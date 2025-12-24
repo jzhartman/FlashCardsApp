@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="FlashCards.App/FlashCards.App.csproj" Id="52fb6ec8-5567-4205-a0f7-1c6c9f89a198" />
+  <Project Path="FlashCards.Application/FlashCards.Application.csproj" Id="47d8c996-1df2-4abe-bf72-f6a9f1afe01a" />
+  <Project Path="FlashCards.ConsoleUI/FlashCards.ConsoleUI.csproj" Id="c266321c-2b51-43c0-87a3-77f7deda5363" />
+  <Project Path="FlashCards.Core/FlashCards.Core.csproj" />
+  <Project Path="FlashCards.Infrastructure/FlashCards.Infrastructure.csproj" Id="f30bb556-ce30-4cfe-b771-88af840d6642" />
+</Solution>
