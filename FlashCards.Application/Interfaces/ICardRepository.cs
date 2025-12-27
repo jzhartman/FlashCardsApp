@@ -7,8 +7,9 @@ namespace FlashCards.Application.Interfaces;
 
 public interface ICardRepository
 {
-    List<Card> GetCardsByStackId();
-    void AddCard();
-    void DeleteCard();
-    void EditCard();
+    Card GetById(int id);
+    List<Card> GetAllByStackId(int id);
+    int Add(Card card);
+    void Delete(int id);
+    void Update();
 }

@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlashCards.Application\FlashCards.Application.csproj" />
+    <ProjectReference Include="..\FlashCards.Core\FlashCards.Core.csproj" />
+  </ItemGroup>
+
 </Project>

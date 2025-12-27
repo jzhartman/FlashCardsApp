@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Stack]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[Name] NVARCHAR(25) NOT NULL,
+
+)
