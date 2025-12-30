@@ -21,7 +21,8 @@ public class CardRepository : ICardRepository
     public int Add(Card card )
     {
         var sql = @"Insert into Card (StackId, FrontText, BackText)
-                    Values (@StackId, @FrontText, @BackText)";
+                    Values (@StackId, @FrontText, @BackText);
+                    Select cast(scope_identity() as int)";
 
         return _connection.QuerySingle<int>(sql, card);
     }
@@ -42,9 +43,9 @@ public class CardRepository : ICardRepository
     public Card GetById(int id)
     {
         var sql = @"select * from Card
-                    where Id = @id";
+                    where Id = @Id";
 
-        return _connection.Query<Card>(sql, id).FirstOrDefault();
+        return _connection.Query<Card>(sql, new { Id = id }).FirstOrDefault();
     }
     public List<Card> GetAllByStackId(int id)
     {

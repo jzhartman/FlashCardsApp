@@ -11,6 +11,7 @@ public class CardRepositoryTests
     [Fact]
     public void Add_ShouldReturnNewId()
     {
+        // ToDo: Kill this test since stupid AI could not help write it correctly...
         // Arrange
         var mockConnection = new Mock<IDbConnection>();
         mockConnection

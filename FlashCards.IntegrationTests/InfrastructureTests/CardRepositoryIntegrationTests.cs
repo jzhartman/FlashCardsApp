@@ -1,4 +1,5 @@
-﻿using FlashCards.Core.Entities;
+﻿using Dapper;
+using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 
@@ -16,19 +17,21 @@ public class CardRepositoryIntegrationTests
         using var connection = new SqlConnection(ConnectionString);
         connection.Open();
 
+        //var insertStackSql = @"insert into Stack (Name) Values (@Name); Select cast(Scope_Identity() as int);";
+        //var stackId = connection.QuerySingle<int>(insertStackSql, new { Name = "Design Patterns" });
+        var stackId = 1;
+
         var repo = new CardRepository(connection);
-        var card = new Card(1, "S in Solid", "Single Responsibility Protocol");
+        var card = new Card(stackId, "S in Solid", "Single Responsibility Protocol");
 
         // Act
         var id = repo.Add(card);
         var retrieved = repo.GetById(id);
 
         // Assert
-        Assert.Equal(1, retrieved.StackId);
+        Assert.Equal(stackId, retrieved.StackId);
         Assert.Equal("S in Solid", retrieved.FrontText);
         Assert.Equal("Single Responsibility Protocol", retrieved.BackText);
 
     }
-
-    // ToDo: Fix testing so that it works!!!!! Issue with foreign keys
 }

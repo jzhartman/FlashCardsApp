@@ -13,5 +13,13 @@
             FrontText = frontText;
             BackText = backText;
         }
+
+        public Card(int id, int stackId, string frontText, string backText)
+        {
+            Id = id;
+            StackId = stackId;
+            FrontText = frontText;
+            BackText = backText;
+        }
     }
 }
