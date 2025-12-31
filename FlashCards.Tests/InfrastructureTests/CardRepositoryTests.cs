@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using FlashCards.Core.Entities;
+using FlashCards.Infrastructure.Dapper;
 using FlashCards.Infrastructure.Repositories;
 using Moq;
 using System.Data;
@@ -11,17 +12,18 @@ public class CardRepositoryTests
     [Fact]
     public void Add_ShouldReturnNewId()
     {
-        // ToDo: Kill this test since stupid AI could not help write it correctly...
         // Arrange
         var mockConnection = new Mock<IDbConnection>();
-        mockConnection
-            .Setup(c => c.QuerySingle<int>(
+        var mockDapper = new Mock<IDapperWrapper>();
+
+        mockDapper
+            .Setup(d => d.QuerySingle<int>(
+                mockConnection.Object,
                 It.IsAny<string>(),
-                It.IsAny<object>(),
-                null, null, null))
+                It.IsAny<object>()))
             .Returns(42);
 
-        var repo = new CardRepository(mockConnection.Object);
+        var repo = new CardRepository(mockConnection.Object, mockDapper.Object);
         var card = new Card(1, "S in Solid", "Single Responsibility Protocol");
 
         // Act

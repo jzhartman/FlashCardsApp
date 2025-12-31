@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using FlashCards.Core.Entities;
+using FlashCards.Infrastructure.Dapper;
 using FlashCards.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 
@@ -21,7 +22,8 @@ public class CardRepositoryIntegrationTests
         //var stackId = connection.QuerySingle<int>(insertStackSql, new { Name = "Design Patterns" });
         var stackId = 1;
 
-        var repo = new CardRepository(connection);
+        var dapper = new DapperWrapper();
+        var repo = new CardRepository(connection, dapper);
         var card = new Card(stackId, "S in Solid", "Single Responsibility Protocol");
 
         // Act

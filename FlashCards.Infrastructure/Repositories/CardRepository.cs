@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using FlashCards.Application.Interfaces;
 using FlashCards.Core.Entities;
+using FlashCards.Infrastructure.Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,10 +13,12 @@ public class CardRepository : ICardRepository
 {
 
     private readonly IDbConnection _connection;
+    private readonly IDapperWrapper _dapper;
 
-    public CardRepository(IDbConnection connection)
+    public CardRepository(IDbConnection connection, IDapperWrapper dapper)
     {
         _connection = connection;
+        _dapper = dapper;
     }
 
     public int Add(Card card )
@@ -24,7 +27,7 @@ public class CardRepository : ICardRepository
                     Values (@StackId, @FrontText, @BackText);
                     Select cast(scope_identity() as int)";
 
-        return _connection.QuerySingle<int>(sql, card);
+        return _dapper.QuerySingle<int>(_connection, sql, card);
     }
 
     public void Delete(int id)
@@ -32,7 +35,7 @@ public class CardRepository : ICardRepository
         var sql = @"delete from Card
                     where Id = @id";
 
-        _connection.Execute(sql, id);
+        _dapper.Execute(_connection, sql, id);
     }
 
     public void Update()
@@ -45,13 +48,13 @@ public class CardRepository : ICardRepository
         var sql = @"select * from Card
                     where Id = @Id";
 
-        return _connection.Query<Card>(sql, new { Id = id }).FirstOrDefault();
+        return _dapper.Query<Card>(_connection, sql, new { Id = id }).FirstOrDefault();
     }
     public List<Card> GetAllByStackId(int id)
     {
         var sql = @"select * from Card
                     where StackId = @id";
 
-        return _connection.Query<Card>(sql, id).ToList();
+        return _dapper.Query<Card>(_connection, sql, id).ToList();
     }
 }
