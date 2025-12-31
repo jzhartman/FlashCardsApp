@@ -1,5 +1,4 @@
-﻿using Dapper;
-using FlashCards.Core.Entities;
+﻿using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Dapper;
 using FlashCards.Infrastructure.Repositories;
 using Moq;

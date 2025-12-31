@@ -1,5 +1,4 @@
-﻿using Dapper;
-using FlashCards.Core.Entities;
+﻿using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Dapper;
 using FlashCards.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
@@ -9,7 +8,7 @@ namespace FlashCards.IntegrationTests.InfrastructureTests;
 public class CardRepositoryIntegrationTests
 {
     private const string ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=devFlashCardsAppDb;Integrated Security=True;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-    
+
     [Fact]
     [Trait("Category", "Integration")]
     public void Add_And_GetById_ShouldPersistCard()

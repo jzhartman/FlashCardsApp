@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 
-namespace FlashCards.Infrastructure;
+namespace FlashCards.Infrastructure.DependencyInjection;
 
 public static class DependencyInjection
 {
@@ -16,7 +16,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Default");
 
         // Register IDbConnection Factory
-        services.AddScoped< IDbConnection>(sp => new SqlConnection(connectionString));
+        services.AddScoped<IDbConnection>(sp => new SqlConnection(connectionString));
 
         // Register Dapper Wrapper
         services.AddScoped<IDapperWrapper, DapperWrapper>();

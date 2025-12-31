@@ -1,11 +1,7 @@
-﻿using Dapper;
-using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Interfaces;
 using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace FlashCards.Infrastructure.Repositories;
 
@@ -21,7 +17,7 @@ public class CardRepository : ICardRepository
         _dapper = dapper;
     }
 
-    public int Add(Card card )
+    public int Add(Card card)
     {
         var sql = @"Insert into Card (StackId, FrontText, BackText)
                     Values (@StackId, @FrontText, @BackText);
