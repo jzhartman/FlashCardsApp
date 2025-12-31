@@ -10,4 +10,10 @@
     <ProjectReference Include="..\FlashCards.Core\FlashCards.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+    <Folder Include="DependencyInjection\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
