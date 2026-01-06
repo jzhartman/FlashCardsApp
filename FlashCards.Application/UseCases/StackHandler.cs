@@ -1,17 +1,18 @@
 ﻿using FlashCards.Application.Interfaces;
+using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases;
 
-public class CreateStackHandler
+public class StackHandler
 {
     private readonly IStackRepository _repo;
 
-    public CreateStackHandler(IStackRepository repo)
+    public StackHandler(IStackRepository repo)
     {
         _repo = repo;
     }
 
-    public int Handle(string name)
+    public int HandleAdd(string name)
     {
         // Validate Name
         var checkName = StackNameIsUnique();
@@ -21,6 +22,10 @@ public class CreateStackHandler
             return _repo.Add(name);
         }
         else return -1;
+    }
+    public List<Stack> HandleGetAll()
+    {
+        return _repo.GetAllStacks();
     }
 
     private bool StackNameIsUnique()

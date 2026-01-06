@@ -1,4 +1,5 @@
 ﻿using FlashCards.Application.UseCases;
+using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -19,7 +20,8 @@ public class StackMenuHandler
     {
         while (true)
         {
-            PrintStackList();
+            var stacks = GetAllStacks();
+            PrintStackList(stacks);
 
             var selection = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
@@ -58,8 +60,14 @@ public class StackMenuHandler
     private void HandleAddStack()
     {
         var input = GetNameFromUser();
-        var handler = _provider.GetRequiredService<CreateStackHandler>();
-        var id = handler.Handle(input);
+        var handler = _provider.GetRequiredService<StackHandler>();
+        var id = handler.HandleAdd(input);
+    }
+
+    private List<Stack> GetAllStacks()
+    {
+        var handler = _provider.GetRequiredService<StackHandler>();
+        return handler.HandleGetAll();
     }
 
     private string GetNameFromUser()
@@ -68,8 +76,18 @@ public class StackMenuHandler
         return Console.ReadLine();
     }
 
-    private void PrintStackList()
+    private void PrintStackList(List<Stack> stacks)
     {
-        AnsiConsole.MarkupLine("This is a printed list of all the stacks....");
+        if (stacks.Count == 0)
+            AnsiConsole.MarkupLine("No stacks exist!");
+        else
+        {
+            int i = 1;
+            foreach (var stack in stacks)
+            {
+                AnsiConsole.MarkupLine($"{i}: {stack.Name}");
+                i++;
+            }
+        }
     }
 }

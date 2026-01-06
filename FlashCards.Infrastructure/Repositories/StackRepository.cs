@@ -39,7 +39,7 @@ public class StackRepository : IStackRepository
 
     public List<Stack> GetAllStacks()
     {
-        var sql = @"select Name from Stacks";
+        var sql = @"select * from Stack";
 
         return _dapper.Query<Stack>(_connection, sql).ToList();
     }
