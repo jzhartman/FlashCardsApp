@@ -8,7 +8,7 @@ using System.Data;
 
 namespace FlashCards.Infrastructure.DependencyInjection;
 
-public static class DependencyInjection
+public static class InfrastructureServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
                                                          IConfiguration configuration)
@@ -23,6 +23,7 @@ public static class DependencyInjection
 
         // Register all repositories
         services.AddScoped<ICardRepository, CardRepository>();
+        services.AddScoped<IStackRepository, StackRepository>();
 
         return services;
     }

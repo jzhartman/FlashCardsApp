@@ -6,7 +6,8 @@ public interface IStackRepository
 {
     Stack GetById(int id);
     List<Stack> GetAllStacks();
-    int Add(Stack stack);
+    int Add(string name);
     void DeleteById(int id);
     void Update();
+    bool ExistsByName();
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.ConsoleUI.DependencyInjection;
 
-public static class DependencyInjection
+public static class ConsoleUIServiceCollectionExtensions
 {
     public static IServiceCollection AddConsoleUI(this IServiceCollection services)
     {

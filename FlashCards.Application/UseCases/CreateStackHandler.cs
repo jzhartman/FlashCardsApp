@@ -1,9 +1,8 @@
 ﻿using FlashCards.Application.Interfaces;
-using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases;
 
-internal class CreateStackHandler
+public class CreateStackHandler
 {
     private readonly IStackRepository _repo;
 
@@ -16,8 +15,12 @@ internal class CreateStackHandler
     {
         // Validate Name
         var checkName = StackNameIsUnique();
-        var stack = new Stack() { Name = name };
-        return _repo.Add(stack);
+
+        if (checkName)
+        {
+            return _repo.Add(name);
+        }
+        else return -1;
     }
 
     private bool StackNameIsUnique()

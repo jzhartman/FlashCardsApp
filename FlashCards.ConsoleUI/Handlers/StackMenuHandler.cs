@@ -1,13 +1,17 @@
-﻿using Spectre.Console;
+﻿using FlashCards.Application.UseCases;
+using Microsoft.Extensions.DependencyInjection;
+using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
 public class StackMenuHandler
 {
+    private readonly IServiceProvider _provider;
     private readonly ViewStackMenuHandler _viewStackMenu;
 
-    public StackMenuHandler(ViewStackMenuHandler viewStackMenu)
+    public StackMenuHandler(IServiceProvider provider, ViewStackMenuHandler viewStackMenu)
     {
+        _provider = provider;
         _viewStackMenu = viewStackMenu;
     }
 
@@ -53,7 +57,15 @@ public class StackMenuHandler
 
     private void HandleAddStack()
     {
-        AnsiConsole.MarkupLine("Handling the add...");
+        var input = GetNameFromUser();
+        var handler = _provider.GetRequiredService<CreateStackHandler>();
+        var id = handler.Handle(input);
+    }
+
+    private string GetNameFromUser()
+    {
+        AnsiConsole.Markup("Enter stack name: ");
+        return Console.ReadLine();
     }
 
     private void PrintStackList()

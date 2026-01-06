@@ -1,4 +1,5 @@
-﻿using FlashCards.ConsoleUI.Controllers;
+﻿using FlashCards.Application.DependencyInjection;
+using FlashCards.ConsoleUI.Controllers;
 using FlashCards.ConsoleUI.DependencyInjection;
 using FlashCards.Infrastructure.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -15,14 +16,11 @@ internal class Program
             .Build();
 
         var services = new ServiceCollection();
-
+        services.AddApplication();
         services.AddInfrastructure(config);
         services.AddConsoleUI();
 
         var provider = services.BuildServiceProvider();
-
-        // Repos
-        // var myRepo = provider.GetRequiredService<IMyRepo>();
 
         var mainMenu = provider.GetRequiredService<MainMenuHandler>();
         mainMenu.Run();
