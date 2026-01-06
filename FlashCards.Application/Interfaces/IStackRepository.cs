@@ -9,5 +9,5 @@ public interface IStackRepository
     int Add(string name);
     void DeleteById(int id);
     void Update();
-    bool ExistsByName();
+    bool ExistsByName(string name);
 }

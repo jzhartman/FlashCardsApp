@@ -30,11 +30,13 @@ public class StackRepository : IStackRepository
         throw new NotImplementedException();
     }
 
-    public bool ExistsByName()
+    public bool ExistsByName(string name)
     {
-        var sql = @"";
+        var sql = @"select 1 from stack where Name = @Name";
 
-        return true;
+        int exists = _dapper.Query<int>(_connection, sql, new { Name = name }).FirstOrDefault();
+
+        return exists == 1 ? true : false;
     }
 
     public List<Stack> GetAllStacks()
