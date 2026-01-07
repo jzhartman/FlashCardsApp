@@ -37,7 +37,10 @@ public class StackMenuHandler
 
             switch (selection)
             {
-                case "View Stack": HandleViewStack(); break;
+                case "View Stack":
+                    var stack = GetStackSelectionFromUser(stacks, "view");
+                    HandleViewStack(stack);
+                    break;
                 case "Add Stack": HandleAddStack(); break;
                 case "Delete Stack": HandleDeleteStack(); break;
                 case "Return to Main Menu": return;
@@ -46,10 +49,17 @@ public class StackMenuHandler
         }
     }
 
-    private void HandleViewStack()
+    private void HandleViewStack(Stack stack)
     {
-        AnsiConsole.MarkupLine("Oh but which stack to view...?");
-        _viewStackMenu.Run();
+        AnsiConsole.MarkupLine($"Viewing stack {stack.Name}!");
+        _viewStackMenu.Run(stack);
+    }
+
+    private Stack GetStackSelectionFromUser(List<Stack> stacks, string action)
+    {
+        AnsiConsole.Write($"Enter ID of the stack you wish to {action}: ");
+        int id = Int32.Parse(Console.ReadLine());
+        return stacks[id - 1];
     }
 
     private void HandleDeleteStack()

@@ -1,4 +1,5 @@
 ﻿using FlashCards.Application.Services;
+using FlashCards.Application.UseCases.Cards;
 using FlashCards.Application.UseCases.Stacks;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,12 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddScoped<AddStackHandler>();
         services.AddScoped<GetStacksHandler>();
+
+        services.AddScoped<AddCardHandler>();
+
         services.AddScoped<StackNameUniquenessService>();
+        services.AddScoped<CardUniquenessService>();
+
 
 
         return services;

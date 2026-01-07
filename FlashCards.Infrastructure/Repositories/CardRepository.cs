@@ -53,4 +53,22 @@ public class CardRepository : ICardRepository
 
         return _dapper.Query<Card>(_connection, sql, id).ToList();
     }
+
+    public bool ExistsByFrontText(string text, int stackId)
+    {
+        var sql = @"select 1 from card where UPPER(FrontText) = UPPER(@FrontText) AND StackId = @StackId";
+
+        int exists = _dapper.Query<int>(_connection, sql, new { FrontText = text, StackId = stackId }).FirstOrDefault();
+
+        return exists == 1 ? true : false;
+    }
+
+    public bool ExistsByBackText(string text, int stackId)
+    {
+        var sql = @"select 1 from card where UPPER(BackText) = UPPER(@BackText) AND StackId = @StackId";
+
+        int exists = _dapper.Query<int>(_connection, sql, new { BackText = text, StackId = stackId }).FirstOrDefault();
+
+        return exists == 1 ? true : false;
+    }
 }

@@ -48,7 +48,9 @@ public class StackRepository : IStackRepository
 
     public Stack GetById(int id)
     {
-        throw new NotImplementedException();
+        var sql = @"select name from Stack where Id = @Id";
+
+        return _dapper.QuerySingle<Stack>(_connection, sql);
     }
 
     public void Update()

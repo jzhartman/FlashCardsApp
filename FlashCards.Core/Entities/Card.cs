@@ -21,5 +21,10 @@
             FrontText = frontText;
             BackText = backText;
         }
+
+        public void SetId(int id)
+        {
+            Id = id;
+        }
     }
 }

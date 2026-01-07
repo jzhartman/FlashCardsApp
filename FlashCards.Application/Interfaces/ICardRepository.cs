@@ -9,4 +9,6 @@ public interface ICardRepository
     int Add(Card card);
     void Delete(int id);
     void Update();
+    bool ExistsByFrontText(string text, int stackId);
+    bool ExistsByBackText(string text, int stackId);
 }
