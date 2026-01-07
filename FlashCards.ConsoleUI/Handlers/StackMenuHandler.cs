@@ -61,10 +61,17 @@ public class StackMenuHandler
     {
         var input = GetNameFromUser();
         var handler = _provider.GetRequiredService<AddStackHandler>();
-        var id = handler.HandleAdd(input);
+        var result = handler.HandleAdd(input);
 
-        if (id == -1) AnsiConsole.WriteLine("ERROR: Stack already exists with that name");
-        else AnsiConsole.WriteLine($"Added stack {input}!");
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                AnsiConsole.WriteLine(error);
+            }
+        }
+
+        else AnsiConsole.WriteLine($"Added stack {result.Value.Name}!");
     }
 
     private List<Stack> GetAllStacks()

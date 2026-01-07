@@ -32,7 +32,7 @@ public class StackRepository : IStackRepository
 
     public bool ExistsByName(string name)
     {
-        var sql = @"select 1 from stack where Name = @Name";
+        var sql = @"select 1 from stack where UPPER(Name) = UPPER(@Name)";
 
         int exists = _dapper.Query<int>(_connection, sql, new { Name = name }).FirstOrDefault();
 

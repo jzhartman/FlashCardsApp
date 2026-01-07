@@ -1,5 +1,7 @@
 ﻿using FlashCards.Application.Interfaces;
 using FlashCards.Application.Services;
+using FlashCards.Core.Entities;
+using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
@@ -14,13 +16,19 @@ public class AddStackHandler
         _nameUniqueness = nameUniqueness;
     }
 
-    public int HandleAdd(string name)
+    public ValidationResult<Stack> HandleAdd(string name)
     {
         // Build in validation with a ValidationResult object
+        if (_nameUniqueness.IsStackNameUnique(name) == false)
+            return ValidationResult<Stack>.Failure("Stack name must be unique!");
 
-        if (_nameUniqueness.IsStackNameUnique(name) == true)
-            return _repo.Add(name);
-        else return -1;
+        if (String.IsNullOrWhiteSpace(name))
+            return ValidationResult<Stack>.Failure("Stack name cannot be empty!");
+
+        var id = _repo.Add(name);
+        var stack = new Stack { Name = name, Id = id };
+
+        return ValidationResult<Stack>.Success(stack);
     }
 
 }
