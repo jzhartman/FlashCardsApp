@@ -1,4 +1,4 @@
-﻿using FlashCards.Application.UseCases;
+﻿using FlashCards.Application.UseCases.Stacks;
 using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
@@ -60,13 +60,16 @@ public class StackMenuHandler
     private void HandleAddStack()
     {
         var input = GetNameFromUser();
-        var handler = _provider.GetRequiredService<StackHandler>();
+        var handler = _provider.GetRequiredService<AddStackHandler>();
         var id = handler.HandleAdd(input);
+
+        if (id == -1) AnsiConsole.WriteLine("ERROR: Stack already exists with that name");
+        else AnsiConsole.WriteLine($"Added stack {input}!");
     }
 
     private List<Stack> GetAllStacks()
     {
-        var handler = _provider.GetRequiredService<StackHandler>();
+        var handler = _provider.GetRequiredService<GetStacksHandler>();
         return handler.HandleGetAll();
     }
 
