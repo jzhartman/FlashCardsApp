@@ -26,7 +26,7 @@ public class AddStackHandler
             return ValidationResult<Stack>.Failure("Stack name cannot be empty!");
 
         var id = _repo.Add(name);
-        var stack = new Stack { Name = name, Id = id };
+        var stack = new Stack(id, name, new List<Card>());
 
         return ValidationResult<Stack>.Success(stack);
     }

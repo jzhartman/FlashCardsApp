@@ -15,29 +15,43 @@ public class MainMenuHandler
     }
     public void Run()
     {
-        while (true)
-        {
-            var selection = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                .Title("Select from the options below:")
-                .AddChoices(new[]
-                {
-                        "Manage Stacks",
-                        "Study",
-                        "View Reports",
-                        "Exit"
-                })
-            );
+        bool exitApp = false;
 
-            switch (selection)
-            {
-                case "Manage Stacks": _stackMenu.Run(); break;
-                case "Study": _studyMenu.Run(); break;
-                case "View Reports": HandleReports(); break;
-                case "Exit": return;
-                default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
-            }
+        while (exitApp == false)
+        {
+            var selection = PrintMainMenuAndGetSelection();
+            exitApp = HandleUserSelection(selection);
         }
+    }
+
+    private string PrintMainMenuAndGetSelection()
+    {
+        Console.Clear();
+        AnsiConsole.MarkupLine("[bold green]Main Menu[/]\r\n");
+
+        return AnsiConsole.Prompt(new SelectionPrompt<string>()
+                            .Title("Select from the options below:")
+                            .AddChoices(new[]
+                            {
+                                                "Manage Stacks",
+                                                "Study",
+                                                "View Reports",
+                                                "Exit"
+                            }));
+    }
+
+    private bool HandleUserSelection(string selection)
+    {
+        switch (selection)
+        {
+            case "Manage Stacks": _stackMenu.Run(); break;
+            case "Study": _studyMenu.Run(); break;
+            case "View Reports": HandleReports(); break;
+            case "Exit": return true;
+            default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
+        }
+
+        return false;
     }
 
     private void HandleReports()

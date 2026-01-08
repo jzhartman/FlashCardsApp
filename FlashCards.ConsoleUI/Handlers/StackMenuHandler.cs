@@ -20,6 +20,9 @@ public class StackMenuHandler
     {
         while (true)
         {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[bold green]Manage Stack Menu[/]\r\n");
+
             var stacks = GetAllStacks();
             PrintStackList(stacks);
 
@@ -103,11 +106,15 @@ public class StackMenuHandler
         else
         {
             int i = 1;
+
+            Console.WriteLine($"ID  NAME\tCARD COUNT");
             foreach (var stack in stacks)
             {
-                AnsiConsole.MarkupLine($"{i}: {stack.Name}");
+                var cardCount = (stack.Cards != null) ? stack.Cards.Count : 0;
+                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{cardCount}");
                 i++;
             }
         }
+        Console.WriteLine();
     }
 }
