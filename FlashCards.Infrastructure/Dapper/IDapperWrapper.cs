@@ -8,5 +8,12 @@ public interface IDapperWrapper
 
     IEnumerable<T> Query<T>(IDbConnection connection, string sql, object parameters = null);
 
+    IEnumerable<TReturn> Query<TFirst, TSecond, TReturn>(
+        IDbConnection connection,
+        string sql,
+        Func<TFirst, TSecond, TReturn> map,
+        object parameters = null,
+        string splitOn = "Id");
+
     void Execute(IDbConnection connection, string sql, object parameters = null);
 }
