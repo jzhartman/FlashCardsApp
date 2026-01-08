@@ -27,6 +27,10 @@ public class ViewStackMenuHandler
 
         while (true)
         {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[bold green]View Stack Menu[/]\r\n");
+            PrintCards();
+
             var selection = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                 .Title("Select from the options below:")
@@ -48,6 +52,17 @@ public class ViewStackMenuHandler
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
         }
+    }
+
+    private void PrintCards()
+    {
+        int i = 1;
+        foreach (var card in CurrentStack.Cards)
+        {
+            Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+            i++;
+        }
+        Console.WriteLine();
     }
 
     private void HandleDeleteCard()
