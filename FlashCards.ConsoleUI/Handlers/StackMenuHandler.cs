@@ -90,7 +90,7 @@ public class StackMenuHandler
     private List<CardStack> GetAllStacks()
     {
         var handler = _provider.GetRequiredService<GetAllStacksHandler>();
-        return handler.HandleGetAll();
+        return handler.Handle();
     }
 
     private string GetNameFromUser()
