@@ -39,22 +39,22 @@ public class StackRepository : IStackRepository
         return exists == 1 ? true : false;
     }
 
-    public List<Stack> GetAllStacks()
+    public List<CardStack> GetAllStacks()
     {
         var sql = @"select s.Id, s.Name, c.Id as StackId, c.FrontText, c.BackText
                     from dbo.Stack s
                     left join dbo.Card c on s.Id = c.StackId";
 
-        var lookup = new Dictionary<int, Stack>();
+        var lookup = new Dictionary<int, CardStack>();
 
-        _dapper.Query<Stack, Card, Stack>(
+        _dapper.Query<CardStack, Card, CardStack>(
             _connection,
             sql,
             (stack, card) =>
             {
                 if (!lookup.TryGetValue(stack.Id, out var s))
                 {
-                    s = new Stack(stack.Id, stack.Name, new List<Card>());
+                    s = new CardStack(stack.Id, stack.Name, new List<Card>());
                     lookup.Add(s.Id, s);
                 }
 
@@ -65,17 +65,14 @@ public class StackRepository : IStackRepository
             splitOn: "StackId"
             );
 
-
-
-
         return lookup.Values.ToList();
     }
 
-    public Stack GetById(int id)
+    public CardStack GetById(int id)
     {
         var sql = @"select name from Stack where Id = @Id";
 
-        return _dapper.QuerySingle<Stack>(_connection, sql);
+        return _dapper.QuerySingle<CardStack>(_connection, sql);
     }
 
     public void Update()

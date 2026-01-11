@@ -19,7 +19,7 @@ public class AddCardHandler
     public ValidationResult<Card> HandleAdd(int stackId, string frontText, string backText)
     {
         // Build in validation with a ValidationResult object
-        if (_cardUniqueness.IsCardUnique(frontText, backText, stackId) == false)
+        if (repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
             return ValidationResult<Card>.Failure("Card already exists!");
 
         var errors = new List<string>();

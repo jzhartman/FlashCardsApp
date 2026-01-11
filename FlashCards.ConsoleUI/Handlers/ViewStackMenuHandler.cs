@@ -9,19 +9,19 @@ public class ViewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
 
-    private Stack CurrentStack;
+    private CardStack CurrentStack;
 
     public ViewStackMenuHandler(IServiceProvider provider)
     {
         _provider = provider;
     }
 
-    private void SetStack(Stack stack)
+    private void SetStack(CardStack stack)
     {
         CurrentStack = stack;
     }
 
-    public void Run(Stack stack)
+    public void Run(CardStack stack)
     {
         SetStack(stack);
 

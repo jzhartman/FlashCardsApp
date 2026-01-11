@@ -1,4 +1,5 @@
 ﻿using FlashCards.ConsoleUI.Handlers;
+using FlashCards.Core.Entities;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Controllers;
@@ -57,5 +58,24 @@ public class MainMenuHandler
     private void HandleReports()
     {
         AnsiConsole.MarkupLine("Reporting for duty, sir!");
+    }
+
+    private void PrintStackList(List<CardStack> stacks)
+    {
+        if (stacks.Count == 0)
+            AnsiConsole.MarkupLine("No stacks exist!");
+        else
+        {
+            int i = 1;
+
+            Console.WriteLine($"ID  NAME\tCARD COUNT");
+            foreach (var stack in stacks)
+            {
+                var cardCount = (stack.Cards != null) ? stack.Cards.Count : 0;
+                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{cardCount}");
+                i++;
+            }
+        }
+        Console.WriteLine();
     }
 }

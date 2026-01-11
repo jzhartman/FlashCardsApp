@@ -52,13 +52,13 @@ public class StackMenuHandler
         }
     }
 
-    private void HandleViewStack(Stack stack)
+    private void HandleViewStack(CardStack stack)
     {
         AnsiConsole.MarkupLine($"Viewing stack {stack.Name}!");
         _viewStackMenu.Run(stack);
     }
 
-    private Stack GetStackSelectionFromUser(List<Stack> stacks, string action)
+    private CardStack GetStackSelectionFromUser(List<CardStack> stacks, string action)
     {
         AnsiConsole.Write($"Enter ID of the stack you wish to {action}: ");
         int id = Int32.Parse(Console.ReadLine());
@@ -87,9 +87,9 @@ public class StackMenuHandler
         else AnsiConsole.WriteLine($"Added stack {result.Value.Name}!");
     }
 
-    private List<Stack> GetAllStacks()
+    private List<CardStack> GetAllStacks()
     {
-        var handler = _provider.GetRequiredService<GetStacksHandler>();
+        var handler = _provider.GetRequiredService<GetAllStacksHandler>();
         return handler.HandleGetAll();
     }
 
@@ -99,7 +99,7 @@ public class StackMenuHandler
         return Console.ReadLine();
     }
 
-    private void PrintStackList(List<Stack> stacks)
+    private void PrintStackList(List<CardStack> stacks)
     {
         if (stacks.Count == 0)
             AnsiConsole.MarkupLine("No stacks exist!");
