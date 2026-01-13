@@ -74,7 +74,7 @@ public class StackMenuHandler
     {
         var input = GetNameFromUser();
         var handler = _provider.GetRequiredService<AddStackHandler>();
-        var result = handler.HandleAdd(input);
+        var result = handler.Handle(input);
 
         if (!result.IsValid)
         {

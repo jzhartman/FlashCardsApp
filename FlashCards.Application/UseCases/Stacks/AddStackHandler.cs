@@ -13,7 +13,7 @@ public class AddStackHandler
         _repo = repo;
     }
 
-    public ValidationResult<CardStack> HandleAdd(string name)
+    public ValidationResult<CardStack> Handle(string name)
     {
         if (_repo.ExistsByName(name))
             return ValidationResult<CardStack>.Failure("Stack name must be unique!");

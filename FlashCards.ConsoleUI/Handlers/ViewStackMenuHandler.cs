@@ -85,7 +85,7 @@ public class ViewStackMenuHandler
 
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
-        var result = handler.HandleAdd(CurrentStack.Id, frontText, backText);
+        var result = handler.Handle(CurrentStack.Id, frontText, backText);
 
         if (!result.IsValid)
         {

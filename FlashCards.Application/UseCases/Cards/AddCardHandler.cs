@@ -13,7 +13,7 @@ public class AddCardHandler
         _repo = repo;
     }
 
-    public ValidationResult<Card> HandleAdd(int stackId, string frontText, string backText)
+    public ValidationResult<Card> Handle(int stackId, string frontText, string backText)
     {
         if (_repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
             return ValidationResult<Card>.Failure("Card already exists!");
