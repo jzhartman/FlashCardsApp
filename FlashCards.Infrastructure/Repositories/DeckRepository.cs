@@ -5,12 +5,12 @@ using System.Data;
 
 namespace FlashCards.Infrastructure.Repositories;
 
-public class StackRepository : IStackRepository
+public class DeckRepository : IDeckRepository
 {
     private readonly IDbConnection _connection;
     private readonly IDapperWrapper _dapper;
 
-    public StackRepository(IDbConnection connection, IDapperWrapper dapper)
+    public DeckRepository(IDbConnection connection, IDapperWrapper dapper)
     {
         _connection = connection;
         _dapper = dapper;
@@ -39,22 +39,22 @@ public class StackRepository : IStackRepository
         return exists == 1 ? true : false;
     }
 
-    public List<CardStack> GetAllStacks()
+    public List<Deck> GetAllDecks()
     {
         var sql = @"select s.Id, s.Name, c.Id as StackId, c.FrontText, c.BackText
                     from dbo.Stack s
                     left join dbo.Card c on s.Id = c.StackId";
 
-        var lookup = new Dictionary<int, CardStack>();
+        var lookup = new Dictionary<int, Deck>();
 
-        _dapper.Query<CardStack, Card, CardStack>(
+        _dapper.Query<Deck, Card, Deck>(
             _connection,
             sql,
             (stack, card) =>
             {
                 if (!lookup.TryGetValue(stack.Id, out var s))
                 {
-                    s = new CardStack(stack.Id, stack.Name, new List<Card>());
+                    s = new Deck(stack.Id, stack.Name, new List<Card>());
                     lookup.Add(s.Id, s);
                 }
 
@@ -68,11 +68,11 @@ public class StackRepository : IStackRepository
         return lookup.Values.ToList();
     }
 
-    public CardStack GetById(int id)
+    public Deck GetById(int id)
     {
         var sql = @"select name from Stack where Id = @Id";
 
-        return _dapper.QuerySingle<CardStack>(_connection, sql);
+        return _dapper.QuerySingle<Deck>(_connection, sql);
     }
 
     public void Update()

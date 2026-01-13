@@ -4,7 +4,7 @@ public class StudySession
 {
     public int Id { get; set; }
     public DateTime Time { get; set; }
-    public int StackId { get; set; }
+    public int DeckId { get; set; }
     public int Score { get; set; }
     public int TotalCards { get; set; }
 
