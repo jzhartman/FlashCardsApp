@@ -1,5 +1,4 @@
 ﻿using FlashCards.Application.Interfaces;
-using FlashCards.Application.Services;
 using FlashCards.Core.Entities;
 using FlashCards.Core.Validation;
 
@@ -8,18 +7,15 @@ namespace FlashCards.Application.UseCases.Cards;
 public class AddCardHandler
 {
     private readonly ICardRepository _repo;
-    private readonly CardUniquenessService _cardUniqueness;
 
-    public AddCardHandler(ICardRepository repo, CardUniquenessService cardUniqueness)
+    public AddCardHandler(ICardRepository repo)
     {
         _repo = repo;
-        _cardUniqueness = cardUniqueness;
     }
 
     public ValidationResult<Card> HandleAdd(int stackId, string frontText, string backText)
     {
-        // Build in validation with a ValidationResult object
-        if (repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
+        if (_repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
             return ValidationResult<Card>.Failure("Card already exists!");
 
         var errors = new List<string>();
