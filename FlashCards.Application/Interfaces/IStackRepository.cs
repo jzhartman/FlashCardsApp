@@ -5,9 +5,10 @@ namespace FlashCards.Application.Interfaces;
 public interface IStackRepository
 {
     Stack GetById(int id);
-    List<Stack> GetAllStacks();
+    List<Stack> GetAll();
     int Add(string name);
     void DeleteById(int id);
     void Update();
     bool ExistsByName(string name);
+    List<string> GetAllNames();
 }

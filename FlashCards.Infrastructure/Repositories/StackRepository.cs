@@ -39,7 +39,7 @@ public class StackRepository : IStackRepository
         return exists == 1 ? true : false;
     }
 
-    public List<Stack> GetAllStacks()
+    public List<Stack> GetAll()
     {
         var sql = @"select s.Id, s.Name, c.Id as StackId, c.FrontText, c.BackText
                     from dbo.Stack s
@@ -68,9 +68,22 @@ public class StackRepository : IStackRepository
         return lookup.Values.ToList();
     }
 
+    public List<string> GetAllNames()
+    {
+        var sql = @"select Name from Stack";
+
+        return _dapper.Query<string>(_connection, sql).ToList();
+    }
+
     public Stack GetById(int id)
     {
         var sql = @"select name from Stack where Id = @Id";
+
+        return _dapper.QuerySingle<Stack>(_connection, sql);
+    }
+    public Stack GetByName(string name)
+    {
+        var sql = @"select * from Stack where Name = @Name";
 
         return _dapper.QuerySingle<Stack>(_connection, sql);
     }

@@ -1,6 +1,5 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.Interfaces;
-using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
@@ -17,19 +16,19 @@ public class GetAllStacksHandler
 
     public List<StackNameAndCardCountResponse> Handle()
     {
-        var stacks = _stackRepo.GetAllStacks();
+        var stacks = _stackRepo.GetAllNames();
 
         return MapStack(stacks);
     }
 
-    private List<StackNameAndCardCountResponse> MapStack(List<Stack> stacks)
+    private List<StackNameAndCardCountResponse> MapStack(List<string> names)
     {
         var stackResponses = new List<StackNameAndCardCountResponse>();
 
-        foreach (var stack in stacks)
+        foreach (var name in names)
         {
-            int cardCount = _cardRepo.GetCardCountByStackName(stack.Name);
-            var stackResponse = new StackNameAndCardCountResponse { Name = stack.Name, CardCount = cardCount };
+            int cardCount = _cardRepo.GetCardCountByStackName(name);
+            var stackResponse = new StackNameAndCardCountResponse { Name = name, CardCount = cardCount };
             stackResponses.Add(stackResponse);
         }
 
