@@ -13,18 +13,18 @@ public class AddStackHandler
         _repo = repo;
     }
 
-    public ValidationResult<CardStack> Handle(string name)
+    public ValidationResult<Stack> Handle(string name)
     {
         if (_repo.ExistsByName(name))
-            return ValidationResult<CardStack>.Failure("Stack name must be unique!");
+            return ValidationResult<Stack>.Failure("Stack name must be unique!");
 
         if (String.IsNullOrWhiteSpace(name))
-            return ValidationResult<CardStack>.Failure("Stack name cannot be empty!");
+            return ValidationResult<Stack>.Failure("Stack name cannot be empty!");
 
         var id = _repo.Add(name);
-        var stack = new CardStack(id, name, new List<Card>());
+        var stack = new Stack(id, name, new List<Card>());
 
-        return ValidationResult<CardStack>.Success(stack);
+        return ValidationResult<Stack>.Success(stack);
     }
 
 }

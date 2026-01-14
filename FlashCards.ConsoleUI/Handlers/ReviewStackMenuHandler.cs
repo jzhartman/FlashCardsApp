@@ -5,30 +5,31 @@ using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
-public class ViewStackMenuHandler
+public class ReviewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
 
-    private CardStack CurrentStack;
+    private Stack CurrentStack;
 
-    public ViewStackMenuHandler(IServiceProvider provider)
+    public ReviewStackMenuHandler(IServiceProvider provider)
     {
         _provider = provider;
     }
 
-    private void SetStack(CardStack stack)
+    private void SetStack(Stack stack)
     {
         CurrentStack = stack;
     }
 
-    public void Run(CardStack stack)
+    public void Run(Stack stack)
     {
         SetStack(stack);
 
         while (true)
         {
             Console.Clear();
-            AnsiConsole.MarkupLine("[bold green]View Stack Menu[/]\r\n");
+            AnsiConsole.MarkupLine("[bold green]Review Stack Menu[/]\r\n");
+
             PrintCards();
 
             var selection = AnsiConsole.Prompt(
@@ -68,11 +69,13 @@ public class ViewStackMenuHandler
     private void HandleDeleteCard()
     {
         AnsiConsole.MarkupLine("Delete that card...");
+        Console.ReadKey();
     }
 
     private void HandleEditCard()
     {
         AnsiConsole.MarkupLine("Edit my card...");
+        Console.ReadKey();
 
     }
 
@@ -97,6 +100,7 @@ public class ViewStackMenuHandler
 
         else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
 
+        // Will need to get all cards for the stack again...
 
     }
 }

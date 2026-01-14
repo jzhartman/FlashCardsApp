@@ -12,7 +12,7 @@ public class GetStackById
         _repo = repo;
     }
 
-    public CardStack Handle(int id)
+    public Stack Handle(int id)
     {
         return _repo.GetById(id);
     }

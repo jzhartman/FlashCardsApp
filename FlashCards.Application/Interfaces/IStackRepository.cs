@@ -4,8 +4,8 @@ namespace FlashCards.Application.Interfaces;
 
 public interface IStackRepository
 {
-    CardStack GetById(int id);
-    List<CardStack> GetAllStacks();
+    Stack GetById(int id);
+    List<Stack> GetAllStacks();
     int Add(string name);
     void DeleteById(int id);
     void Update();

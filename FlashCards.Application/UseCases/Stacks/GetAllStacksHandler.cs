@@ -12,7 +12,7 @@ public class GetAllStacksHandler
         _repo = repo;
     }
 
-    public List<CardStack> Handle()
+    public List<Stack> Handle()
     {
         return _repo.GetAllStacks();
     }

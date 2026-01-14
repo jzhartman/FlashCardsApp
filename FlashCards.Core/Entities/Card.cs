@@ -6,7 +6,7 @@
         public int StackId { get; set; }
         public string FrontText { get; set; }
         public string BackText { get; set; }
-        public CardStack Stack { get; set; }
+        public Stack Stack { get; set; }
 
         public Card(int stackId, string frontText, string backText)
         {

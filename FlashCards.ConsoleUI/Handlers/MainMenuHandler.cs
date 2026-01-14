@@ -1,18 +1,20 @@
-﻿using FlashCards.ConsoleUI.Handlers;
+﻿using FlashCards.Application.UseCases.Stacks;
+using FlashCards.ConsoleUI.Handlers;
 using FlashCards.Core.Entities;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Controllers;
 
 public class MainMenuHandler
 {
-    private readonly StackMenuHandler _stackMenu;
-    private readonly StudyMenuHandler _studyMenu;
+    private readonly IServiceProvider _provider;
+    private readonly ReviewStackMenuHandler _stackMenu;
 
-    public MainMenuHandler(StackMenuHandler stackMenu, StudyMenuHandler studyMenu)
+    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu)
     {
+        _provider = provider;
         _stackMenu = stackMenu;
-        _studyMenu = studyMenu;
     }
     public void Run()
     {
@@ -20,33 +22,44 @@ public class MainMenuHandler
 
         while (exitApp == false)
         {
+            Console.Clear();
+            AnsiConsole.MarkupLine("[bold green]Main Menu[/]\r\n");
+            var stacks = GetAllStacks();
+            PrintStackList(stacks);
+
+
             var selection = PrintMainMenuAndGetSelection();
-            exitApp = HandleUserSelection(selection);
+            exitApp = HandleUserSelection(selection, stacks);
         }
     }
 
     private string PrintMainMenuAndGetSelection()
     {
-        Console.Clear();
-        AnsiConsole.MarkupLine("[bold green]Main Menu[/]\r\n");
-
         return AnsiConsole.Prompt(new SelectionPrompt<string>()
                             .Title("Select from the options below:")
                             .AddChoices(new[]
                             {
-                                                "Manage Stacks",
-                                                "Study",
+                                                "Review Cards in Stack",
+                                                "Create New Stack",
+                                                "Delete Stack",
+                                                "Begin Study Session",
+                                                "View Past Study Sessions",
                                                 "View Reports",
                                                 "Exit"
                             }));
     }
 
-    private bool HandleUserSelection(string selection)
+    private bool HandleUserSelection(string selection, List<Stack> stacks)
     {
         switch (selection)
         {
-            case "Manage Stacks": _stackMenu.Run(); break;
-            case "Study": _studyMenu.Run(); break;
+            case "Review Cards in Stack":
+                var stack = GetStackSelectionFromUser(stacks, "review");
+                _stackMenu.Run(stack); break;
+            case "Create New Stack": HandleAddStack(); break;
+            case "Delete Stack": HandleDeleteStack(); break;
+            case "Begin Study Session": HandleStudy(); break;
+            case "View Past Study Sessions": HandleViewPastSessions(); break;
             case "View Reports": HandleReports(); break;
             case "Exit": return true;
             default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
@@ -58,9 +71,10 @@ public class MainMenuHandler
     private void HandleReports()
     {
         AnsiConsole.MarkupLine("Reporting for duty, sir!");
+        Console.ReadKey();
     }
 
-    private void PrintStackList(List<CardStack> stacks)
+    private void PrintStackList(List<Stack> stacks)
     {
         if (stacks.Count == 0)
             AnsiConsole.MarkupLine("No stacks exist!");
@@ -77,5 +91,59 @@ public class MainMenuHandler
             }
         }
         Console.WriteLine();
+    }
+
+    private List<Stack> GetAllStacks()
+    {
+        var handler = _provider.GetRequiredService<GetAllStacksHandler>();
+        return handler.Handle();
+    }
+
+    private Stack GetStackSelectionFromUser(List<Stack> stacks, string action)
+    {
+        AnsiConsole.Write($"Enter ID of the stack you wish to {action}: ");
+        int id = Int32.Parse(Console.ReadLine());
+        return stacks[id - 1];
+    }
+
+    private void HandleAddStack()
+    {
+        var input = GetNameFromUser();
+        var handler = _provider.GetRequiredService<AddStackHandler>();
+        var result = handler.Handle(input);
+
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                AnsiConsole.WriteLine(error);
+            }
+        }
+
+        else AnsiConsole.WriteLine($"Added stack {result.Value.Name}!");
+    }
+
+    private string GetNameFromUser()
+    {
+        AnsiConsole.Markup("Enter stack name: ");
+        return Console.ReadLine();
+    }
+
+    private void HandleDeleteStack()
+    {
+        AnsiConsole.MarkupLine("Handling the delete...");
+        Console.ReadKey();
+    }
+
+    private void HandleViewPastSessions()
+    {
+        AnsiConsole.MarkupLine("Look at all these sessions!");
+        Console.ReadKey();
+    }
+
+    private void HandleStudy()
+    {
+        AnsiConsole.MarkupLine("Uh-oh- study time...");
+        Console.ReadKey();
     }
 }
