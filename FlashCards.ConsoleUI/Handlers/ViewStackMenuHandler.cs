@@ -5,30 +5,30 @@ using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
-public class ViewDeckMenuHandler
+public class ViewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
 
-    private Deck CurrentDeck;
+    private CardStack CurrentStack;
 
-    public ViewDeckMenuHandler(IServiceProvider provider)
+    public ViewStackMenuHandler(IServiceProvider provider)
     {
         _provider = provider;
     }
 
-    private void SetDeck(Deck deck)
+    private void SetStack(CardStack stack)
     {
-        CurrentDeck = deck;
+        CurrentStack = stack;
     }
 
-    public void Run(Deck deck)
+    public void Run(CardStack stack)
     {
-        SetDeck(deck);
+        SetStack(stack);
 
         while (true)
         {
             Console.Clear();
-            AnsiConsole.MarkupLine("[bold green]View Deck Menu[/]\r\n");
+            AnsiConsole.MarkupLine("[bold green]View Stack Menu[/]\r\n");
             PrintCards();
 
             var selection = AnsiConsole.Prompt(
@@ -57,7 +57,7 @@ public class ViewDeckMenuHandler
     private void PrintCards()
     {
         int i = 1;
-        foreach (var card in CurrentDeck.Cards)
+        foreach (var card in CurrentStack.Cards)
         {
             Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
             i++;
@@ -85,7 +85,7 @@ public class ViewDeckMenuHandler
 
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
-        var result = handler.Handle(CurrentDeck.Id, frontText, backText);
+        var result = handler.Handle(CurrentStack.Id, frontText, backText);
 
         if (!result.IsValid)
         {
@@ -95,7 +95,7 @@ public class ViewDeckMenuHandler
             }
         }
 
-        else AnsiConsole.WriteLine($"Added card to {CurrentDeck.Name}!");
+        else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
 
 
     }

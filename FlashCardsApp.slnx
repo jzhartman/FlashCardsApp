@@ -1,5 +1,5 @@
 <Solution>
-  <Folder Name="/sql/">
+  <Folder Name="/External/">
     <Project Path="FlashCards.DB/FlashCards.Db.sqlproj" Id="e1156da2-7174-4300-b660-308387d6d249">
       <Build />
       <Deploy />

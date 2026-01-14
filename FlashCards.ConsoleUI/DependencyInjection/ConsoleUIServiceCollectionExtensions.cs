@@ -9,9 +9,9 @@ public static class ConsoleUIServiceCollectionExtensions
     public static IServiceCollection AddConsoleUI(this IServiceCollection services)
     {
         services.AddScoped<MainMenuHandler>();
-        services.AddScoped<DeckMenuHandler>();
+        services.AddScoped<StackMenuHandler>();
         services.AddScoped<StudyMenuHandler>();
-        services.AddScoped<ViewDeckMenuHandler>();
+        services.AddScoped<ViewStackMenuHandler>();
 
         return services;
     }

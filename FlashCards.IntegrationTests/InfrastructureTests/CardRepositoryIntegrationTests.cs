@@ -19,18 +19,18 @@ public class CardRepositoryIntegrationTests
 
         //var insertStackSql = @"insert into Stack (Name) Values (@Name); Select cast(Scope_Identity() as int);";
         //var stackId = connection.QuerySingle<int>(insertStackSql, new { Name = "Design Patterns" });
-        var deckId = 1;
+        var stackId = 1;
 
         var dapper = new DapperWrapper();
         var repo = new CardRepository(connection, dapper);
-        var card = new Card(deckId, "S in Solid", "Single Responsibility Protocol");
+        var card = new Card(stackId, "S in Solid", "Single Responsibility Protocol");
 
         // Act
         var id = repo.Add(card);
         var retrieved = repo.GetById(id);
 
         // Assert
-        Assert.Equal(deckId, retrieved.DeckId);
+        Assert.Equal(stackId, retrieved.StackId);
         Assert.Equal("S in Solid", retrieved.FrontText);
         Assert.Equal("Single Responsibility Protocol", retrieved.BackText);
 

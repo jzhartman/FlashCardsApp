@@ -13,9 +13,9 @@ public class AddCardHandler
         _repo = repo;
     }
 
-    public ValidationResult<Card> Handle(int deckId, string frontText, string backText)
+    public ValidationResult<Card> Handle(int stackId, string frontText, string backText)
     {
-        if (_repo.ExistsByFrontText(frontText, deckId) && _repo.ExistsByBackText(backText, deckId))
+        if (_repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
             return ValidationResult<Card>.Failure("Card already exists!");
 
         var errors = new List<string>();
@@ -26,7 +26,7 @@ public class AddCardHandler
             return ValidationResult<Card>.Failure(errors);
 
 
-        var card = new Card(deckId, frontText, backText);
+        var card = new Card(stackId, frontText, backText);
         var id = _repo.Add(card);
         card.SetId(id);
 

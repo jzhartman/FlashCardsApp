@@ -13,7 +13,7 @@ public class StudyMenuHandler
                 .Title("Select from the options below:")
                 .AddChoices(new[]
                 {
-                        "Study Deck",
+                        "Study Stack",
                         "View Past Sessions",
                         "Return to Main Menu"
                 })
@@ -21,7 +21,7 @@ public class StudyMenuHandler
 
             switch (selection)
             {
-                case "Study Deck": HandleStudy(); break;
+                case "Study Stack": HandleStudy(); break;
                 case "View Past Sessions": HandleViewPastSessions(); break;
                 case "Return to Main Menu": return;
                 default: AnsiConsole.MarkupLine("[bold red]ERROR:[/] Invalid input!"); break;

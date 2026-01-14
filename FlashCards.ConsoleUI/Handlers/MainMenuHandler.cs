@@ -6,12 +6,12 @@ namespace FlashCards.ConsoleUI.Controllers;
 
 public class MainMenuHandler
 {
-    private readonly DeckMenuHandler _deckMenu;
+    private readonly StackMenuHandler _stackMenu;
     private readonly StudyMenuHandler _studyMenu;
 
-    public MainMenuHandler(DeckMenuHandler deckMenu, StudyMenuHandler studyMenu)
+    public MainMenuHandler(StackMenuHandler stackMenu, StudyMenuHandler studyMenu)
     {
-        _deckMenu = deckMenu;
+        _stackMenu = stackMenu;
         _studyMenu = studyMenu;
     }
     public void Run()
@@ -34,7 +34,7 @@ public class MainMenuHandler
                             .Title("Select from the options below:")
                             .AddChoices(new[]
                             {
-                                                "Manage Decks",
+                                                "Manage Stacks",
                                                 "Study",
                                                 "View Reports",
                                                 "Exit"
@@ -45,7 +45,7 @@ public class MainMenuHandler
     {
         switch (selection)
         {
-            case "Manage Decks": _deckMenu.Run(); break;
+            case "Manage Stacks": _stackMenu.Run(); break;
             case "Study": _studyMenu.Run(); break;
             case "View Reports": HandleReports(); break;
             case "Exit": return true;
@@ -60,19 +60,19 @@ public class MainMenuHandler
         AnsiConsole.MarkupLine("Reporting for duty, sir!");
     }
 
-    private void PrintDeckList(List<Deck> decks)
+    private void PrintStackList(List<CardStack> stacks)
     {
-        if (decks.Count == 0)
-            AnsiConsole.MarkupLine("No decks exist!");
+        if (stacks.Count == 0)
+            AnsiConsole.MarkupLine("No stacks exist!");
         else
         {
             int i = 1;
 
             Console.WriteLine($"ID  NAME\tCARD COUNT");
-            foreach (var deck in decks)
+            foreach (var stack in stacks)
             {
-                var cardCount = (deck.Cards != null) ? deck.Cards.Count : 0;
-                AnsiConsole.MarkupLine($"{i}: {deck.Name}\t{cardCount}");
+                var cardCount = (stack.Cards != null) ? stack.Cards.Count : 0;
+                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{cardCount}");
                 i++;
             }
         }

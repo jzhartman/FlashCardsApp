@@ -3,22 +3,22 @@
     public class Card
     {
         public int Id { get; set; }
-        public int DeckId { get; set; }
+        public int StackId { get; set; }
         public string FrontText { get; set; }
         public string BackText { get; set; }
-        public Deck Deck { get; set; }
+        public CardStack Stack { get; set; }
 
-        public Card(int deckId, string frontText, string backText)
+        public Card(int stackId, string frontText, string backText)
         {
-            DeckId = deckId;
+            StackId = stackId;
             FrontText = frontText;
             BackText = backText;
         }
 
-        public Card(int id, int deckId, string frontText, string backText)
+        public Card(int id, int stackId, string frontText, string backText)
         {
             Id = id;
-            DeckId = deckId;
+            StackId = stackId;
             FrontText = frontText;
             BackText = backText;
         }
