@@ -1,5 +1,5 @@
-﻿using FlashCards.Application.UseCases.Cards;
-using FlashCards.Core.Entities;
+﻿using FlashCards.Application.DTOs;
+using FlashCards.Application.UseCases.Cards;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -9,19 +9,19 @@ public class ReviewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
 
-    private Stack CurrentStack;
+    private StackNameAndCardCountResponse CurrentStack;
 
     public ReviewStackMenuHandler(IServiceProvider provider)
     {
         _provider = provider;
     }
 
-    private void SetStack(Stack stack)
+    private void SetStack(StackNameAndCardCountResponse stack)
     {
         CurrentStack = stack;
     }
 
-    public void Run(Stack stack)
+    public void Run(StackNameAndCardCountResponse stack)
     {
         SetStack(stack);
 
@@ -57,13 +57,13 @@ public class ReviewStackMenuHandler
 
     private void PrintCards()
     {
-        int i = 1;
-        foreach (var card in CurrentStack.Cards)
-        {
-            Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
-            i++;
-        }
-        Console.WriteLine();
+        //int i = 1;
+        //foreach (var card in CurrentStack.Cards)
+        //{
+        //    Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+        //    i++;
+        //}
+        //Console.WriteLine();
     }
 
     private void HandleDeleteCard()
@@ -88,17 +88,17 @@ public class ReviewStackMenuHandler
 
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
-        var result = handler.Handle(CurrentStack.Id, frontText, backText);
+        //var result = handler.Handle(CurrentStack.Id, frontText, backText);
 
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                AnsiConsole.WriteLine(error);
-            }
-        }
+        //if (!result.IsValid)
+        //{
+        //    foreach (var error in result.Errors)
+        //    {
+        //        AnsiConsole.WriteLine(error);
+        //    }
+        //}
 
-        else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
+        //else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
 
         // Will need to get all cards for the stack again...
 

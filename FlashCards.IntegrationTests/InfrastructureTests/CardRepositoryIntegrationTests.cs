@@ -1,4 +1,5 @@
-﻿using FlashCards.Core.Entities;
+﻿using Dapper;
+using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Dapper;
 using FlashCards.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
@@ -34,5 +35,33 @@ public class CardRepositoryIntegrationTests
         Assert.Equal("S in Solid", retrieved.FrontText);
         Assert.Equal("Single Responsibility Protocol", retrieved.BackText);
 
+    }
+
+    [Fact]
+    [Trait("Category", "Integration")]
+    public void GetCardCountByStackName_ShouldReturnCount()
+    {
+        // Arrange
+        using var connection = new SqlConnection(ConnectionString);
+        connection.Open();
+
+        var deleteDuplicateSql = @" DELETE FROM Card
+                                    WHERE Id NOT IN (
+                                    SELECT Min(Id)
+                                    FROM Card
+                                    GROUP BY FrontText, BackText);";
+
+        connection.Execute(deleteDuplicateSql);
+
+        var stackId = 1;
+
+        var dapper = new DapperWrapper();
+        var repo = new CardRepository(connection, dapper);
+
+        // Act
+        var count = repo.GetCardCountByStackName("Design Patterns");
+
+        // Assert
+        Assert.Equal(count, 1);
     }
 }

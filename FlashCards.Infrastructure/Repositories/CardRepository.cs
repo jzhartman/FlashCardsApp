@@ -54,6 +54,16 @@ public class CardRepository : ICardRepository
         return _dapper.Query<Card>(_connection, sql, id).ToList();
     }
 
+    public int GetCardCountByStackName(string stackName)
+    {
+        var sql = @"select count(*)
+                    from Card c
+                    inner join stack s on s.id = c.stackid
+                    where s.name = @StackName";
+
+        return _dapper.Query<int>(_connection, sql, new { StackName = stackName }).First();
+    }
+
     public bool ExistsByFrontText(string text, int stackId)
     {
         var sql = @"select 1 from card where UPPER(FrontText) = UPPER(@FrontText) AND StackId = @StackId";

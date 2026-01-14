@@ -1,6 +1,6 @@
-﻿using FlashCards.Application.UseCases.Stacks;
+﻿using FlashCards.Application.DTOs;
+using FlashCards.Application.UseCases.Stacks;
 using FlashCards.ConsoleUI.Handlers;
-using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -49,7 +49,7 @@ public class MainMenuHandler
                             }));
     }
 
-    private bool HandleUserSelection(string selection, List<Stack> stacks)
+    private bool HandleUserSelection(string selection, List<StackNameAndCardCountResponse> stacks)
     {
         switch (selection)
         {
@@ -74,7 +74,7 @@ public class MainMenuHandler
         Console.ReadKey();
     }
 
-    private void PrintStackList(List<Stack> stacks)
+    private void PrintStackList(List<StackNameAndCardCountResponse> stacks)
     {
         if (stacks.Count == 0)
             AnsiConsole.MarkupLine("No stacks exist!");
@@ -85,21 +85,20 @@ public class MainMenuHandler
             Console.WriteLine($"ID  NAME\tCARD COUNT");
             foreach (var stack in stacks)
             {
-                var cardCount = (stack.Cards != null) ? stack.Cards.Count : 0;
-                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{cardCount}");
+                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{stack.CardCount}");
                 i++;
             }
         }
         Console.WriteLine();
     }
 
-    private List<Stack> GetAllStacks()
+    private List<StackNameAndCardCountResponse> GetAllStacks()
     {
         var handler = _provider.GetRequiredService<GetAllStacksHandler>();
         return handler.Handle();
     }
 
-    private Stack GetStackSelectionFromUser(List<Stack> stacks, string action)
+    private StackNameAndCardCountResponse GetStackSelectionFromUser(List<StackNameAndCardCountResponse> stacks, string action)
     {
         AnsiConsole.Write($"Enter ID of the stack you wish to {action}: ");
         int id = Int32.Parse(Console.ReadLine());

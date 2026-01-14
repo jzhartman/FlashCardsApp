@@ -11,4 +11,5 @@ public interface ICardRepository
     void Update();
     bool ExistsByFrontText(string text, int stackId);
     bool ExistsByBackText(string text, int stackId);
+    int GetCardCountByStackName(string stackName);
 }
