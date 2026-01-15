@@ -24,7 +24,7 @@ public class MainMenuHandler
         {
             Console.Clear();
             AnsiConsole.MarkupLine("[bold green]Main Menu[/]\r\n");
-            var stacks = GetAllStacks();
+            var stacks = GetAllStackNamesAndCardCounts();
             PrintStackList(stacks);
 
 
@@ -92,7 +92,7 @@ public class MainMenuHandler
         Console.WriteLine();
     }
 
-    private List<StackNameAndCardCountResponse> GetAllStacks()
+    private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
     {
         var handler = _provider.GetRequiredService<GetAllStacksHandler>();
         return handler.Handle();
