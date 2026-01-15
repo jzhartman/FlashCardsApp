@@ -88,6 +88,13 @@ public class StackRepository : IStackRepository
         return _dapper.QuerySingle<Stack>(_connection, sql);
     }
 
+    public int GetIdByName(string name)
+    {
+        var sql = @"select Id from Stack where Name = @Name";
+
+        return _dapper.QuerySingle<int>(_connection, sql, new { Name = name });
+    }
+
     public void Update()
     {
         throw new NotImplementedException();

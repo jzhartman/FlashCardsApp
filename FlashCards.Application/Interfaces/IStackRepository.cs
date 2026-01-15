@@ -11,4 +11,5 @@ public interface IStackRepository
     void Update();
     bool ExistsByName(string name);
     List<string> GetAllNames();
+    int GetIdByName(string name);
 }

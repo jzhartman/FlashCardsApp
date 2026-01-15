@@ -23,14 +23,13 @@ public class ReviewStackMenuHandler
 
     public void Run(string stackName)
     {
-        var cards = GetAllCardsInStack(stackName);
-        SetStack(stackName, cards);
-
         while (true)
         {
             Console.Clear();
             AnsiConsole.MarkupLine("[bold green]Review Stack Menu[/]\r\n");
 
+            var cards = GetAllCardsInStack(stackName);
+            SetStack(stackName, cards);
             PrintCards();
 
             var selection = AnsiConsole.Prompt(
@@ -47,11 +46,21 @@ public class ReviewStackMenuHandler
 
             switch (selection)
             {
-                case "Add Card": HandleAddCard(); break;
-                case "Edit Card": HandleEditCard(); break;
-                case "Delete Card": HandleDeleteCard(); break;
-                case "Return to Previous Menu": return;
-                default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
+                case "Add Card":
+                    HandleAddCard();
+                    cards = GetAllCardsInStack(stackName);
+                    break;
+                case "Edit Card":
+                    HandleEditCard();
+                    break;
+                case "Delete Card":
+                    HandleDeleteCard();
+                    break;
+                case "Return to Previous Menu":
+                    return;
+                default:
+                    AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!");
+                    break;
             }
         }
     }
@@ -73,18 +82,7 @@ public class ReviewStackMenuHandler
         Console.WriteLine();
     }
 
-    private void HandleDeleteCard()
-    {
-        AnsiConsole.MarkupLine("Delete that card...");
-        Console.ReadKey();
-    }
 
-    private void HandleEditCard()
-    {
-        AnsiConsole.MarkupLine("Edit my card...");
-        Console.ReadKey();
-
-    }
 
     private void HandleAddCard()
     {
@@ -95,19 +93,42 @@ public class ReviewStackMenuHandler
 
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
-        //var result = handler.Handle(CurrentStack.Id, frontText, backText);
+        var result = handler.Handle(CurrentStack.Name, frontText, backText);
 
-        //if (!result.IsValid)
-        //{
-        //    foreach (var error in result.Errors)
-        //    {
-        //        AnsiConsole.WriteLine(error);
-        //    }
-        //}
+        if (!result.IsValid)
+        {
+            foreach (var error in result.Errors)
+            {
+                AnsiConsole.WriteLine(error);
+            }
+        }
 
-        //else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
+        else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
+        PressAnyKeyToContinue();
 
         // Will need to get all cards for the stack again...
+
+    }
+    private void PressAnyKeyToContinue()
+    {
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+
+    //
+    // NOT IMPLEMENTED YET
+    //
+
+    private void HandleDeleteCard()
+    {
+        AnsiConsole.MarkupLine("Delete that card...");
+        PressAnyKeyToContinue();
+    }
+    private void HandleEditCard()
+    {
+        AnsiConsole.MarkupLine("Edit my card...");
+        PressAnyKeyToContinue();
 
     }
 }

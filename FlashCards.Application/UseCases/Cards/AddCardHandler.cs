@@ -6,16 +6,20 @@ namespace FlashCards.Application.UseCases.Cards;
 
 public class AddCardHandler
 {
-    private readonly ICardRepository _repo;
+    private readonly ICardRepository _cardRepo;
+    private readonly IStackRepository _stackRepo;
 
-    public AddCardHandler(ICardRepository repo)
+    public AddCardHandler(ICardRepository cardRepo, IStackRepository stackRepo)
     {
-        _repo = repo;
+        _cardRepo = cardRepo;
+        _stackRepo = stackRepo;
     }
 
-    public ValidationResult<Card> Handle(int stackId, string frontText, string backText)
+    public ValidationResult<Card> Handle(string stackName, string frontText, string backText)
     {
-        if (_repo.ExistsByFrontText(frontText, stackId) && _repo.ExistsByBackText(backText, stackId))
+        var stackId = _stackRepo.GetIdByName(stackName);
+
+        if (_cardRepo.ExistsByFrontText(frontText, stackId) && _cardRepo.ExistsByBackText(backText, stackId))
             return ValidationResult<Card>.Failure("Card already exists!");
 
         var errors = new List<string>();
@@ -27,7 +31,7 @@ public class AddCardHandler
 
 
         var card = new Card(stackId, frontText, backText);
-        var id = _repo.Add(card);
+        var id = _cardRepo.Add(card);
         card.SetId(id);
 
         return ValidationResult<Card>.Success(card);
