@@ -13,6 +13,7 @@ public static class ApplicationServiceCollectionExtensions
 
         services.AddScoped<AddCardHandler>();
         services.AddScoped<GetAllCardsByStackName>();
+        services.AddScoped<DeleteCardByIdHandler>();
 
         return services;
     }

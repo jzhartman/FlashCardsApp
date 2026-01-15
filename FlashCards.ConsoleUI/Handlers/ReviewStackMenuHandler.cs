@@ -48,13 +48,12 @@ public class ReviewStackMenuHandler
             {
                 case "Add Card":
                     HandleAddCard();
-                    cards = GetAllCardsInStack(stackName);
                     break;
                 case "Edit Card":
                     HandleEditCard();
                     break;
                 case "Delete Card":
-                    HandleDeleteCard();
+                    HandleDeleteCard(cards);
                     break;
                 case "Return to Previous Menu":
                     return;
@@ -71,12 +70,16 @@ public class ReviewStackMenuHandler
         return handler.Handle(stackName);
     }
 
+    private void PrintCard(CardResponse card, int i)
+    {
+        Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+    }
     private void PrintCards()
     {
         int i = 1;
         foreach (var card in CurrentStack.Cards)
         {
-            Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+            PrintCard(card, i);
             i++;
         }
         Console.WriteLine();
@@ -105,9 +108,6 @@ public class ReviewStackMenuHandler
 
         else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
         PressAnyKeyToContinue();
-
-        // Will need to get all cards for the stack again...
-
     }
     private void PressAnyKeyToContinue()
     {
@@ -115,16 +115,46 @@ public class ReviewStackMenuHandler
         Console.ReadKey();
     }
 
+    private bool ConfirmDelete(CardResponse card)
+    {
+        Console.WriteLine("About to delete card with the following data:");
+        Console.WriteLine($"Front Text:\t{card.FrontText}");
+        Console.WriteLine($"Back Text:\t{card.BackText}");
+        Console.WriteLine();
+        Console.Write("Enter y to delete or anything else to cancel: ");
+        var input = Console.ReadLine();
+
+        return input == "y" ? true : false;
+    }
+
+    private void HandleDeleteCard(List<CardResponse> cards)
+    {
+        var card = GetCardSelectionFromUser(cards, "delete");
+
+        if (ConfirmDelete(card))
+        {
+            var handler = _provider.GetRequiredService<DeleteCardByIdHandler>();
+            handler.Handle(card.Id);
+            Console.WriteLine("Card deleted!");
+        }
+        else Console.WriteLine("Cancelled delete!");
+
+        PressAnyKeyToContinue();
+    }
+
+    private CardResponse GetCardSelectionFromUser(List<CardResponse> cards, string action)
+    {
+        AnsiConsole.Write($"Enter ID of the card you wish to {action}: ");
+        int id = Int32.Parse(Console.ReadLine());
+        return cards[id - 1];
+    }
+
+
 
     //
     // NOT IMPLEMENTED YET
     //
 
-    private void HandleDeleteCard()
-    {
-        AnsiConsole.MarkupLine("Delete that card...");
-        PressAnyKeyToContinue();
-    }
     private void HandleEditCard()
     {
         AnsiConsole.MarkupLine("Edit my card...");

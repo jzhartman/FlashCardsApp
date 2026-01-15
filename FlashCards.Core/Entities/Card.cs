@@ -8,25 +8,26 @@
         public string BackText { get; set; }
         public Stack Stack { get; set; }
 
-        public Card(string frontText, string backText)
-        {
-            FrontText = frontText;
-            BackText = backText;
-        }
+        public Card() { }
+
+        //public Card(string frontText, string backText)
+        //{
+        //    FrontText = frontText;
+        //    BackText = backText;
+        //}
         public Card(int stackId, string frontText, string backText)
         {
             StackId = stackId;
             FrontText = frontText;
             BackText = backText;
         }
-
-        public Card(int id, int stackId, string frontText, string backText)
-        {
-            Id = id;
-            StackId = stackId;
-            FrontText = frontText;
-            BackText = backText;
-        }
+        //public Card(int id, int stackId, string frontText, string backText)
+        //{
+        //    Id = id;
+        //    StackId = stackId;
+        //    FrontText = frontText;
+        //    BackText = backText;
+        //}
 
         public void SetId(int id)
         {

@@ -26,12 +26,12 @@ public class CardRepository : ICardRepository
         return _dapper.QuerySingle<int>(_connection, sql, card);
     }
 
-    public void Delete(int id)
+    public void DeleteById(int id)
     {
         var sql = @"delete from Card
                     where Id = @id";
 
-        _dapper.Execute(_connection, sql, id);
+        _dapper.Execute(_connection, sql, new { Id = id });
     }
 
     public void Update()
@@ -55,7 +55,7 @@ public class CardRepository : ICardRepository
     }
     public List<Card> GetAllByStackName(string name)
     {
-        var sql = @"select c.FrontText, c.BackText
+        var sql = @"select c.Id, c.FrontText, c.BackText
                     from Card c
                     inner join stack s on s.id = c.StackId
                     where s.Name = @name";

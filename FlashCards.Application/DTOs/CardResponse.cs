@@ -1,3 +1,3 @@
 ﻿namespace FlashCards.Application.DTOs;
 
-public record CardResponse(string FrontText, string BackText);
+public record CardResponse(int Id, string FrontText, string BackText);
