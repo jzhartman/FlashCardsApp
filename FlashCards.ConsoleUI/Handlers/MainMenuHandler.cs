@@ -39,13 +39,13 @@ public class MainMenuHandler
                             .Title("Select from the options below:")
                             .AddChoices(new[]
                             {
-                                                "Review Cards in Stack",
-                                                "Create New Stack",
-                                                "Delete Stack",
-                                                "Begin Study Session",
-                                                "View Past Study Sessions",
-                                                "View Reports",
-                                                "Exit"
+                                    "Review Cards in Stack",
+                                    "Create New Stack",
+                                    "Delete Stack",
+                                    "Begin Study Session",
+                                    "View Past Study Sessions",
+                                    "View Reports",
+                                    "Exit"
                             }));
     }
 
@@ -55,24 +55,34 @@ public class MainMenuHandler
         {
             case "Review Cards in Stack":
                 var stack = GetStackSelectionFromUser(stacks, "review");
-                _stackMenu.Run(stack); break;
-            case "Create New Stack": HandleAddStack(); break;
-            case "Delete Stack": HandleDeleteStack(); break;
-            case "Begin Study Session": HandleStudy(); break;
-            case "View Past Study Sessions": HandleViewPastSessions(); break;
-            case "View Reports": HandleReports(); break;
-            case "Exit": return true;
-            default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
+                _stackMenu.Run(stack.Name);
+                break;
+            case "Create New Stack":
+                HandleAddStack();
+                break;
+            case "Delete Stack":
+                HandleDeleteStack();
+                break;
+            case "Begin Study Session":
+                HandleStudy();
+                break;
+            case "View Past Study Sessions":
+                HandleViewPastSessions();
+                break;
+            case "View Reports":
+                HandleReports();
+                break;
+            case "Exit":
+                return true;
+            default:
+                AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!");
+                break;
         }
 
         return false;
     }
 
-    private void HandleReports()
-    {
-        AnsiConsole.MarkupLine("Reporting for duty, sir!");
-        Console.ReadKey();
-    }
+
 
     private void PrintStackList(List<StackNameAndCardCountResponse> stacks)
     {
@@ -94,7 +104,7 @@ public class MainMenuHandler
 
     private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
     {
-        var handler = _provider.GetRequiredService<GetAllStacksHandler>();
+        var handler = _provider.GetRequiredService<GetAllStackNamesAndCardCountsHandler>();
         return handler.Handle();
     }
 
@@ -120,6 +130,7 @@ public class MainMenuHandler
         }
 
         else AnsiConsole.WriteLine($"Added stack {result.Value.Name}!");
+        PressAnyKeyToContinue();
     }
 
     private string GetNameFromUser()
@@ -127,22 +138,38 @@ public class MainMenuHandler
         AnsiConsole.Markup("Enter stack name: ");
         return Console.ReadLine();
     }
+    private void PressAnyKeyToContinue()
+    {
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    //
+    // NOT YET IMPLEMENTED
+    //
 
     private void HandleDeleteStack()
     {
         AnsiConsole.MarkupLine("Handling the delete...");
-        Console.ReadKey();
-    }
-
-    private void HandleViewPastSessions()
-    {
-        AnsiConsole.MarkupLine("Look at all these sessions!");
-        Console.ReadKey();
+        PressAnyKeyToContinue();
     }
 
     private void HandleStudy()
     {
         AnsiConsole.MarkupLine("Uh-oh- study time...");
-        Console.ReadKey();
+        PressAnyKeyToContinue();
     }
+    private void HandleViewPastSessions()
+    {
+        AnsiConsole.MarkupLine("Look at all these sessions!");
+        PressAnyKeyToContinue();
+    }
+
+    private void HandleReports()
+    {
+        AnsiConsole.MarkupLine("Reporting for duty, sir!");
+        PressAnyKeyToContinue();
+    }
+
+
 }

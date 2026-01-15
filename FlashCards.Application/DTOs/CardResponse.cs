@@ -1,5 +1,3 @@
 ﻿namespace FlashCards.Application.DTOs;
 
-public class CardResponse
-{
-}
+public record CardResponse(string FrontText, string BackText);

@@ -8,6 +8,11 @@
         public string BackText { get; set; }
         public Stack Stack { get; set; }
 
+        public Card(string frontText, string backText)
+        {
+            FrontText = frontText;
+            BackText = backText;
+        }
         public Card(int stackId, string frontText, string backText)
         {
             StackId = stackId;

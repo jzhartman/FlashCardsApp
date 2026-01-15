@@ -3,12 +3,12 @@ using FlashCards.Application.Interfaces;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
-public class GetAllStacksHandler
+public class GetAllStackNamesAndCardCountsHandler
 {
     private readonly IStackRepository _stackRepo;
     private readonly ICardRepository _cardRepo;
 
-    public GetAllStacksHandler(IStackRepository stackRepo, ICardRepository cardRepo)
+    public GetAllStackNamesAndCardCountsHandler(IStackRepository stackRepo, ICardRepository cardRepo)
     {
         _stackRepo = stackRepo;
         _cardRepo = cardRepo;
@@ -18,17 +18,17 @@ public class GetAllStacksHandler
     {
         var stacks = _stackRepo.GetAllNames();
 
-        return MapStack(stacks);
+        return BuildResponse(stacks);
     }
 
-    private List<StackNameAndCardCountResponse> MapStack(List<string> names)
+    private List<StackNameAndCardCountResponse> BuildResponse(List<string> names)
     {
         var stackResponses = new List<StackNameAndCardCountResponse>();
 
         foreach (var name in names)
         {
             int cardCount = _cardRepo.GetCardCountByStackName(name);
-            var stackResponse = new StackNameAndCardCountResponse { Name = name, CardCount = cardCount };
+            var stackResponse = new StackNameAndCardCountResponse(name, cardCount);
             stackResponses.Add(stackResponse);
         }
 

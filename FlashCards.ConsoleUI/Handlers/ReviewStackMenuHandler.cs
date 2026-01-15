@@ -9,21 +9,22 @@ public class ReviewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
 
-    private StackNameAndCardCountResponse CurrentStack;
+    private StackResponse CurrentStack;
 
     public ReviewStackMenuHandler(IServiceProvider provider)
     {
         _provider = provider;
     }
 
-    private void SetStack(StackNameAndCardCountResponse stack)
+    private void SetStack(string stackName, List<CardResponse> cards)
     {
-        CurrentStack = stack;
+        CurrentStack = new StackResponse(stackName, cards);
     }
 
-    public void Run(StackNameAndCardCountResponse stack)
+    public void Run(string stackName)
     {
-        SetStack(stack);
+        var cards = GetAllCardsInStack(stackName);
+        SetStack(stackName, cards);
 
         while (true)
         {
@@ -55,15 +56,21 @@ public class ReviewStackMenuHandler
         }
     }
 
+    private List<CardResponse> GetAllCardsInStack(string stackName)
+    {
+        var handler = _provider.GetRequiredService<GetAllCardsByStackName>();
+        return handler.Handle(stackName);
+    }
+
     private void PrintCards()
     {
-        //int i = 1;
-        //foreach (var card in CurrentStack.Cards)
-        //{
-        //    Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
-        //    i++;
-        //}
-        //Console.WriteLine();
+        int i = 1;
+        foreach (var card in CurrentStack.Cards)
+        {
+            Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+            i++;
+        }
+        Console.WriteLine();
     }
 
     private void HandleDeleteCard()

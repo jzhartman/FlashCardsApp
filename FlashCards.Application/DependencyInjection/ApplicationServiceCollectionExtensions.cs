@@ -9,9 +9,10 @@ public static class ApplicationServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<AddStackHandler>();
-        services.AddScoped<GetAllStacksHandler>();
+        services.AddScoped<GetAllStackNamesAndCardCountsHandler>();
 
         services.AddScoped<AddCardHandler>();
+        services.AddScoped<GetAllCardsByStackName>();
 
         return services;
     }
