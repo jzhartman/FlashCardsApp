@@ -13,4 +13,5 @@ public interface ICardRepository
     bool ExistsByBackText(string text, int stackId);
     int GetCardCountByStackName(string stackName);
     List<Card> GetAllByStackName(string name);
+    void DeleteAllByStackName(string name);
 }

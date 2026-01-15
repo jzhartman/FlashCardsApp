@@ -12,4 +12,5 @@ public interface IStackRepository
     bool ExistsByName(string name);
     List<string> GetAllNames();
     int GetIdByName(string name);
+    void DeleteByName(string name);
 }

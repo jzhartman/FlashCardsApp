@@ -61,7 +61,7 @@ public class MainMenuHandler
                 HandleAddStack();
                 break;
             case "Delete Stack":
-                HandleDeleteStack();
+                HandleDeleteStack(stacks);
                 break;
             case "Begin Study Session":
                 HandleStudy();
@@ -144,15 +144,36 @@ public class MainMenuHandler
         Console.ReadKey();
     }
 
+    private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)
+    {
+        var stack = GetStackSelectionFromUser(stacks, "delete");
+
+        if (ConfirmDelete(stack))
+        {
+            var handler = _provider.GetRequiredService<DeleteStackByNameHandler>();
+            handler.Handle(stack);
+            Console.WriteLine("Card deleted!");
+        }
+        else Console.WriteLine("Cancelled delete!");
+
+        PressAnyKeyToContinue();
+    }
+
+    private bool ConfirmDelete(StackNameAndCardCountResponse stack)
+    {
+        Console.WriteLine($"About to delete stack {stack.Name} and all {stack.CardCount} included cards.");
+        Console.WriteLine();
+        Console.Write("Enter y to delete or anything else to cancel: ");
+        var input = Console.ReadLine();
+
+        return input == "y" ? true : false;
+    }
+
+
+
     //
     // NOT YET IMPLEMENTED
     //
-
-    private void HandleDeleteStack()
-    {
-        AnsiConsole.MarkupLine("Handling the delete...");
-        PressAnyKeyToContinue();
-    }
 
     private void HandleStudy()
     {

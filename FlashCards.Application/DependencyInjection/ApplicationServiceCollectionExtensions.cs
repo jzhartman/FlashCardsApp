@@ -10,6 +10,7 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddScoped<AddStackHandler>();
         services.AddScoped<GetAllStackNamesAndCardCountsHandler>();
+        services.AddScoped<DeleteStackByNameHandler>();
 
         services.AddScoped<AddCardHandler>();
         services.AddScoped<GetAllCardsByStackName>();

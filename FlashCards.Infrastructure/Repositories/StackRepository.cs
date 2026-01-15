@@ -27,7 +27,17 @@ public class StackRepository : IStackRepository
 
     public void DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var sql = @"delete from Stack
+                    where Id = @id";
+
+        _dapper.Execute(_connection, sql, new { Id = id });
+    }
+    public void DeleteByName(string name)
+    {
+        var sql = @"delete from Stack
+                    where Name = @name";
+
+        _dapper.Execute(_connection, sql, new { Name = name });
     }
 
     public bool ExistsByName(string name)
