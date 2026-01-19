@@ -46,20 +46,11 @@ public class ReviewStackMenuHandler
 
             switch (selection)
             {
-                case "Add Card":
-                    HandleAddCard();
-                    break;
-                case "Edit Card":
-                    HandleEditCard();
-                    break;
-                case "Delete Card":
-                    HandleDeleteCard(cards);
-                    break;
-                case "Return to Previous Menu":
-                    return;
-                default:
-                    AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!");
-                    break;
+                case "Add Card": HandleAddCard(); break;
+                case "Edit Card": HandleEditCard(); break;
+                case "Delete Card": HandleDeleteCard(cards); break;
+                case "Return to Previous Menu": return;
+                default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
         }
     }
@@ -157,8 +148,43 @@ public class ReviewStackMenuHandler
 
     private void HandleEditCard()
     {
+        var originalCard = GetCardSelectionFromUser(CurrentStack.Cards, "review");
+        var newFrontText = GetEditedFrontTextFromUser(originalCard);
+        // Get front text from user:
+
+
+
         AnsiConsole.MarkupLine("Edit my card...");
         PressAnyKeyToContinue();
+
+    }
+
+    private string GetEditedFrontTextFromUser(CardResponse card)
+    {
+        bool textValid = false;
+        var input = string.Empty;
+
+        while (textValid == false)
+        {
+            Console.WriteLine($"Original Card Front Text: {card.FrontText}");
+            Console.Write("Enter new text or leave blank to keep original: ");
+            input = Console.ReadLine();
+
+            var handler = _provider.GetRequiredService<EditCardFrontTextHandler>();
+            var result = handler.Handle(card, input, CurrentStack.Name);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    AnsiConsole.WriteLine(error);
+                }
+            }
+
+            textValid = result.IsValid;
+        }
+
+        return input;
 
     }
 }

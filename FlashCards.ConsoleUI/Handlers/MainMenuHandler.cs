@@ -53,36 +53,25 @@ public class MainMenuHandler
     {
         switch (selection)
         {
-            case "Review Cards in Stack":
-                var stack = GetStackSelectionFromUser(stacks, "review");
-                _stackMenu.Run(stack.Name);
-                break;
-            case "Create New Stack":
-                HandleAddStack();
-                break;
-            case "Delete Stack":
-                HandleDeleteStack(stacks);
-                break;
-            case "Begin Study Session":
-                HandleStudy();
-                break;
-            case "View Past Study Sessions":
-                HandleViewPastSessions();
-                break;
-            case "View Reports":
-                HandleReports();
-                break;
-            case "Exit":
-                return true;
-            default:
-                AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!");
-                break;
+            case "Review Cards in Stack": HandleReviewCardsInStack(stacks); break;
+            case "Create New Stack": HandleCreateStack(); break;
+            case "Delete Stack": HandleDeleteStack(stacks); break;
+            case "Begin Study Session": HandleStudy(); break;
+            case "View Past Study Sessions": HandleViewPastSessions(); break;
+            case "View Reports": HandleReports(); break;
+            case "Exit": return true;
+            default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
         }
 
         return false;
     }
 
 
+    private void HandleReviewCardsInStack(List<StackNameAndCardCountResponse> stacks)
+    {
+        var stack = GetStackSelectionFromUser(stacks, "review");
+        _stackMenu.Run(stack.Name);
+    }
 
     private void PrintStackList(List<StackNameAndCardCountResponse> stacks)
     {
@@ -115,7 +104,7 @@ public class MainMenuHandler
         return stacks[id - 1];
     }
 
-    private void HandleAddStack()
+    private void HandleCreateStack()
     {
         var input = GetNameFromUser();
         var handler = _provider.GetRequiredService<AddStackHandler>();
@@ -129,7 +118,7 @@ public class MainMenuHandler
             }
         }
 
-        else AnsiConsole.WriteLine($"Added stack {result.Value.Name}!");
+        else AnsiConsole.WriteLine($"Created stack {result.Value.Name}!");
         PressAnyKeyToContinue();
     }
 

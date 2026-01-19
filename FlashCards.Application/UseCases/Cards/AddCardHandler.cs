@@ -15,25 +15,27 @@ public class AddCardHandler
         _stackRepo = stackRepo;
     }
 
-    public ValidationResult<Card> Handle(string stackName, string frontText, string backText)
+    public Result<Card> Handle(string stackName, string frontText, string backText)
     {
         var stackId = _stackRepo.GetIdByName(stackName);
 
-        if (_cardRepo.ExistsByFrontText(frontText, stackId) && _cardRepo.ExistsByBackText(backText, stackId))
-            return ValidationResult<Card>.Failure("Card already exists!");
+        if (_cardRepo.ExistsByFrontText(frontText, stackId))
+            return Result<Card>.Failure("A card with that front text already exists!");
+        if (_cardRepo.ExistsByBackText(backText, stackId))
+            return Result<Card>.Failure("A card with that back text already exists!");
 
         var errors = new List<string>();
         if (String.IsNullOrWhiteSpace(frontText)) errors.Add("Card front text cannot be blank!");
         if (String.IsNullOrWhiteSpace(backText)) errors.Add("Card back text cannot be blank!");
 
         if (errors.Count > 0)
-            return ValidationResult<Card>.Failure(errors);
+            return Result<Card>.Failure(errors);
 
 
         var card = new Card(stackId, frontText, backText);
         var id = _cardRepo.Add(card);
         card.SetId(id);
 
-        return ValidationResult<Card>.Success(card);
+        return Result<Card>.Success(card);
     }
 }
