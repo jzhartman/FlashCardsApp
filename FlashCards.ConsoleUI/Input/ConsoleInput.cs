@@ -34,6 +34,23 @@ public class ConsoleInput : IConsoleInput
         return confirmation;
     }
 
+    public bool GetDeleteCardConfirmationFromUser(string frontText, string backText)
+    {
+        AddEmptyLines(1);
+
+        string promptText = $"[yellow]WARNING![/]You are about to delete the card with the following data:" +
+            $"\r\n[green]Front Text:[/] {frontText}" +
+            $"\r\n[green]Back Text:[/] {backText}";
+
+        var confirmation = AnsiConsole.Prompt(
+            new TextPrompt<bool>(promptText)
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? "y" : "n"));
+
+        return confirmation;
+    }
+
 
 
 

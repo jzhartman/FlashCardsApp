@@ -3,6 +3,7 @@ using FlashCards.Application.UseCases.Stacks;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -91,7 +92,7 @@ public class MainMenuHandler
         var handler = _provider.GetRequiredService<AddStackHandler>();
         var result = handler.Handle(input);
 
-        if (!result.IsValid) _output.PrintValidationErrorsFromCollection(result);
+        if (!result.IsValid) _output.PrintValidationErrorsFromCollection<Stack>(result);
 
         else _output.PrintSuccessMessage($"Created stack {result.Value.Name}!");
         _input.PressAnyKeyToContinue();

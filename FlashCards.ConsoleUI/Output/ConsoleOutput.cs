@@ -1,5 +1,4 @@
 ﻿using FlashCards.Application.DTOs;
-using FlashCards.Core.Entities;
 using FlashCards.Core.Validation;
 using Spectre.Console;
 
@@ -30,8 +29,22 @@ public class ConsoleOutput : IConsoleOutput
         }
         Console.WriteLine();
     }
+    public void PrintCard(CardResponse card, int i)
+    {
+        Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
+    }
+    public void PrintCards(StackResponse stack)
+    {
+        int i = 1;
+        foreach (var card in stack.Cards)
+        {
+            PrintCard(card, i);
+            i++;
+        }
+        Console.WriteLine();
+    }
 
-    public void PrintValidationErrorsFromCollection(Result<Stack> result)
+    public void PrintValidationErrorsFromCollection<T>(Result<T> result)
     {
         foreach (var error in result.Errors)
         {

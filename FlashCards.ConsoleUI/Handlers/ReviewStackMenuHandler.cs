@@ -1,5 +1,8 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Cards;
+using FlashCards.ConsoleUI.Input;
+using FlashCards.ConsoleUI.Output;
+using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -8,12 +11,16 @@ namespace FlashCards.ConsoleUI.Handlers;
 public class ReviewStackMenuHandler
 {
     private readonly IServiceProvider _provider;
+    private readonly IConsoleInput _input;
+    private readonly IConsoleOutput _output;
 
     private StackResponse CurrentStack;
 
-    public ReviewStackMenuHandler(IServiceProvider provider)
+    public ReviewStackMenuHandler(IServiceProvider provider, IConsoleInput input, IConsoleOutput output)
     {
         _provider = provider;
+        _input = input;
+        _output = output;
     }
 
     private void SetStack(string stackName, List<CardResponse> cards)
@@ -25,12 +32,11 @@ public class ReviewStackMenuHandler
     {
         while (true)
         {
-            Console.Clear();
-            AnsiConsole.MarkupLine("[bold green]Review Stack Menu[/]\r\n");
+            _output.PrintPageTitle("REVIEW STACK MENU");
 
             var cards = GetAllCardsInStack(stackName);
             SetStack(stackName, cards);
-            PrintCards();
+            _output.PrintCards(CurrentStack);
 
             var selection = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
@@ -60,86 +66,33 @@ public class ReviewStackMenuHandler
         var handler = _provider.GetRequiredService<GetAllCardsByStackName>();
         return handler.Handle(stackName);
     }
-
-    private void PrintCard(CardResponse card, int i)
-    {
-        Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
-    }
-    private void PrintCards()
-    {
-        int i = 1;
-        foreach (var card in CurrentStack.Cards)
-        {
-            PrintCard(card, i);
-            i++;
-        }
-        Console.WriteLine();
-    }
-
-
-
     private void HandleAddCard()
     {
-        AnsiConsole.Write("Enter front text: ");
-        var frontText = Console.ReadLine();
-        AnsiConsole.Write("Enter back text: ");
-        var backText = Console.ReadLine();
-
+        var frontText = _input.GetTextInputFromUser("Enter front text: ");
+        var backText = _input.GetTextInputFromUser("Enter back text: ");
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
         var result = handler.Handle(CurrentStack.Name, frontText, backText);
 
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                AnsiConsole.WriteLine(error);
-            }
-        }
-
-        else AnsiConsole.WriteLine($"Added card to {CurrentStack.Name}!");
-        PressAnyKeyToContinue();
-    }
-    private void PressAnyKeyToContinue()
-    {
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadKey();
-    }
-
-    private bool ConfirmDelete(CardResponse card)
-    {
-        Console.WriteLine("About to delete card with the following data:");
-        Console.WriteLine($"Front Text:\t{card.FrontText}");
-        Console.WriteLine($"Back Text:\t{card.BackText}");
-        Console.WriteLine();
-        Console.Write("Enter y to delete or anything else to cancel: ");
-        var input = Console.ReadLine();
-
-        return input == "y" ? true : false;
+        if (!result.IsValid) _output.PrintValidationErrorsFromCollection<Card>(result);
+        else _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
+        _input.PressAnyKeyToContinue();
     }
 
     private void HandleDeleteCard(List<CardResponse> cards)
     {
-        var card = GetCardSelectionFromUser(cards, "delete");
+        var card = cards[_input.GetRecordIdFromUser("delete", 1, cards.Count) - 1];
 
-        if (ConfirmDelete(card))
+        if (_input.GetDeleteCardConfirmationFromUser(card.FrontText, card.BackText))
         {
             var handler = _provider.GetRequiredService<DeleteCardByIdHandler>();
             handler.Handle(card.Id);
-            Console.WriteLine("Card deleted!");
+            _output.PrintSuccessMessage($"Deleted [yellow]card[/]!");
         }
-        else Console.WriteLine("Cancelled delete!");
+        else _output.PrintCancellationMessage("deletion", "card");
 
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
     }
-
-    private CardResponse GetCardSelectionFromUser(List<CardResponse> cards, string action)
-    {
-        AnsiConsole.Write($"Enter ID of the card you wish to {action}: ");
-        int id = Int32.Parse(Console.ReadLine());
-        return cards[id - 1];
-    }
-
 
 
     //
@@ -148,14 +101,15 @@ public class ReviewStackMenuHandler
 
     private void HandleEditCard()
     {
-        var originalCard = GetCardSelectionFromUser(CurrentStack.Cards, "review");
+        var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser("edit", 1, CurrentStack.Cards.Count) - 1];
+
         var newFrontText = GetEditedFrontTextFromUser(originalCard);
         // Get front text from user:
 
 
 
         AnsiConsole.MarkupLine("Edit my card...");
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
 
     }
 
