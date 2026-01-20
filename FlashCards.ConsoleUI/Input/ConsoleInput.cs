@@ -18,4 +18,43 @@ public class ConsoleInput : IConsoleInput
         return id;
     }
 
+
+    public bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount)
+    {
+        AddEmptyLines(1);
+
+        string promptText = $"[yellow]WARNING![/]You are about to delete the stack [green]{stackName}[/] and all [blue]{cardCount}[/] included in it.";
+
+        var confirmation = AnsiConsole.Prompt(
+            new TextPrompt<bool>(promptText)
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? "y" : "n"));
+
+        return confirmation;
+    }
+
+
+
+
+
+
+
+    public string GetTextInputFromUser(string message)
+    {
+        AnsiConsole.Markup($"{message}: ");
+        return Console.ReadLine();
+    }
+
+    public void PressAnyKeyToContinue()
+    {
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+    }
+
+    private void AddEmptyLines(int count)
+    {
+        for (int i = 0; i < count; i++) AnsiConsole.WriteLine();
+    }
+
 }

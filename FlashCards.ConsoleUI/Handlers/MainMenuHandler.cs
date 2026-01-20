@@ -39,6 +39,12 @@ public class MainMenuHandler
         }
     }
 
+    private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
+    {
+        var handler = _provider.GetRequiredService<GetAllStackNamesAndCardCountsHandler>();
+        return handler.Handle();
+    }
+
     private string PrintMainMenuAndGetSelection()
     {
         return AnsiConsole.Prompt(new SelectionPrompt<string>()
@@ -78,75 +84,33 @@ public class MainMenuHandler
         int id = _input.GetRecordIdFromUser("review", 1, stacks.Count);
         _stackMenu.Run(stacks[id - 1].Name);
     }
-
-    private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
-    {
-        var handler = _provider.GetRequiredService<GetAllStackNamesAndCardCountsHandler>();
-        return handler.Handle();
-    }
-
-    private StackNameAndCardCountResponse GetStackSelectionFromUser(List<StackNameAndCardCountResponse> stacks, string action)
-    {
-        int id = _input.GetRecordIdFromUser(action, 1, stacks.Count);
-
-
-        return stacks[id - 1];
-    }
-
     private void HandleCreateStack()
     {
-        var input = GetNameFromUser();
+        var input = _input.GetTextInputFromUser("Enter stack name");
+
         var handler = _provider.GetRequiredService<AddStackHandler>();
         var result = handler.Handle(input);
 
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-            {
-                AnsiConsole.WriteLine(error);
-            }
-        }
+        if (!result.IsValid) _output.PrintValidationErrorsFromCollection(result);
 
-        else AnsiConsole.WriteLine($"Created stack {result.Value.Name}!");
-        PressAnyKeyToContinue();
+        else _output.PrintSuccessMessage($"Created stack {result.Value.Name}!");
+        _input.PressAnyKeyToContinue();
     }
-
-    private string GetNameFromUser()
-    {
-        AnsiConsole.Markup("Enter stack name: ");
-        return Console.ReadLine();
-    }
-    private void PressAnyKeyToContinue()
-    {
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadKey();
-    }
-
     private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)
     {
-        var stack = GetStackSelectionFromUser(stacks, "delete");
+        int id = _input.GetRecordIdFromUser("delete", 1, stacks.Count);
+        var stack = stacks[id - 1];
 
-        if (ConfirmDelete(stack))
+        if (_input.GetDeleteStackConfirmationFromUser(stack.Name, stack.CardCount))
         {
             var handler = _provider.GetRequiredService<DeleteStackByNameHandler>();
             handler.Handle(stack);
-            Console.WriteLine("Card deleted!");
+            _output.PrintSuccessMessage($"Deleted [yellow]{stack.Name}[/] stack!");
         }
-        else Console.WriteLine("Cancelled delete!");
+        else _output.PrintCancellationMessage("deletion", $"{stack.Name} stack");
 
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
     }
-
-    private bool ConfirmDelete(StackNameAndCardCountResponse stack)
-    {
-        Console.WriteLine($"About to delete stack {stack.Name} and all {stack.CardCount} included cards.");
-        Console.WriteLine();
-        Console.Write("Enter y to delete or anything else to cancel: ");
-        var input = Console.ReadLine();
-
-        return input == "y" ? true : false;
-    }
-
 
 
     //
@@ -156,18 +120,18 @@ public class MainMenuHandler
     private void HandleStudy()
     {
         AnsiConsole.MarkupLine("Uh-oh- study time...");
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
     }
     private void HandleViewPastSessions()
     {
         AnsiConsole.MarkupLine("Look at all these sessions!");
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
     }
 
     private void HandleReports()
     {
         AnsiConsole.MarkupLine("Reporting for duty, sir!");
-        PressAnyKeyToContinue();
+        _input.PressAnyKeyToContinue();
     }
 
 

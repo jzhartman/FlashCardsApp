@@ -1,4 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
+using FlashCards.Core.Entities;
+using FlashCards.Core.Validation;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Output;
@@ -28,4 +30,15 @@ public class ConsoleOutput : IConsoleOutput
         }
         Console.WriteLine();
     }
+
+    public void PrintValidationErrorsFromCollection(Result<Stack> result)
+    {
+        foreach (var error in result.Errors)
+        {
+            AnsiConsole.WriteLine(error);
+        }
+    }
+
+    public void PrintSuccessMessage(string message) => AnsiConsole.WriteLine($"[green]SUCCESS:[/] message");
+    public void PrintCancellationMessage(string action, string item) => AnsiConsole.WriteLine($"[yellow]CANCELLED:[/] {action} of {item}!");
 }
