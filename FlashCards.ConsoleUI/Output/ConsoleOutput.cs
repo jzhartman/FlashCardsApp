@@ -8,7 +8,7 @@ public class ConsoleOutput : IConsoleOutput
 {
     public void PrintPageTitle(string title)
     {
-        Console.Clear();
+        AnsiConsole.Clear();
         AnsiConsole.MarkupLine($"[bold green]{title.ToUpper()}[/]\r\n");
     }
 
@@ -52,6 +52,6 @@ public class ConsoleOutput : IConsoleOutput
         }
     }
 
-    public void PrintSuccessMessage(string message) => AnsiConsole.WriteLine($"[green]SUCCESS:[/] message");
-    public void PrintCancellationMessage(string action, string item) => AnsiConsole.WriteLine($"[yellow]CANCELLED:[/] {action} of {item}!");
+    public void PrintSuccessMessage(string message) => AnsiConsole.MarkupLine($"[green]SUCCESS:[/] {message}");
+    public void PrintCancellationMessage(string action, string item) => AnsiConsole.MarkupLine($"[yellow]CANCELLED:[/] {action} of {item}!");
 }

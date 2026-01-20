@@ -23,7 +23,7 @@ public class ConsoleInput : IConsoleInput
     {
         AddEmptyLines(1);
 
-        string promptText = $"[yellow]WARNING![/]You are about to delete the stack [green]{stackName}[/] and all [blue]{cardCount}[/] included in it.";
+        string promptText = $"[yellow]WARNING![/]You are about to delete the stack [green]{stackName}[/] and all [blue]{cardCount}[/] cards included in it.";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>(promptText)
@@ -40,7 +40,8 @@ public class ConsoleInput : IConsoleInput
 
         string promptText = $"[yellow]WARNING![/]You are about to delete the card with the following data:" +
             $"\r\n[green]Front Text:[/] {frontText}" +
-            $"\r\n[green]Back Text:[/] {backText}";
+            $"\r\n[green]Back Text:[/] {backText}" +
+            "\r\nWould you like to proceed?";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>(promptText)
@@ -65,6 +66,7 @@ public class ConsoleInput : IConsoleInput
 
     public void PressAnyKeyToContinue()
     {
+        AddEmptyLines(1);
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }

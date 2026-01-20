@@ -106,7 +106,7 @@ public class MainMenuHandler
         {
             var handler = _provider.GetRequiredService<DeleteStackByNameHandler>();
             handler.Handle(stack);
-            _output.PrintSuccessMessage($"Deleted [yellow]{stack.Name}[/] stack!");
+            _output.PrintSuccessMessage($"Deleted [green]{stack.Name}[/] stack!");
         }
         else _output.PrintCancellationMessage("deletion", $"{stack.Name} stack");
 
