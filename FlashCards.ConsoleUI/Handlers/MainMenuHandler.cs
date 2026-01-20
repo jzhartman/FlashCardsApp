@@ -1,6 +1,8 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Stacks;
 using FlashCards.ConsoleUI.Handlers;
+using FlashCards.ConsoleUI.Input;
+using FlashCards.ConsoleUI.Output;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -9,12 +11,17 @@ namespace FlashCards.ConsoleUI.Controllers;
 public class MainMenuHandler
 {
     private readonly IServiceProvider _provider;
+    private readonly IConsoleInput _input;
+    private readonly IConsoleOutput _output;
     private readonly ReviewStackMenuHandler _stackMenu;
 
-    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu)
+    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu,
+                            IConsoleInput input, IConsoleOutput output)
     {
         _provider = provider;
         _stackMenu = stackMenu;
+        _input = input;
+        _output = output;
     }
     public void Run()
     {
@@ -22,11 +29,10 @@ public class MainMenuHandler
 
         while (exitApp == false)
         {
-            Console.Clear();
-            AnsiConsole.MarkupLine("[bold green]Main Menu[/]\r\n");
-            var stacks = GetAllStackNamesAndCardCounts();
-            PrintStackList(stacks);
+            _output.PrintPageTitle("MAIN MENU");
 
+            var stacks = GetAllStackNamesAndCardCounts();
+            _output.PrintStackList(stacks);
 
             var selection = PrintMainMenuAndGetSelection();
             exitApp = HandleUserSelection(selection, stacks);
@@ -69,26 +75,8 @@ public class MainMenuHandler
 
     private void HandleReviewCardsInStack(List<StackNameAndCardCountResponse> stacks)
     {
-        var stack = GetStackSelectionFromUser(stacks, "review");
-        _stackMenu.Run(stack.Name);
-    }
-
-    private void PrintStackList(List<StackNameAndCardCountResponse> stacks)
-    {
-        if (stacks.Count == 0)
-            AnsiConsole.MarkupLine("No stacks exist!");
-        else
-        {
-            int i = 1;
-
-            Console.WriteLine($"ID  NAME\tCARD COUNT");
-            foreach (var stack in stacks)
-            {
-                AnsiConsole.MarkupLine($"{i}: {stack.Name}\t{stack.CardCount}");
-                i++;
-            }
-        }
-        Console.WriteLine();
+        int id = _input.GetRecordIdFromUser("review", 1, stacks.Count);
+        _stackMenu.Run(stacks[id - 1].Name);
     }
 
     private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
@@ -99,8 +87,9 @@ public class MainMenuHandler
 
     private StackNameAndCardCountResponse GetStackSelectionFromUser(List<StackNameAndCardCountResponse> stacks, string action)
     {
-        AnsiConsole.Write($"Enter ID of the stack you wish to {action}: ");
-        int id = Int32.Parse(Console.ReadLine());
+        int id = _input.GetRecordIdFromUser(action, 1, stacks.Count);
+
+
         return stacks[id - 1];
     }
 
