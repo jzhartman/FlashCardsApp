@@ -44,11 +44,11 @@ public class ConsoleOutput : IConsoleOutput
         Console.WriteLine();
     }
 
-    public void PrintValidationErrorsFromCollection<T>(Result<T> result)
+    public void PrintValidationErrorsFromCollection(List<Error> errors)
     {
-        foreach (var error in result.Errors)
+        foreach (var error in errors)
         {
-            AnsiConsole.WriteLine(error);
+            AnsiConsole.MarkupLine($"[red]ERROR:[/] {error.Description}");
         }
     }
 

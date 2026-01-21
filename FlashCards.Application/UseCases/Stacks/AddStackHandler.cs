@@ -1,5 +1,4 @@
 ﻿using FlashCards.Application.Interfaces;
-using FlashCards.Core.Entities;
 using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Stacks;
@@ -13,18 +12,17 @@ public class AddStackHandler
         _repo = repo;
     }
 
-    public Result<Stack> Handle(string name)
+    public Result<string> Handle(string name)
     {
         if (_repo.ExistsByName(name))
-            return Result<Stack>.Failure("Stack name must be unique!");
+            return Result<string>.Failure(Errors.StackNameExists);
 
         if (String.IsNullOrWhiteSpace(name))
-            return Result<Stack>.Failure("Stack name cannot be empty!");
+            return Result<string>.Failure(Errors.StackNameRequired);
 
-        var id = _repo.Add(name);
-        var stack = new Stack(id, name, new List<Card>());
+        _repo.Add(name);
 
-        return Result<Stack>.Success(stack);
+        return Result<string>.Success(name);
     }
 
 }

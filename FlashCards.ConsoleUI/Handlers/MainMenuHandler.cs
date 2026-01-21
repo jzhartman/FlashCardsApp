@@ -3,7 +3,6 @@ using FlashCards.Application.UseCases.Stacks;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
-using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -87,14 +86,25 @@ public class MainMenuHandler
     }
     private void HandleCreateStack()
     {
-        var input = _input.GetTextInputFromUser("Enter stack name");
+        bool stackNameValid = false;
+        while (stackNameValid)
+        {
+            var input = _input.GetTextInputFromUser("Enter stack name");
 
-        var handler = _provider.GetRequiredService<AddStackHandler>();
-        var result = handler.Handle(input);
+            var handler = _provider.GetRequiredService<AddStackHandler>();
+            var result = handler.Handle(input);
 
-        if (!result.IsValid) _output.PrintValidationErrorsFromCollection<Stack>(result);
+            if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
 
-        else _output.PrintSuccessMessage($"Created stack {result.Value.Name}!");
+            else
+            {
+                _output.PrintSuccessMessage($"Created stack {result.Value}!");
+                stackNameValid = true;
+            }
+
+        }
+
+
         _input.PressAnyKeyToContinue();
     }
     private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)

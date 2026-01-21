@@ -11,5 +11,5 @@ public interface IConsoleOutput
     void PrintPageTitle(string title);
     void PrintStackList(List<StackNameAndCardCountResponse> stacks);
     void PrintSuccessMessage(string message);
-    void PrintValidationErrorsFromCollection<T>(Result<T> result);
+    void PrintValidationErrorsFromCollection(List<Error> errors);
 }
