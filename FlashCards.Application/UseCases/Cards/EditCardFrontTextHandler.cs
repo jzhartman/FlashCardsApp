@@ -23,7 +23,7 @@ public class EditCardFrontTextHandler
             return Result<string>.Success(card.FrontText);
 
         if (_cardRepo.ExistsByFrontText(editedFrontText, stackId))
-            return Result<string>.Failure("A card with that front text already exists!");
+            return Result<string>.Failure(Errors.CardFrontTextExists);
 
 
         return Result<string>.Success(editedFrontText);

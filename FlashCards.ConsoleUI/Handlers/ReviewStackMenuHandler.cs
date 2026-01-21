@@ -2,7 +2,6 @@
 using FlashCards.Application.UseCases.Cards;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
-using FlashCards.Core.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -68,16 +67,40 @@ public class ReviewStackMenuHandler
     }
     private void HandleAddCard()
     {
-        var frontText = _input.GetTextInputFromUser("Enter front text: ");
-        var backText = _input.GetTextInputFromUser("Enter back text: ");
+        var frontText = GetCardText("front");
+        var backText = GetCardText("back");
 
         var handler = _provider.GetRequiredService<AddCardHandler>();
         var result = handler.Handle(CurrentStack.Name, frontText, backText);
 
-        if (!result.IsValid) _output.PrintValidationErrorsFromCollection<Card>(result);
-        else _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
+        _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
+
         _input.PressAnyKeyToContinue();
     }
+
+    private string GetCardText(string cardSide)
+    {
+        bool textValid = false;
+        var output = string.Empty;
+
+        while (textValid == false)
+        {
+            var text = _input.GetTextInputFromUser($"Enter {cardSide} text");
+
+            var handler = _provider.GetRequiredService<GetCardFrontTextHandler>();
+            var result = handler.Handle(CurrentStack.Name, text, cardSide);
+
+            if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
+
+            else
+            {
+                output = result.Value;
+                textValid = true;
+            }
+        }
+        return output;
+    }
+
 
     private void HandleDeleteCard(List<CardResponse> cards)
     {
@@ -87,7 +110,7 @@ public class ReviewStackMenuHandler
         {
             var handler = _provider.GetRequiredService<DeleteCardByIdHandler>();
             handler.Handle(card.Id);
-            _output.PrintSuccessMessage($"Deleted [yellow]card[/]!");
+            _output.PrintSuccessMessage($"Deleted [yellow]{card.FrontText}[/] card!");
         }
         else _output.PrintCancellationMessage("deletion", "card");
 
@@ -127,15 +150,15 @@ public class ReviewStackMenuHandler
             var handler = _provider.GetRequiredService<EditCardFrontTextHandler>();
             var result = handler.Handle(card, input, CurrentStack.Name);
 
-            if (!result.IsValid)
+            if (!result.IsSuccess)
             {
                 foreach (var error in result.Errors)
                 {
-                    AnsiConsole.WriteLine(error);
+                    AnsiConsole.WriteLine(error.Description);
                 }
             }
 
-            textValid = result.IsValid;
+            textValid = result.IsSuccess;
         }
 
         return input;

@@ -87,7 +87,8 @@ public class MainMenuHandler
     private void HandleCreateStack()
     {
         bool stackNameValid = false;
-        while (stackNameValid)
+
+        while (stackNameValid == false)
         {
             var input = _input.GetTextInputFromUser("Enter stack name");
 
@@ -101,10 +102,7 @@ public class MainMenuHandler
                 _output.PrintSuccessMessage($"Created stack {result.Value}!");
                 stackNameValid = true;
             }
-
         }
-
-
         _input.PressAnyKeyToContinue();
     }
     private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)
