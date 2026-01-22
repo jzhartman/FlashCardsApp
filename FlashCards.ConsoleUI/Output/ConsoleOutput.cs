@@ -54,4 +54,6 @@ public class ConsoleOutput : IConsoleOutput
 
     public void PrintSuccessMessage(string message) => AnsiConsole.MarkupLine($"[green]SUCCESS:[/] {message}");
     public void PrintCancellationMessage(string action, string item) => AnsiConsole.MarkupLine($"[yellow]CANCELLED:[/] {action} of {item}!");
+    public void PrintNoEditsMadeMessage() => AnsiConsole.MarkupLine($"[yellow]No changes made to card![/]");
+
 }
