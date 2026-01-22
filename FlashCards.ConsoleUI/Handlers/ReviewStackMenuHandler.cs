@@ -102,6 +102,8 @@ public class ReviewStackMenuHandler
     }
 
 
+
+
     private void HandleDeleteCard(List<CardResponse> cards)
     {
         var card = cards[_input.GetRecordIdFromUser("delete", 1, cards.Count) - 1];
@@ -126,29 +128,42 @@ public class ReviewStackMenuHandler
     {
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser("edit", 1, CurrentStack.Cards.Count) - 1];
 
-        var newFrontText = GetEditedFrontTextFromUser(originalCard);
-        // Get front text from user:
+        var newFrontText = GetEditedTextFromUser(originalCard, "Front");
+        var newBackText = GetEditedTextFromUser(originalCard, "Back");
 
+        if ((originalCard.FrontText == newFrontText) && (originalCard.BackText == newBackText))
+        {
+            _output.PrintNoEditsMadeMessage();
+            _input.PressAnyKeyToContinue(1);
+            return;
+        }
 
+        bool confirmEdit = _input.GetEditCardConfirmationFromUser(originalCard.FrontText, originalCard.BackText, newFrontText, newBackText);
 
-        AnsiConsole.MarkupLine("Edit my card...");
+        if (confirmEdit)
+        {
+            var handler = _provider.GetRequiredService<EditCardHandler>();
+            handler.Handle(CurrentStack.Name, originalCard, newFrontText, newBackText);
+            _output.PrintSuccessMessage("Edited card data!");
+        }
+        else _output.PrintCancellationMessage("editing", "card text");
+
         _input.PressAnyKeyToContinue();
 
     }
-
-    private string GetEditedFrontTextFromUser(CardResponse card)
+    private string GetEditedTextFromUser(CardResponse card, string cardSide)
     {
         bool textValid = false;
         var input = string.Empty;
 
+        var promptText = (cardSide.ToUpper() == "FRONT") ? $"{card.FrontText}" : $"{card.BackText}";
+
         while (textValid == false)
         {
-            Console.WriteLine($"Original Card Front Text: {card.FrontText}");
-            Console.Write("Enter new text or leave blank to keep original: ");
-            input = Console.ReadLine();
+            input = _input.GetTextInputFromUser($"Original Card {cardSide} Text: [green]{promptText}[/]\r\nEnter new text or leave blank to keep original", 1);
 
             var handler = _provider.GetRequiredService<EditCardFrontTextHandler>();
-            var result = handler.Handle(card, input, CurrentStack.Name);
+            var result = handler.Handle(card, input, CurrentStack.Name, cardSide);
 
             if (!result.IsSuccess)
             {
@@ -157,11 +172,9 @@ public class ReviewStackMenuHandler
                     AnsiConsole.WriteLine(error.Description);
                 }
             }
-
             textValid = result.IsSuccess;
+            input = result.Value;
         }
-
         return input;
-
     }
 }

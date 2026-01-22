@@ -52,21 +52,46 @@ public class ConsoleInput : IConsoleInput
         return confirmation;
     }
 
-
-
-
-
-
-
-    public string GetTextInputFromUser(string message)
+    public bool GetEditCardConfirmationFromUser(string originalFrontText, string originalBackText, string newFrontText, string newBackText)
     {
+        AddEmptyLines(1);
+
+        string promptText = $"[yellow]WARNING![/]The following change(s) are being made to a card:";
+
+        if (originalFrontText != newFrontText)
+            promptText += $"\r\n\t[blue]Front Text[/] changed from: [green]{originalFrontText}[/] to [yellow]{newFrontText}[/]";
+        if (originalBackText != newBackText)
+            promptText += $"\r\n\t[blue]Back Text[/] changed from: [green]{originalBackText}[/] to [yellow]{newBackText}[/]";
+
+        promptText += "\r\nConfirm changes: ";
+
+
+        var confirmation = AnsiConsole.Prompt(
+            new TextPrompt<bool>(promptText)
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? "y" : "n"));
+
+        return confirmation;
+    }
+
+
+
+
+
+
+
+    public string GetTextInputFromUser(string message, int topSpaces = 0, int bottomSpaces = 0)
+    {
+        AddEmptyLines(topSpaces);
         AnsiConsole.Markup($"{message}: ");
+        AddEmptyLines(bottomSpaces);
         return Console.ReadLine();
     }
 
-    public void PressAnyKeyToContinue()
+    public void PressAnyKeyToContinue(int topSpaces = 1)
     {
-        AddEmptyLines(1);
+        AddEmptyLines(topSpaces);
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }
