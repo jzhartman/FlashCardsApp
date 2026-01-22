@@ -26,10 +26,10 @@ public class EditCardFrontTextHandler
         if (cardSide.ToUpper() == "BACK" && string.IsNullOrWhiteSpace(editedText))
             return Result<string>.Success(card.BackText);
 
-        if (cardSide.ToUpper() == "FRONT" && _cardRepo.ExistsByFrontText(editedText, stackId))
+        if (cardSide.ToUpper() == "FRONT" && _cardRepo.ExistsByFrontTextExcludingId(editedText, stackId, cardId))
             return Result<string>.Failure(Errors.CardFrontTextExists);
 
-        if (cardSide.ToUpper() == "BACK" && _cardRepo.ExistsByBackText(editedText, stackId))
+        if (cardSide.ToUpper() == "BACK" && _cardRepo.ExistsByBackTextExcludingId(editedText, stackId, cardId))
             return Result<string>.Failure(Errors.CardBackTextExists);
 
         return Result<string>.Success(editedText);

@@ -15,4 +15,6 @@ public interface ICardRepository
     void DeleteAllByStackName(string name);
     int GetIdByTextAndStackId(int stackId, string frontText, string backText);
     void UpdateCardText(int id, string frontText, string backText);
+    bool ExistsByFrontTextExcludingId(string text, int stackId, int cardId);
+    bool ExistsByBackTextExcludingId(string text, int stackId, int cardId);
 }
