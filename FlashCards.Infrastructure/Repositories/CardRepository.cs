@@ -43,9 +43,13 @@ public class CardRepository : ICardRepository
         _dapper.Execute(_connection, sql, new { Name = name });
     }
 
-    public void Update()
+    public void UpdateCardText(int id, string frontText, string backText)
     {
-        throw new NotImplementedException();
+        var sql = @"UPDATE card
+                    SET FrontText = @frontText, BackText = @backText
+                    WHERE Id = @id;";
+
+        _dapper.Execute(_connection, sql, new { Id = id, FrontText = frontText, BackText = backText });
     }
 
     public Card GetById(int id)
@@ -98,5 +102,11 @@ public class CardRepository : ICardRepository
         int exists = _dapper.Query<int>(_connection, sql, new { BackText = text, StackId = stackId }).FirstOrDefault();
 
         return exists == 1 ? true : false;
+    }
+    public int GetIdByTextAndStackId(int stackId, string frontText, string backText)
+    {
+        var sql = @"select Id from card where UPPER(FrontText) = UPPER(@FrontText) AND UPPER(BackText) = UPPER(@BackText) AND StackId = @StackId";
+
+        return _dapper.QuerySingle<int>(_connection, sql, new { StackId = stackId, FrontText = frontText, BackText = backText });
     }
 }
