@@ -13,9 +13,15 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<DeleteStackByNameHandler>();
 
         services.AddScoped<AddCardHandler>();
+
         services.AddScoped<GetAllCardsByStackName>();
+
         services.AddScoped<DeleteCardByIdHandler>();
+
         services.AddScoped<GetCardFrontTextHandler>();
+
+        services.AddScoped<EditCardFrontTextHandler>();
+        services.AddScoped<EditCardHandler>();
 
         return services;
     }
