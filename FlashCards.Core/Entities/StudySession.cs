@@ -6,12 +6,14 @@ public class StudySession
     public DateTime Time { get; set; }
     public int StackId { get; set; }
     public int Score { get; set; }
-    public int TotalCards { get; set; }
+    public int CountStudied { get; set; }
+    public int CountCorrect { get; set; }
+    public int CountIncorrect { get; set; }
 
     public double GetPercentageScore()
     {
-        if (TotalCards == 0) return 0;
-        return (double)Score / TotalCards * 100;
+        if (CountStudied == 0) return 0;
+        return (double)Score / CountStudied * 100;
     }
 
 }

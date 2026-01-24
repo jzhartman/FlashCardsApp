@@ -68,7 +68,7 @@ public class CardRepository : ICardRepository
     }
     public List<Card> GetAllByStackName(string name)
     {
-        var sql = @"select c.Id, c.FrontText, c.BackText
+        var sql = @"select c.Id, c.FrontText, c.BackText, c.TimesStudied, c.TimesCorrect, c.TimesIncorrect
                     from Card c
                     inner join stack s on s.id = c.StackId
                     where s.Name = @name";

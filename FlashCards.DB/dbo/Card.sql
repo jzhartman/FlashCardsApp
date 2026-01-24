@@ -4,5 +4,8 @@
 	[StackId] INT NOT NULL,
 	[FrontText] NVARCHAR(50) NOT NULL,
 	[BackText] NVARCHAR(450) NOT NULL,
+	[TimesStudied] INT NOT NULL DEFAULT 0,
+	[TimesCorrect]	INT NOT NULL DEFAULT 0,
+	[TimesIncorrect] INT NOT NULL DEFAULT 0,
     CONSTRAINT [FK_Card_ToTStack] FOREIGN KEY ([StackId]) REFERENCES [Stack]([Id])
 )
