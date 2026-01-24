@@ -13,15 +13,17 @@ public class MainMenuHandler
     private readonly IServiceProvider _provider;
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
+    private readonly StudySessionViewHandler _studySessionHandler;
     private readonly ReviewStackMenuHandler _stackMenu;
 
-    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu,
+    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu, StudySessionViewHandler studySessionHandler,
                             IConsoleInput input, IConsoleOutput output)
     {
         _provider = provider;
         _stackMenu = stackMenu;
         _input = input;
         _output = output;
+        _studySessionHandler = studySessionHandler;
     }
     public void Run()
     {
@@ -68,7 +70,7 @@ public class MainMenuHandler
             case "Review Cards in Stack": HandleReviewCardsInStack(stacks); break;
             case "Create New Stack": HandleCreateStack(); break;
             case "Delete Stack": HandleDeleteStack(stacks); break;
-            case "Begin Study Session": HandleStudy(); break;
+            case "Begin Study Session": HandleStudy(stacks); break;
             case "View Past Study Sessions": HandleViewPastSessions(); break;
             case "View Reports": HandleReports(); break;
             case "Exit": return true;
@@ -77,7 +79,6 @@ public class MainMenuHandler
 
         return false;
     }
-
 
     private void HandleReviewCardsInStack(List<StackNameAndCardCountResponse> stacks)
     {
@@ -120,17 +121,17 @@ public class MainMenuHandler
 
         _input.PressAnyKeyToContinue();
     }
-
+    private void HandleStudy(List<StackNameAndCardCountResponse> stacks)
+    {
+        int id = _input.GetRecordIdFromUser("study", 1, stacks.Count);
+        _studySessionHandler.Run(stacks[id - 1].Name);
+    }
 
     //
     // NOT YET IMPLEMENTED
     //
 
-    private void HandleStudy()
-    {
-        AnsiConsole.MarkupLine("Uh-oh- study time...");
-        _input.PressAnyKeyToContinue();
-    }
+
     private void HandleViewPastSessions()
     {
         AnsiConsole.MarkupLine("Look at all these sessions!");

@@ -77,7 +77,23 @@ public class ConsoleInput : IConsoleInput
 
 
 
+    public bool GetPassStateFromUser()
+    {
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Did you pass or fail?")
+            .AddChoices("PASS", "FAIL"));
 
+        return (choice == "PASS" ? true : false);
+    }
+
+    public bool ContinueStudyMode()
+    {
+        Console.Write("Press \'ESC\' to exit study mode, or any other key to continue...");
+
+        return Console.ReadKey().Key != ConsoleKey.Escape;
+
+    }
 
 
 
@@ -89,10 +105,10 @@ public class ConsoleInput : IConsoleInput
         return Console.ReadLine();
     }
 
-    public void PressAnyKeyToContinue(int topSpaces = 1)
+    public void PressAnyKeyToContinue(int topSpaces = 1, string message = "Press any key to continue...")
     {
         AddEmptyLines(topSpaces);
-        Console.WriteLine("Press any key to continue...");
+        Console.Write(message);
         Console.ReadKey();
     }
 

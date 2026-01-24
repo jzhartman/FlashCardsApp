@@ -29,6 +29,11 @@ public class ConsoleOutput : IConsoleOutput
         }
         Console.WriteLine();
     }
+    public void PrintCardTextInPanel(string text)
+    {
+        var panel = new Panel(new Align(new Markup(text), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
+        AnsiConsole.Write(panel);
+    }
     public void PrintCard(CardResponse card, int i)
     {
         Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
@@ -56,4 +61,27 @@ public class ConsoleOutput : IConsoleOutput
     public void PrintCancellationMessage(string action, string item) => AnsiConsole.MarkupLine($"[yellow]CANCELLED:[/] {action} of {item}!");
     public void PrintNoEditsMadeMessage() => AnsiConsole.MarkupLine($"[yellow]No changes made to card![/]");
 
+    public void PrintSessionResults(string stackName, int count, int cardsCorrect, int cardsIncorrect)
+    {
+        var cardsStudied = cardsCorrect + cardsIncorrect;
+        var cardsNotStudied = count - cardsStudied;
+
+        var table = new Table();
+
+        table.AddColumn("Stack Name");
+        table.AddColumn("Date");
+        table.AddColumn("# Cards Studied");
+        table.AddColumn("# Correct");
+        table.AddColumn("# Incorrect");
+        table.AddColumn("# Not Studied");
+
+
+        table.AddRow(stackName, DateTime.Now.ToString("yyyy-MM-dd HH:mm"), cardsStudied.ToString(), cardsCorrect.ToString(),
+                    cardsIncorrect.ToString(), cardsNotStudied.ToString());
+
+
+        AnsiConsole.WriteLine("SESSION RESULTS:");
+        AnsiConsole.WriteLine();
+        AnsiConsole.Write(table);
+    }
 }
