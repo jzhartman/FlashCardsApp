@@ -24,6 +24,6 @@ public class AddCardHandler
         var id = _cardRepo.Add(card);
         card.SetId(id);
 
-        return Result<CardResponse>.Success(new(id, frontText, backText));
+        return Result<CardResponse>.Success(new(id, frontText, backText, 0, 0, 0));
     }
 }

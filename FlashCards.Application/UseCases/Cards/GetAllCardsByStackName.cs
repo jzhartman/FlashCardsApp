@@ -26,7 +26,7 @@ public class GetAllCardsByStackName
 
         foreach (var card in cards)
         {
-            var cardResponse = new CardResponse(card.Id, card.FrontText, card.BackText);
+            var cardResponse = new CardResponse(card.Id, card.FrontText, card.BackText, card.TimesStudied, card.TimesCorrect, card.TimesIncorrect);
             outputs.Add(cardResponse);
         }
 
