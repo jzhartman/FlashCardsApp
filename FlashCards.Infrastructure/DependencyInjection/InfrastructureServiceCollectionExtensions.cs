@@ -24,6 +24,7 @@ public static class InfrastructureServiceCollectionExtensions
         // Register all repositories
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IStackRepository, StackRepository>();
+        services.AddScoped<IStudySessionRepository, StudySessionRepository>();
 
         return services;
     }
