@@ -1,0 +1,25 @@
+﻿using FlashCards.Application.Interfaces;
+
+namespace FlashCards.Application.UseCases.Cards;
+
+public class UpdateCardCounterHandler
+{
+    private readonly ICardRepository _repo;
+
+    public UpdateCardCounterHandler(ICardRepository repo)
+    {
+        _repo = repo;
+    }
+
+    public void Handle(List<int> cardsCorrect, List<int> cardsIncorrect)
+    {
+        foreach (var card in cardsCorrect)
+        {
+            _repo.UpdateCardCounters(card, 1, 1, 0);
+        }
+        foreach (var card in cardsIncorrect)
+        {
+            _repo.UpdateCardCounters(card, 1, 0, 1);
+        }
+    }
+}

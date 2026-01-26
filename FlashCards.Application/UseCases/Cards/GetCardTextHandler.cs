@@ -3,12 +3,12 @@ using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class GetCardFrontTextHandler
+public class GetCardTextHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;
 
-    public GetCardFrontTextHandler(ICardRepository cardRepo, IStackRepository stackRepo)
+    public GetCardTextHandler(ICardRepository cardRepo, IStackRepository stackRepo)
     {
         _cardRepo = cardRepo;
         _stackRepo = stackRepo;
@@ -18,7 +18,7 @@ public class GetCardFrontTextHandler
     {
         var stackId = _stackRepo.GetIdByName(stackName);
 
-        if (cardSide.ToLower() == "front")
+        if (cardSide.ToUpper() == "FRONT")
         {
             if (_cardRepo.ExistsByFrontText(text, stackId))
                 return Result<string>.Failure(Errors.CardFrontTextExists);
@@ -26,7 +26,7 @@ public class GetCardFrontTextHandler
             if (string.IsNullOrWhiteSpace(text))
                 return Result<string>.Failure(Errors.CardFrontTextRequired);
         }
-        if (cardSide.ToLower() == "back")
+        if (cardSide.ToUpper() == "FRONT")
         {
             if (_cardRepo.ExistsByBackText(text, stackId))
                 return Result<string>.Failure(Errors.CardBackTextExists);

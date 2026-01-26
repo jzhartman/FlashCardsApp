@@ -87,7 +87,7 @@ public class ReviewStackMenuHandler
         {
             var text = _input.GetTextInputFromUser($"Enter {cardSide} text");
 
-            var handler = _provider.GetRequiredService<GetCardFrontTextHandler>();
+            var handler = _provider.GetRequiredService<GetCardTextHandler>();
             var result = handler.Handle(CurrentStack.Name, text, cardSide);
 
             if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
@@ -119,10 +119,6 @@ public class ReviewStackMenuHandler
         _input.PressAnyKeyToContinue();
     }
 
-
-    //
-    // NOT IMPLEMENTED YET
-    //
 
     private void HandleEditCard()
     {

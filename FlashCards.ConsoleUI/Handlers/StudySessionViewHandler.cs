@@ -1,5 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Cards;
+using FlashCards.Application.UseCases.StudySessions;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,11 +31,18 @@ public class StudySessionViewHandler
         var cards = GetAllCardsInStack(stackName);
         cards = ShuffleStack(cards);
 
-        StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
+        var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
+        AddSession(session);
+        UpdateCardCounters(cardsCorrect, cardsIncorrect);
+        _output.PrintSessionResults(session);
+
+        _input.PressAnyKeyToContinue();
     }
 
-    private void StudyCards(string stackName, List<CardResponse> cards, List<int> cardsCorrect, List<int> cardsIncorrect)
+    private StudySessionResponse StudyCards(string stackName, List<CardResponse> cards, List<int> cardsCorrect, List<int> cardsIncorrect)
     {
+        int cardsStudied = 0;
+
         foreach (var card in cards)
         {
             _output.PrintPageTitle("STUDY MODE");
@@ -55,16 +63,24 @@ public class StudySessionViewHandler
                 cardsIncorrect.Add(card.Id);
             }
 
+            cardsStudied++;
             if (_input.ContinueStudyMode() == false) break;
         }
 
-        _output.PrintPageTitle("STUDY MODE");
-        _output.PrintSessionResults(stackName, cards.Count, cardsCorrect.Count, cardsIncorrect.Count);
-        _input.PressAnyKeyToContinue();
+        double score = (double)cardsCorrect.Count / cardsStudied * 100;
+        return new StudySessionResponse(DateTime.Now, stackName, score, cardsStudied, cardsCorrect.Count, cardsIncorrect.Count);
     }
 
-
-
+    private void UpdateCardCounters(List<int> cardsCorrect, List<int> cardsIncorrect)
+    {
+        var handler = _provider.GetRequiredService<UpdateCardCounterHandler>();
+        handler.Handle(cardsCorrect, cardsIncorrect);
+    }
+    private void AddSession(StudySessionResponse session)
+    {
+        var handler = _provider.GetRequiredService<AddStudySessionHandler>();
+        handler.Handle(session);
+    }
     private List<CardResponse> GetAllCardsInStack(string stackName)
     {
         var handler = _provider.GetRequiredService<GetAllCardsByStackName>();

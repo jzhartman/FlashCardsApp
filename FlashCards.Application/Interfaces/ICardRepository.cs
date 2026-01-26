@@ -17,4 +17,5 @@ public interface ICardRepository
     void UpdateCardText(int id, string frontText, string backText);
     bool ExistsByFrontTextExcludingId(string text, int stackId, int cardId);
     bool ExistsByBackTextExcludingId(string text, int stackId, int cardId);
+    void UpdateCardCounters(int id, int studied, int correct, int incorrect);
 }

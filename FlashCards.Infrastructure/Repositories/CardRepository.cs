@@ -51,6 +51,14 @@ public class CardRepository : ICardRepository
 
         _dapper.Execute(_connection, sql, new { Id = id, FrontText = frontText, BackText = backText });
     }
+    public void UpdateCardCounters(int id, int studied, int correct, int incorrect)
+    {
+        var sql = @"update card
+                    set TimesStudied = TimesStudied +  @studied, TimesCorrect = TimesCorrect + @correct, TimesIncorrect = TimesIncorrect + @incorrect
+                    where Id = @Id";
+
+        _dapper.Execute(_connection, sql, new { Id = id, studied = studied, correct = correct, incorrect = incorrect });
+    }
 
     public Card GetById(int id)
     {

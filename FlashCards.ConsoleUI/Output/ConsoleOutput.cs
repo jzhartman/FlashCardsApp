@@ -61,23 +61,21 @@ public class ConsoleOutput : IConsoleOutput
     public void PrintCancellationMessage(string action, string item) => AnsiConsole.MarkupLine($"[yellow]CANCELLED:[/] {action} of {item}!");
     public void PrintNoEditsMadeMessage() => AnsiConsole.MarkupLine($"[yellow]No changes made to card![/]");
 
-    public void PrintSessionResults(string stackName, int count, int cardsCorrect, int cardsIncorrect)
+    public void PrintSessionResults(StudySessionResponse session)
     {
-        var cardsStudied = cardsCorrect + cardsIncorrect;
-        var cardsNotStudied = count - cardsStudied;
-
         var table = new Table();
 
         table.AddColumn("Stack Name");
-        table.AddColumn("Date");
+        table.AddColumn("Score");
+        table.AddColumn("Time");
         table.AddColumn("# Cards Studied");
         table.AddColumn("# Correct");
         table.AddColumn("# Incorrect");
         table.AddColumn("# Not Studied");
 
 
-        table.AddRow(stackName, DateTime.Now.ToString("yyyy-MM-dd HH:mm"), cardsStudied.ToString(), cardsCorrect.ToString(),
-                    cardsIncorrect.ToString(), cardsNotStudied.ToString());
+        table.AddRow(session.StackName, session.Score.ToString("F1"), session.Time.ToString("yyyy-MM-dd HH:mm"), session.CountStudied.ToString(),
+                    session.CountCorrect.ToString(), session.CountIncorrect.ToString());
 
 
         AnsiConsole.WriteLine("SESSION RESULTS:");
