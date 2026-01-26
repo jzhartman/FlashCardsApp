@@ -6,6 +6,12 @@ namespace FlashCards.ConsoleUI.Output;
 
 public class ConsoleOutput : IConsoleOutput
 {
+    public void PrintAppTitle()
+    {
+        var figlet = new FigletText("FLASH CARDS v1")
+            .Color(Color.Blue);
+        AnsiConsole.Write(figlet);
+    }
     public void PrintPageTitle(string title)
     {
         AnsiConsole.Clear();

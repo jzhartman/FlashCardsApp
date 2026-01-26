@@ -106,7 +106,8 @@ public class ReviewStackMenuHandler
 
     private void HandleDeleteCard(List<CardResponse> cards)
     {
-        var card = cards[_input.GetRecordIdFromUser("delete", 1, cards.Count) - 1];
+        var message = "Please enter the [yellow]ID[/] of the card you wish to delete:";
+        var card = cards[_input.GetRecordIdFromUser(message, 1, cards.Count) - 1];
 
         if (_input.GetDeleteCardConfirmationFromUser(card.FrontText, card.BackText))
         {
@@ -122,7 +123,8 @@ public class ReviewStackMenuHandler
 
     private void HandleEditCard()
     {
-        var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser("edit", 1, CurrentStack.Cards.Count) - 1];
+        var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
+        var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];
 
         var newFrontText = GetEditedTextFromUser(originalCard, "Front");
         var newBackText = GetEditedTextFromUser(originalCard, "Back");

@@ -5,6 +5,7 @@ namespace FlashCards.ConsoleUI.Output;
 
 public interface IConsoleOutput
 {
+    void PrintAppTitle();
     void PrintCancellationMessage(string action, string item);
     void PrintCard(CardResponse card, int i);
     void PrintCards(StackResponse stack);

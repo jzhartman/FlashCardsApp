@@ -5,4 +5,6 @@ namespace FlashCards.Application.Interfaces;
 public interface IStudySessionRepository
 {
     void Add(StudySession session);
+    List<StudySession> GetAll();
+    StudySession GetById(int id);
 }

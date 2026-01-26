@@ -27,6 +27,9 @@ public class MainMenuHandler
     }
     public void Run()
     {
+        _output.PrintAppTitle();
+        _input.PressAnyKeyToContinue();
+
         bool exitApp = false;
 
         while (exitApp == false)
@@ -71,7 +74,7 @@ public class MainMenuHandler
             case "Create New Stack": HandleCreateStack(); break;
             case "Delete Stack": HandleDeleteStack(stacks); break;
             case "Begin Study Session": HandleStudy(stacks); break;
-            case "View Past Study Sessions": HandleViewPastSessions(); break;
+            case "View Past Study Sessions": HandleViewPastSessions(stacks.Count); break;
             case "View Reports": HandleReports(); break;
             case "Exit": return true;
             default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
@@ -82,7 +85,8 @@ public class MainMenuHandler
 
     private void HandleReviewCardsInStack(List<StackNameAndCardCountResponse> stacks)
     {
-        int id = _input.GetRecordIdFromUser("review", 1, stacks.Count);
+        var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
+        int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         _stackMenu.Run(stacks[id - 1].Name);
     }
     private void HandleCreateStack()
@@ -108,7 +112,8 @@ public class MainMenuHandler
     }
     private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)
     {
-        int id = _input.GetRecordIdFromUser("delete", 1, stacks.Count);
+        var message = "Please enter the [yellow]ID[/] of the stack you wish to delete:";
+        int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         var stack = stacks[id - 1];
 
         if (_input.GetDeleteStackConfirmationFromUser(stack.Name, stack.CardCount))
@@ -123,20 +128,25 @@ public class MainMenuHandler
     }
     private void HandleStudy(List<StackNameAndCardCountResponse> stacks)
     {
-        int id = _input.GetRecordIdFromUser("study", 1, stacks.Count);
+        var message = "Please enter the [yellow]ID[/] of the stack you wish to study:";
+        int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         _studySessionHandler.Run(stacks[id - 1].Name);
     }
+    private void HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
+    {
+        var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
+        int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);
+        _studySessionHandler.Run(stacks[id - 1].Name);
 
+        AnsiConsole.MarkupLine("Look at all these sessions!");
+        _input.PressAnyKeyToContinue();
+    }
     //
     // NOT YET IMPLEMENTED
     //
 
 
-    private void HandleViewPastSessions()
-    {
-        AnsiConsole.MarkupLine("Look at all these sessions!");
-        _input.PressAnyKeyToContinue();
-    }
+
 
     private void HandleReports()
     {
