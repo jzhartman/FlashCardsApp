@@ -23,4 +23,17 @@ public class StudySessionRepository : IStudySessionRepository
 
         _dapper.Execute(_connection, sql, session);
     }
+    public StudySession GetById(int id)
+    {
+        var sql = @"select * from StudySession
+                    where Id = @Id";
+
+        return _dapper.Query<StudySession>(_connection, sql, new { Id = id }).FirstOrDefault();
+    }
+    public List<StudySession> GetAll()
+    {
+        var sql = @"select * from Card";
+
+        return _dapper.Query<StudySession>(_connection, sql).ToList();
+    }
 }
