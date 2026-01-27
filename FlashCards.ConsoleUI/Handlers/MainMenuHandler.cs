@@ -1,5 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Stacks;
+using FlashCards.Application.UseCases.StudySessions;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
@@ -74,7 +75,7 @@ public class MainMenuHandler
             case "Create New Stack": HandleCreateStack(); break;
             case "Delete Stack": HandleDeleteStack(stacks); break;
             case "Begin Study Session": HandleStudy(stacks); break;
-            case "View Past Study Sessions": HandleViewPastSessions(stacks.Count); break;
+            case "View Past Study Sessions": HandleViewPastSessions(stacks); break;
             case "View Reports": HandleReports(); break;
             case "Exit": return true;
             default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
@@ -132,14 +133,21 @@ public class MainMenuHandler
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         _studySessionHandler.Run(stacks[id - 1].Name);
     }
-    private void HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
+    private List<StudySessionResponse> HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
     {
         var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
         int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);
-        _studySessionHandler.Run(stacks[id - 1].Name);
 
-        AnsiConsole.MarkupLine("Look at all these sessions!");
-        _input.PressAnyKeyToContinue();
+        if (id == 0)
+        {
+            var handler = _provider.GetRequiredService<GetAllStudySessionsHandler>();
+            return handler.Handle(stacks);
+        }
+        else
+        {
+            var handler = _provider.GetRequiredService<GetStudySessionByIdHandler>();
+            return handler.Handle(stacks[id - 1]);
+        }
     }
     //
     // NOT YET IMPLEMENTED

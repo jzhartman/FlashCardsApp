@@ -22,6 +22,8 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<UpdateCardCounterHandler>();
 
         services.AddScoped<AddStudySessionHandler>();
+        services.AddScoped<GetAllStudySessionsHandler>();
+        services.AddScoped<GetStudySessionByIdHandler>();
 
         return services;
     }
