@@ -14,13 +14,13 @@ public class GetStudySessionByIdHandler
         _stackRepo = stackRepo;
         _studyRepo = studyRepo;
     }
-    public List<StudySessionResponse> Handle(StackNameAndCardCountResponse stack)
+    public StudySessionResponse Handle(StackNameAndCardCountResponse stack)
     {
         var stackId = _stackRepo.GetIdByName(stack.Name);
-        var session = _studyRepo.GetById(stackId);
+        var session = _studyRepo.GetByStackId(stackId);
 
 
-        return new List<StudySessionResponse> { StudySessionMapper(session, stack.Name) };
+        return StudySessionMapper(session, stack.Name);
     }
 
     private StudySessionResponse StudySessionMapper(StudySession session, string stackName)

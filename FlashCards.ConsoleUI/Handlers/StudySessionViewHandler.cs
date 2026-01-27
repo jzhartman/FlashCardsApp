@@ -3,6 +3,7 @@ using FlashCards.Application.UseCases.Cards;
 using FlashCards.Application.UseCases.StudySessions;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.Core.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.ConsoleUI.Handlers;
@@ -29,6 +30,14 @@ public class StudySessionViewHandler
         var cardsCorrect = new List<int>();
         var cardsIncorrect = new List<int>();
         var cards = GetAllCardsInStack(stackName);
+
+        if (cards.Count < 1)
+        {
+            _output.PrintValidationErrorsFromCollection(new List<Error> { Errors.StackEmpty });
+            _input.PressAnyKeyToContinue();
+            return;
+        }
+
         cards = ShuffleStack(cards);
 
         var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);

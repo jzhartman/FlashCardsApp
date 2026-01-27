@@ -23,12 +23,12 @@ public class StudySessionRepository : IStudySessionRepository
 
         _dapper.Execute(_connection, sql, session);
     }
-    public StudySession GetById(int id)
+    public StudySession GetByStackId(int stackId)
     {
         var sql = @"select * from StudySession
-                    where Id = @Id";
+                    where StackId = @StackId";
 
-        return _dapper.Query<StudySession>(_connection, sql, new { Id = id }).FirstOrDefault();
+        return _dapper.Query<StudySession>(_connection, sql, new { StackId = stackId }).FirstOrDefault();
     }
     public List<StudySession> GetAll()
     {

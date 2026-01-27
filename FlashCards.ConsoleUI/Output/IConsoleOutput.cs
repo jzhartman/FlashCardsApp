@@ -12,6 +12,7 @@ public interface IConsoleOutput
     void PrintCardTextInPanel(string text);
     void PrintNoEditsMadeMessage();
     void PrintPageTitle(string title);
+    void PrintResultsForAllSessions(List<StudySessionResponse> sessions);
     void PrintSessionResults(StudySessionResponse session);
     void PrintStackList(List<StackNameAndCardCountResponse> stacks);
     void PrintSuccessMessage(string message);

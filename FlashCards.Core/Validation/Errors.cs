@@ -16,6 +16,5 @@ public static class Errors
 
     public static readonly Error CardBackTextRequired = new("CardBackRequired", "Card back text cannot be blank.");
 
-
-
+    public static readonly Error StackEmpty = new("StackEmpty", "Cannot study a stack with zero cards!");
 }

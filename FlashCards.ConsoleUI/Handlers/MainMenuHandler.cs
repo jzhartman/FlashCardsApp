@@ -133,7 +133,7 @@ public class MainMenuHandler
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         _studySessionHandler.Run(stacks[id - 1].Name);
     }
-    private List<StudySessionResponse> HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
+    private void HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
     {
         var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
         int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);
@@ -141,13 +141,16 @@ public class MainMenuHandler
         if (id == 0)
         {
             var handler = _provider.GetRequiredService<GetAllStudySessionsHandler>();
-            return handler.Handle();
+            var sessions = handler.Handle();
+            _output.PrintResultsForAllSessions(sessions);
         }
         else
         {
             var handler = _provider.GetRequiredService<GetStudySessionByIdHandler>();
-            return handler.Handle(stacks[id - 1]);
+            var session = handler.Handle(stacks[id - 1]);
+            _output.PrintSessionResults(session);
         }
+        _input.PressAnyKeyToContinue();
     }
 
 

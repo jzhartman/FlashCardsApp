@@ -89,7 +89,7 @@ public class StackRepository : IStackRepository
     {
         var sql = @"select name from Stack where Id = @Id";
 
-        return _dapper.QuerySingle<Stack>(_connection, sql);
+        return _dapper.QuerySingle<Stack>(_connection, sql, new { Id = id });
     }
     public Stack GetByName(string name)
     {

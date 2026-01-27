@@ -6,6 +6,11 @@ public class Stack
     public string Name { get; set; }
     public List<Card> Cards { get; set; }
 
+    public Stack()
+    {
+
+    }
+
     public Stack(int id, string name)
     {
         Id = id;
@@ -16,15 +21,5 @@ public class Stack
         Id = id;
         Name = name;
         Cards = cards;
-    }
-
-    public void AddCard(Card card)
-    {
-        Cards.Add(card);
-    }
-
-    public void SetId(int id)
-    {
-        Id = id;
     }
 }
