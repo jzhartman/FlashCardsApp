@@ -32,7 +32,7 @@ public class StudySessionRepository : IStudySessionRepository
     }
     public List<StudySession> GetAll()
     {
-        var sql = @"select * from Card";
+        var sql = @"select * from StudySession";
 
         return _dapper.Query<StudySession>(_connection, sql).ToList();
     }

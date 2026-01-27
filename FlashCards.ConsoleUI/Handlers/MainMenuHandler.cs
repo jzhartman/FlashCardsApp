@@ -141,7 +141,7 @@ public class MainMenuHandler
         if (id == 0)
         {
             var handler = _provider.GetRequiredService<GetAllStudySessionsHandler>();
-            return handler.Handle(stacks);
+            return handler.Handle();
         }
         else
         {
@@ -149,6 +149,8 @@ public class MainMenuHandler
             return handler.Handle(stacks[id - 1]);
         }
     }
+
+
     //
     // NOT YET IMPLEMENTED
     //
