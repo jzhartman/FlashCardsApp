@@ -4,7 +4,7 @@ using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases.StudySessions;
 
-public class AddStudySessionHandler
+public class AddStudySessionHandler : IAddStudySessionHandler
 {
     private readonly IStudySessionRepository _studyRepo;
     private readonly IStackRepository _stackRepo;

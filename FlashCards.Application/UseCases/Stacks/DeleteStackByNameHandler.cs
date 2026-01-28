@@ -3,7 +3,7 @@ using FlashCards.Application.Interfaces;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
-public class DeleteStackByNameHandler
+public class DeleteStackByNameHandler : IDeleteStackByNameHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;

@@ -1,31 +1,44 @@
 ﻿using FlashCards.Application.DTOs;
+using FlashCards.Application.Enums;
 using FlashCards.Application.UseCases.Cards;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
-using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
-public class ReviewStackMenuHandler
+public class ReviewStackMenuService
 {
-    private readonly IServiceProvider _provider;
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
 
     private readonly ReviewStackMenuView _menu;
 
+    private readonly IGetAllCardsByStackName _getAllCardsByName;
+    private readonly IAddCardHandler _addCard;
+    private readonly IGetCardTextHandler _getCardText;
+    private readonly IEditCardFrontTextHandler _editCardFrontText;
+    private readonly IEditCardHandler _editCard;
+    private readonly IDeleteCardByIdHandler _deleteCardById;
+
     private StackResponse CurrentStack;
 
-    public ReviewStackMenuHandler(IServiceProvider provider, IConsoleInput input, IConsoleOutput output
-                                    ReviewStackMenuView menu)
+    public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu,
+                                    IGetAllCardsByStackName getAllCardsByName, IGetCardTextHandler getCardText, IAddCardHandler addCard,
+                                    IEditCardFrontTextHandler editCardFrontText, IEditCardHandler editCard, IDeleteCardByIdHandler deleteCardById)
     {
-        _provider = provider;
         _input = input;
         _output = output;
         _menu = menu;
+
+        _getAllCardsByName = getAllCardsByName;
+        _getCardText = getCardText;
+        _addCard = addCard;
+        _editCardFrontText = editCardFrontText;
+        _editCard = editCard;
+        _deleteCardById = deleteCardById;
     }
 
     private void SetStack(string stackName, List<CardResponse> cards)
@@ -39,7 +52,7 @@ public class ReviewStackMenuHandler
         {
             _output.PrintPageTitle("REVIEW STACK MENU");
 
-            var cards = GetAllCardsInStack(stackName);
+            var cards = _getAllCardsByName.Handle(stackName);
             SetStack(stackName, cards);
             _output.PrintCards(CurrentStack);
 
@@ -56,25 +69,19 @@ public class ReviewStackMenuHandler
         }
     }
 
-    private List<CardResponse> GetAllCardsInStack(string stackName)
-    {
-        var handler = _provider.GetRequiredService<GetAllCardsByStackName>();
-        return handler.Handle(stackName);
-    }
     private void HandleAddCard()
     {
-        var frontText = GetCardText("front");
-        var backText = GetCardText("back");
+        var frontText = GetCardText(CardSide.Front);
+        var backText = GetCardText(CardSide.Back);
 
-        var handler = _provider.GetRequiredService<AddCardHandler>();
-        var result = handler.Handle(CurrentStack.Name, frontText, backText);
+        var result = _addCard.Handle(CurrentStack.Name, frontText, backText);
 
         _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
 
         _input.PressAnyKeyToContinue();
     }
 
-    private string GetCardText(string cardSide)
+    private string GetCardText(CardSide cardSide)
     {
         bool textValid = false;
         var output = string.Empty;
@@ -83,8 +90,7 @@ public class ReviewStackMenuHandler
         {
             var text = _input.GetTextInputFromUser($"Enter {cardSide} text");
 
-            var handler = _provider.GetRequiredService<GetCardTextHandler>();
-            var result = handler.Handle(CurrentStack.Name, text, cardSide);
+            var result = _getCardText.Handle(CurrentStack.Name, text, cardSide);
 
             if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
 
@@ -107,8 +113,7 @@ public class ReviewStackMenuHandler
 
         if (_input.GetDeleteCardConfirmationFromUser(card.FrontText, card.BackText))
         {
-            var handler = _provider.GetRequiredService<DeleteCardByIdHandler>();
-            handler.Handle(card.Id);
+            _deleteCardById.Handle(card.Id);
             _output.PrintSuccessMessage($"Deleted [yellow]{card.FrontText}[/] card!");
         }
         else _output.PrintCancellationMessage("deletion", "card");
@@ -122,8 +127,8 @@ public class ReviewStackMenuHandler
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];
 
-        var newFrontText = GetEditedTextFromUser(originalCard, "Front");
-        var newBackText = GetEditedTextFromUser(originalCard, "Back");
+        var newFrontText = GetEditedTextFromUser(originalCard, CardSide.Front);
+        var newBackText = GetEditedTextFromUser(originalCard, CardSide.Back);
 
         if ((originalCard.FrontText == newFrontText) && (originalCard.BackText == newBackText))
         {
@@ -136,8 +141,7 @@ public class ReviewStackMenuHandler
 
         if (confirmEdit)
         {
-            var handler = _provider.GetRequiredService<EditCardHandler>();
-            handler.Handle(CurrentStack.Name, originalCard, newFrontText, newBackText);
+            _editCard.Handle(CurrentStack.Name, originalCard, newFrontText, newBackText);
             _output.PrintSuccessMessage("Edited card data!");
         }
         else _output.PrintCancellationMessage("editing", "card text");
@@ -145,19 +149,18 @@ public class ReviewStackMenuHandler
         _input.PressAnyKeyToContinue();
 
     }
-    private string GetEditedTextFromUser(CardResponse card, string cardSide)
+    private string GetEditedTextFromUser(CardResponse card, CardSide cardSide)
     {
         bool textValid = false;
         var input = string.Empty;
 
-        var promptText = (cardSide.ToUpper() == "FRONT") ? $"{card.FrontText}" : $"{card.BackText}";
+        var promptText = (cardSide == CardSide.Front) ? $"{card.FrontText}" : $"{card.BackText}";
 
         while (textValid == false)
         {
             input = _input.GetTextInputFromUser($"Original Card {cardSide} Text: [green]{promptText}[/]\r\nEnter new text or leave blank to keep original", 1);
 
-            var handler = _provider.GetRequiredService<EditCardFrontTextHandler>();
-            var result = handler.Handle(card, input, CurrentStack.Name, cardSide);
+            var result = _editCardFrontText.Handle(card, input, CurrentStack.Name, cardSide);
 
             if (!result.IsSuccess)
             {

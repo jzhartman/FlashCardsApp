@@ -3,7 +3,7 @@ using FlashCards.Application.Interfaces;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class EditCardHandler
+public class EditCardHandler : IEditCardHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;

@@ -3,7 +3,7 @@ using FlashCards.Application.Interfaces;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
-public class GetAllStackNamesAndCardCountsHandler
+public class GetAllStackNamesAndCardCountsHandler : IGetAllStackNamesAndCardCountsHandler
 {
     private readonly IStackRepository _stackRepo;
     private readonly ICardRepository _cardRepo;

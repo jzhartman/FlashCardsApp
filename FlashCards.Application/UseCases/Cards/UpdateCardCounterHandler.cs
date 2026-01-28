@@ -2,7 +2,7 @@
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class UpdateCardCounterHandler
+public class UpdateCardCounterHandler : IUpdateCardCounterHandler
 {
     private readonly ICardRepository _repo;
 

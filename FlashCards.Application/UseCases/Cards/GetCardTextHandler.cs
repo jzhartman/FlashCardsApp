@@ -1,9 +1,10 @@
-﻿using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Enums;
+using FlashCards.Application.Interfaces;
 using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class GetCardTextHandler
+public class GetCardTextHandler : IGetCardTextHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;
@@ -14,11 +15,11 @@ public class GetCardTextHandler
         _stackRepo = stackRepo;
     }
 
-    public Result<string> Handle(string stackName, string text, string cardSide)
+    public Result<string> Handle(string stackName, string text, CardSide cardSide)
     {
         var stackId = _stackRepo.GetIdByName(stackName);
 
-        if (cardSide.ToUpper() == "FRONT")
+        if (cardSide == CardSide.Front)
         {
             if (_cardRepo.ExistsByFrontText(text, stackId))
                 return Result<string>.Failure(Errors.CardFrontTextExists);
@@ -26,7 +27,7 @@ public class GetCardTextHandler
             if (string.IsNullOrWhiteSpace(text))
                 return Result<string>.Failure(Errors.CardFrontTextRequired);
         }
-        if (cardSide.ToUpper() == "FRONT")
+        if (cardSide == CardSide.Back)
         {
             if (_cardRepo.ExistsByBackText(text, stackId))
                 return Result<string>.Failure(Errors.CardBackTextExists);

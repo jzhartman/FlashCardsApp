@@ -2,11 +2,11 @@
 
 public enum MainMenuItem
 {
-    Review,
-    Create,
-    Delete,
-    Study,
-    Past,
+    ReviewStack,
+    CreateStack,
+    DeleteStack,
+    StudyStack,
+    ViewPastSessions,
     Report,
     Exit
 }

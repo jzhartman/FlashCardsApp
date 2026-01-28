@@ -9,21 +9,21 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<AddStackHandler>();
-        services.AddScoped<GetAllStackNamesAndCardCountsHandler>();
-        services.AddScoped<DeleteStackByNameHandler>();
+        services.AddScoped<IAddStackHandler, AddStackHandler>();
+        services.AddScoped<IGetAllStackNamesAndCardCountsHandler, GetAllStackNamesAndCardCountsHandler>();
+        services.AddScoped<IDeleteStackByNameHandler, DeleteStackByNameHandler>();
 
-        services.AddScoped<AddCardHandler>();
-        services.AddScoped<GetAllCardsByStackName>();
-        services.AddScoped<DeleteCardByIdHandler>();
-        services.AddScoped<GetCardTextHandler>();
-        services.AddScoped<EditCardFrontTextHandler>();
-        services.AddScoped<EditCardHandler>();
-        services.AddScoped<UpdateCardCounterHandler>();
+        services.AddScoped<IAddCardHandler, AddCardHandler>();
+        services.AddScoped<IGetAllCardsByStackName, GetAllCardsByStackName>();
+        services.AddScoped<IDeleteCardByIdHandler, DeleteCardByIdHandler>();
+        services.AddScoped<IGetCardTextHandler, GetCardTextHandler>();
+        services.AddScoped<IEditCardFrontTextHandler, EditCardFrontTextHandler>();
+        services.AddScoped<IEditCardHandler, EditCardHandler>();
+        services.AddScoped<IUpdateCardCounterHandler, UpdateCardCounterHandler>();
 
-        services.AddScoped<AddStudySessionHandler>();
-        services.AddScoped<GetAllStudySessionsHandler>();
-        services.AddScoped<GetStudySessionByIdHandler>();
+        services.AddScoped<IAddStudySessionHandler, AddStudySessionHandler>();
+        services.AddScoped<IGetAllStudySessionsHandler, GetAllStudySessionsHandler>();
+        services.AddScoped<IGetStudySessionByIdHandler, GetStudySessionByIdHandler>();
 
         return services;
     }

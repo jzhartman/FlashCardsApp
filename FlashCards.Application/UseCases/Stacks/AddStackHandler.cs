@@ -3,7 +3,7 @@ using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
-public class AddStackHandler
+public class AddStackHandler : IAddStackHandler
 {
     private readonly IStackRepository _repo;
 

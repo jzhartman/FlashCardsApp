@@ -5,7 +5,7 @@ using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class AddCardHandler
+public class AddCardHandler : IAddCardHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;

@@ -2,7 +2,7 @@
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class DeleteCardByIdHandler
+public class DeleteCardByIdHandler : IDeleteCardByIdHandler
 {
     private readonly ICardRepository _repo;
 

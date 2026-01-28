@@ -3,7 +3,7 @@ using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
-public class GetStackById
+public class GetStackById : IGetStackById
 {
     private readonly IStackRepository _repo;
 

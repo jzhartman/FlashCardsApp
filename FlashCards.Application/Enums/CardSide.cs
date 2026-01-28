@@ -1,4 +1,4 @@
-﻿namespace FlashCards.ConsoleUI.Enums;
+﻿namespace FlashCards.Application.Enums;
 
 public enum CardSide
 {

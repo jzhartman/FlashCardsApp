@@ -12,12 +12,13 @@ public static class ConsoleUIServiceCollectionExtensions
     public static IServiceCollection AddConsoleUI(this IServiceCollection services)
     {
         services.AddScoped<MainMenuService>();
-        services.AddScoped<ReviewStackMenuHandler>();
+        services.AddScoped<ReviewStackMenuService>();
         services.AddScoped<StudySessionViewHandler>();
         services.AddScoped<IConsoleInput, ConsoleInput>();
         services.AddScoped<IConsoleOutput, ConsoleOutput>();
 
         services.AddScoped<MainMenuView>();
+        services.AddScoped<ReviewStackMenuView>();
 
         return services;
     }

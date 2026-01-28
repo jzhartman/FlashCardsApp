@@ -4,7 +4,7 @@ using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public class GetAllCardsByStackName
+public class GetAllCardsByStackName : IGetAllCardsByStackName
 {
     private readonly ICardRepository _repo;
 

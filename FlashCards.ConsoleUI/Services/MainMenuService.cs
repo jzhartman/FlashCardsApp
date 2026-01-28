@@ -6,32 +6,43 @@ using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
-using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Controllers;
 
 public class MainMenuService
 {
-    private readonly IServiceProvider _provider;
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
     private readonly StudySessionViewHandler _studySessionHandler;
-    private readonly ReviewStackMenuHandler _stackMenu;
+    private readonly ReviewStackMenuService _stackMenu;
 
-    private readonly MainMenuView _mainMenu;
+    private readonly IGetAllStackNamesAndCardCountsHandler _getAllStackNamesAndCardCounts;
+    private readonly IAddStackHandler _addStack;
+    private readonly IDeleteStackByNameHandler _deleteStack;
+    private readonly IGetAllStudySessionsHandler _getAllStudySessions;
+    private readonly IGetStudySessionByIdHandler _getStudySessionById;
 
-    public MainMenuService(IServiceProvider provider, ReviewStackMenuHandler stackMenu, StudySessionViewHandler studySessionHandler,
-                            IConsoleInput input, IConsoleOutput output,
-                            MainMenuView mainMenu)
+    private readonly MainMenuView _menu;
+
+    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionViewHandler studySessionHandler,
+                            IConsoleInput input, IConsoleOutput output, MainMenuView menu,
+                            IGetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, IAddStackHandler addStack,
+                            IDeleteStackByNameHandler deleteStack, IGetAllStudySessionsHandler getAllStudySessions,
+                            IGetStudySessionByIdHandler getStudySessionById)
     {
-        _provider = provider;
         _stackMenu = stackMenu;
         _input = input;
         _output = output;
         _studySessionHandler = studySessionHandler;
 
-        _mainMenu = mainMenu;
+        _menu = menu;
+
+        _getAllStackNamesAndCardCounts = getAllStackNamesAndCardCounts;
+        _addStack = addStack;
+        _deleteStack = deleteStack;
+        _getAllStudySessions = getAllStudySessions;
+        _getStudySessionById = getStudySessionById;
     }
     public void Run()
     {
@@ -41,58 +52,33 @@ public class MainMenuService
         {
             _output.PrintPageTitle("MAIN MENU");
 
-            var stacks = GetAllStackNamesAndCardCounts();
+            var stacks = _getAllStackNamesAndCardCounts.Handle();
             _output.PrintStackList(stacks);
 
-            var selection = _mainMenu.Render();
-            exitApp = HandleUserSelection(selection, stacks);
+            var selection = _menu.Render();
+            exitApp = ProcessMainMenuSelection(selection, stacks);
         }
     }
 
-    private List<StackNameAndCardCountResponse> GetAllStackNamesAndCardCounts()
-    {
-        var handler = _provider.GetRequiredService<GetAllStackNamesAndCardCountsHandler>();
-        return handler.Handle();
-    }
-
-    private string PrintMainMenuAndGetSelection()
-    {
-        return AnsiConsole.Prompt(new SelectionPrompt<string>()
-                            .Title("Select from the options below:")
-                            .AddChoices(new[]
-                            {
-                                    "Review Cards in Stack",
-                                    "Create New Stack",
-                                    "Delete Stack",
-                                    "Begin Study Session",
-                                    "View Past Study Sessions",
-                                    "View Reports",
-                                    "Exit"
-                            }));
-    }
-
-    private bool HandleUserSelection(MainMenuItem selection, List<StackNameAndCardCountResponse> stacks)
+    private bool ProcessMainMenuSelection(MainMenuItem selection, List<StackNameAndCardCountResponse> stacks)
     {
         switch (selection)
         {
-            case MainMenuItem.Review: HandleReviewCardsInStack(stacks); break;
-            case MainMenuItem.Create: HandleCreateStack(); break;
-            case MainMenuItem.Delete: HandleDeleteStack(stacks); break;
-            case MainMenuItem.Study: HandleStudy(stacks); break;
-            case MainMenuItem.Past: HandleViewPastSessions(stacks); break;
+            case MainMenuItem.ReviewStack:
+                var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
+                int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
+                _stackMenu.Run(stacks[id - 1].Name);
+                break;
+
+            case MainMenuItem.CreateStack: HandleCreateStack(); break;
+            case MainMenuItem.DeleteStack: HandleDeleteStack(stacks); break;
+            case MainMenuItem.StudyStack: HandleStudy(stacks); break;
+            case MainMenuItem.ViewPastSessions: HandleViewPastSessions(stacks); break;
             case MainMenuItem.Report: HandleReports(); break;
             case MainMenuItem.Exit: return true;
             default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
         }
-
         return false;
-    }
-
-    private void HandleReviewCardsInStack(List<StackNameAndCardCountResponse> stacks)
-    {
-        var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
-        int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
-        _stackMenu.Run(stacks[id - 1].Name);
     }
     private void HandleCreateStack()
     {
@@ -102,8 +88,7 @@ public class MainMenuService
         {
             var input = _input.GetTextInputFromUser("Enter stack name");
 
-            var handler = _provider.GetRequiredService<AddStackHandler>();
-            var result = handler.Handle(input);
+            var result = _addStack.Handle(input);
 
             if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
 
@@ -123,8 +108,7 @@ public class MainMenuService
 
         if (_input.GetDeleteStackConfirmationFromUser(stack.Name, stack.CardCount))
         {
-            var handler = _provider.GetRequiredService<DeleteStackByNameHandler>();
-            handler.Handle(stack);
+            _deleteStack.Handle(stack);
             _output.PrintSuccessMessage($"Deleted [green]{stack.Name}[/] stack!");
         }
         else _output.PrintCancellationMessage("deletion", $"{stack.Name} stack");
@@ -144,14 +128,12 @@ public class MainMenuService
 
         if (id == 0)
         {
-            var handler = _provider.GetRequiredService<GetAllStudySessionsHandler>();
-            var sessions = handler.Handle();
+            var sessions = _getAllStudySessions.Handle();
             _output.PrintResultsForAllSessions(sessions);
         }
         else
         {
-            var handler = _provider.GetRequiredService<GetStudySessionByIdHandler>();
-            var session = handler.Handle(stacks[id - 1]);
+            var session = _getStudySessionById.Handle(stacks[id - 1]);
             _output.PrintSessionResults(session);
         }
         _input.PressAnyKeyToContinue();
