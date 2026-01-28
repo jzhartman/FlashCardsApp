@@ -56,29 +56,26 @@ public class MainMenuService
             _output.PrintStackList(stacks);
 
             var selection = _menu.Render();
-            exitApp = ProcessMainMenuSelection(selection, stacks);
+
+            switch (selection)
+            {
+                case MainMenuItem.ReviewStack: HandleReviewStack(stacks); break;
+                case MainMenuItem.CreateStack: HandleCreateStack(); break;
+                case MainMenuItem.DeleteStack: HandleDeleteStack(stacks); break;
+                case MainMenuItem.StudyStack: HandleStudy(stacks); break;
+                case MainMenuItem.ViewPastSessions: HandleViewPastSessions(stacks); break;
+                case MainMenuItem.Report: HandleReports(); break;
+                case MainMenuItem.Exit: exitApp = true; break;
+                default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
+            }
         }
     }
 
-    private bool ProcessMainMenuSelection(MainMenuItem selection, List<StackNameAndCardCountResponse> stacks)
+    private void HandleReviewStack(List<StackNameAndCardCountResponse> stacks)
     {
-        switch (selection)
-        {
-            case MainMenuItem.ReviewStack:
-                var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
-                int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
-                _stackMenu.Run(stacks[id - 1].Name);
-                break;
-
-            case MainMenuItem.CreateStack: HandleCreateStack(); break;
-            case MainMenuItem.DeleteStack: HandleDeleteStack(stacks); break;
-            case MainMenuItem.StudyStack: HandleStudy(stacks); break;
-            case MainMenuItem.ViewPastSessions: HandleViewPastSessions(stacks); break;
-            case MainMenuItem.Report: HandleReports(); break;
-            case MainMenuItem.Exit: return true;
-            default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
-        }
-        return false;
+        var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
+        int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
+        _stackMenu.Run(stacks[id - 1].Name);
     }
     private void HandleCreateStack()
     {
