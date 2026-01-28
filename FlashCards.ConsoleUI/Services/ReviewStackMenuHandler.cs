@@ -1,7 +1,9 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Cards;
+using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.ConsoleUI.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
@@ -13,13 +15,17 @@ public class ReviewStackMenuHandler
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
 
+    private readonly ReviewStackMenuView _menu;
+
     private StackResponse CurrentStack;
 
-    public ReviewStackMenuHandler(IServiceProvider provider, IConsoleInput input, IConsoleOutput output)
+    public ReviewStackMenuHandler(IServiceProvider provider, IConsoleInput input, IConsoleOutput output
+                                    ReviewStackMenuView menu)
     {
         _provider = provider;
         _input = input;
         _output = output;
+        _menu = menu;
     }
 
     private void SetStack(string stackName, List<CardResponse> cards)
@@ -37,24 +43,14 @@ public class ReviewStackMenuHandler
             SetStack(stackName, cards);
             _output.PrintCards(CurrentStack);
 
-            var selection = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                .Title("Select from the options below:")
-                .AddChoices(new[]
-                {
-                        "Add Card",
-                        "Edit Card",
-                        "Delete Card",
-                        "Return to Previous Menu"
-                })
-            );
+            var selection = _menu.Render();
 
             switch (selection)
             {
-                case "Add Card": HandleAddCard(); break;
-                case "Edit Card": HandleEditCard(); break;
-                case "Delete Card": HandleDeleteCard(cards); break;
-                case "Return to Previous Menu": return;
+                case ReviewStackMenuItem.AddCard: HandleAddCard(); break;
+                case ReviewStackMenuItem.EditCard: HandleEditCard(); break;
+                case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(cards); break;
+                case ReviewStackMenuItem.Return: return;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
         }

@@ -1,0 +1,23 @@
+﻿using FlashCards.ConsoleUI.Enums;
+using Spectre.Console;
+
+namespace FlashCards.ConsoleUI.Views;
+
+public class ReviewStackMenuView
+{
+    public ReviewStackMenuItem Render()
+    {
+        return AnsiConsole.Prompt(
+                    new SelectionPrompt<ReviewStackMenuItem>()
+                    .Title("Select from the options below:")
+                    .UseConverter(menu => menu switch
+                    {
+                        ReviewStackMenuItem.AddCard => "Add Card to Stack",
+                        ReviewStackMenuItem.EditCard => "Edit Card Text",
+                        ReviewStackMenuItem.DeleteCard => "Delete Card from Stack",
+                        ReviewStackMenuItem.Return => "Return to Main Menu",
+                        _ => menu.ToString()
+                    })
+                    .AddChoices(Enum.GetValues<ReviewStackMenuItem>()));
+    }
+}

@@ -12,11 +12,11 @@ public class MainMenuView
                     .Title("Select from the options below:")
                     .UseConverter(menu => menu switch
                     {
-                        MainMenuItem.Review => "Review Cards in Stack",
-                        MainMenuItem.Create => "Create New Stack",
-                        MainMenuItem.Delete => "Delete Stack",
-                        MainMenuItem.Study => "Begin Study Session",
-                        MainMenuItem.Past => "View Past Study Sessions",
+                        MainMenuItem.ReviewStack => "Review Cards in Stack",
+                        MainMenuItem.CreateStack => "Create New Stack",
+                        MainMenuItem.DeleteStack => "Delete Stack",
+                        MainMenuItem.StudyStack => "Begin Study Session",
+                        MainMenuItem.ViewPastSessions => "View Past Study Sessions",
                         MainMenuItem.Report => "View Reports",
                         MainMenuItem.Exit => "Exit",
                         _ => menu.ToString()
