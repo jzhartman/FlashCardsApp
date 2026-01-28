@@ -22,7 +22,7 @@ internal class Program
 
         var provider = services.BuildServiceProvider();
 
-        var mainMenu = provider.GetRequiredService<MainMenuHandler>();
+        var mainMenu = provider.GetRequiredService<MainMenuService>();
         mainMenu.Run();
     }
 }

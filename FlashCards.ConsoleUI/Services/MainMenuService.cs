@@ -1,15 +1,17 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.UseCases.Stacks;
 using FlashCards.Application.UseCases.StudySessions;
+using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.ConsoleUI.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Controllers;
 
-public class MainMenuHandler
+public class MainMenuService
 {
     private readonly IServiceProvider _provider;
     private readonly IConsoleInput _input;
@@ -17,20 +19,22 @@ public class MainMenuHandler
     private readonly StudySessionViewHandler _studySessionHandler;
     private readonly ReviewStackMenuHandler _stackMenu;
 
-    public MainMenuHandler(IServiceProvider provider, ReviewStackMenuHandler stackMenu, StudySessionViewHandler studySessionHandler,
-                            IConsoleInput input, IConsoleOutput output)
+    private readonly MainMenuView _mainMenu;
+
+    public MainMenuService(IServiceProvider provider, ReviewStackMenuHandler stackMenu, StudySessionViewHandler studySessionHandler,
+                            IConsoleInput input, IConsoleOutput output,
+                            MainMenuView mainMenu)
     {
         _provider = provider;
         _stackMenu = stackMenu;
         _input = input;
         _output = output;
         _studySessionHandler = studySessionHandler;
+
+        _mainMenu = mainMenu;
     }
     public void Run()
     {
-        _output.PrintAppTitle();
-        _input.PressAnyKeyToContinue();
-
         bool exitApp = false;
 
         while (exitApp == false)
@@ -40,7 +44,7 @@ public class MainMenuHandler
             var stacks = GetAllStackNamesAndCardCounts();
             _output.PrintStackList(stacks);
 
-            var selection = PrintMainMenuAndGetSelection();
+            var selection = _mainMenu.Render();
             exitApp = HandleUserSelection(selection, stacks);
         }
     }
@@ -67,17 +71,17 @@ public class MainMenuHandler
                             }));
     }
 
-    private bool HandleUserSelection(string selection, List<StackNameAndCardCountResponse> stacks)
+    private bool HandleUserSelection(MainMenuItem selection, List<StackNameAndCardCountResponse> stacks)
     {
         switch (selection)
         {
-            case "Review Cards in Stack": HandleReviewCardsInStack(stacks); break;
-            case "Create New Stack": HandleCreateStack(); break;
-            case "Delete Stack": HandleDeleteStack(stacks); break;
-            case "Begin Study Session": HandleStudy(stacks); break;
-            case "View Past Study Sessions": HandleViewPastSessions(stacks); break;
-            case "View Reports": HandleReports(); break;
-            case "Exit": return true;
+            case MainMenuItem.Review: HandleReviewCardsInStack(stacks); break;
+            case MainMenuItem.Create: HandleCreateStack(); break;
+            case MainMenuItem.Delete: HandleDeleteStack(stacks); break;
+            case MainMenuItem.Study: HandleStudy(stacks); break;
+            case MainMenuItem.Past: HandleViewPastSessions(stacks); break;
+            case MainMenuItem.Report: HandleReports(); break;
+            case MainMenuItem.Exit: return true;
             default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
         }
 
