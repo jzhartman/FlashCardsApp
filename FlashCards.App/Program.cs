@@ -21,7 +21,6 @@ internal class Program
         services.AddConsoleUI();
 
         var provider = services.BuildServiceProvider();
-
         var mainMenu = provider.GetRequiredService<MainMenuService>();
         mainMenu.Run();
     }

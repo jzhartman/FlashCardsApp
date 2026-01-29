@@ -3,7 +3,7 @@ using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Cards;
 
-public interface IAddCardHandler
+public interface IEditCardTextHandler
 {
-    Result<CardResponse> Handle(AddCardCommand cardCommand);
+    Result<string> Handle(CardResponse card, CardTextBySideCommand editedCard);
 }

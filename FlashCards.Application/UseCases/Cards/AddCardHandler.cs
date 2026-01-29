@@ -16,14 +16,15 @@ public class AddCardHandler : IAddCardHandler
         _stackRepo = stackRepo;
     }
 
-    public Result<CardResponse> Handle(string stackName, string frontText, string backText)
+    public Result<CardResponse> Handle(AddCardCommand cardCommand)
     {
-        var stackId = _stackRepo.GetIdByName(stackName);
+        var stackId = _stackRepo.GetIdByName(cardCommand.StackName);
 
-        var card = new Card(stackId, frontText, backText);
+        var card = new Card(stackId, cardCommand.FrontText, cardCommand.BackText);
         var id = _cardRepo.Add(card);
         card.SetId(id);
 
-        return Result<CardResponse>.Success(new(id, frontText, backText, 0, 0, 0));
+        if (id > 0) return Result<CardResponse>.Success(new(id, cardCommand.FrontText, cardCommand.BackText, 0, 0, 0));
+        else return Result<CardResponse>.Failure(Errors.InvalidId);
     }
 }

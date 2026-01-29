@@ -19,7 +19,7 @@ public class ReviewStackMenuService
     private readonly IGetAllCardsByStackName _getAllCardsByName;
     private readonly IAddCardHandler _addCard;
     private readonly IGetCardTextHandler _getCardText;
-    private readonly IEditCardFrontTextHandler _editCardFrontText;
+    private readonly IEditCardTextHandler _editCardFrontText;
     private readonly IEditCardHandler _editCard;
     private readonly IDeleteCardByIdHandler _deleteCardById;
 
@@ -27,7 +27,7 @@ public class ReviewStackMenuService
 
     public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu,
                                     IGetAllCardsByStackName getAllCardsByName, IGetCardTextHandler getCardText, IAddCardHandler addCard,
-                                    IEditCardFrontTextHandler editCardFrontText, IEditCardHandler editCard, IDeleteCardByIdHandler deleteCardById)
+                                    IEditCardTextHandler editCardFrontText, IEditCardHandler editCard, IDeleteCardByIdHandler deleteCardById)
     {
         _input = input;
         _output = output;
@@ -66,19 +66,20 @@ public class ReviewStackMenuService
                 case ReviewStackMenuItem.Return: return;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
+            _input.PressAnyKeyToContinue(2);
         }
     }
 
     private void HandleAddCard()
     {
-        var frontText = GetCardText(CardSide.Front);
-        var backText = GetCardText(CardSide.Back);
+        var card = new AddCardCommand(CurrentStack.Name,
+                                        GetCardText(CardSide.Front),
+                                        GetCardText(CardSide.Back));
 
-        var result = _addCard.Handle(CurrentStack.Name, frontText, backText);
+        var result = _addCard.Handle(card);
 
-        _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
-
-        _input.PressAnyKeyToContinue();
+        if (result.IsSuccess) _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
+        else Console.WriteLine("ERROR MESSAGE");
     }
 
     private string GetCardText(CardSide cardSide)
@@ -88,9 +89,11 @@ public class ReviewStackMenuService
 
         while (textValid == false)
         {
-            var text = _input.GetTextInputFromUser($"Enter {cardSide} text");
+            var cardData = new CardTextBySideCommand(CurrentStack.Name,
+                                                    _input.GetTextInputFromUser($"Enter {cardSide} text"),
+                                                    cardSide);
 
-            var result = _getCardText.Handle(CurrentStack.Name, text, cardSide);
+            var result = _getCardText.Handle(cardData);
 
             if (result.IsFailure) _output.PrintValidationErrorsFromCollection(result.Errors);
 
@@ -117,8 +120,6 @@ public class ReviewStackMenuService
             _output.PrintSuccessMessage($"Deleted [yellow]{card.FrontText}[/] card!");
         }
         else _output.PrintCancellationMessage("deletion", "card");
-
-        _input.PressAnyKeyToContinue();
     }
 
 
@@ -127,40 +128,43 @@ public class ReviewStackMenuService
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];
 
-        var newFrontText = GetEditedTextFromUser(originalCard, CardSide.Front);
-        var newBackText = GetEditedTextFromUser(originalCard, CardSide.Back);
+        var editedCard = new EditCardCommand(CurrentStack.Name,
+            GetEditedTextFromUser(originalCard, CardSide.Front),
+            GetEditedTextFromUser(originalCard, CardSide.Back));
 
-        if ((originalCard.FrontText == newFrontText) && (originalCard.BackText == newBackText))
+
+        if ((originalCard.FrontText == editedCard.FrontText) && (originalCard.BackText == editedCard.BackText))
         {
             _output.PrintNoEditsMadeMessage();
-            _input.PressAnyKeyToContinue(1);
             return;
         }
 
-        bool confirmEdit = _input.GetEditCardConfirmationFromUser(originalCard.FrontText, originalCard.BackText, newFrontText, newBackText);
+        bool confirmEdit = _input.GetEditCardConfirmationFromUser(originalCard.FrontText, originalCard.BackText, editedCard.FrontText, editedCard.BackText);
 
         if (confirmEdit)
         {
-            _editCard.Handle(CurrentStack.Name, originalCard, newFrontText, newBackText);
+            _editCard.Handle(originalCard, editedCard);
             _output.PrintSuccessMessage("Edited card data!");
         }
         else _output.PrintCancellationMessage("editing", "card text");
-
-        _input.PressAnyKeyToContinue();
-
     }
     private string GetEditedTextFromUser(CardResponse card, CardSide cardSide)
     {
         bool textValid = false;
-        var input = string.Empty;
+        var textInput = string.Empty;
 
-        var promptText = (cardSide == CardSide.Front) ? $"{card.FrontText}" : $"{card.BackText}";
+        var currentCardText = (cardSide == CardSide.Front) ? $"{card.FrontText}" : $"{card.BackText}";
+        var promptText = $"Original Card {cardSide} Text: [green]{currentCardText}[/]\r\nEnter new text or leave blank to keep original";
 
         while (textValid == false)
         {
-            input = _input.GetTextInputFromUser($"Original Card {cardSide} Text: [green]{promptText}[/]\r\nEnter new text or leave blank to keep original", 1);
+            textInput = _input.GetTextInputFromUser(promptText, 1);
 
-            var result = _editCardFrontText.Handle(card, input, CurrentStack.Name, cardSide);
+            var editedCardSide = new CardTextBySideCommand(CurrentStack.Name,
+                                                          textInput,
+                                                          cardSide);
+
+            var result = _editCardFrontText.Handle(card, editedCardSide);
 
             if (!result.IsSuccess)
             {
@@ -170,8 +174,8 @@ public class ReviewStackMenuService
                 }
             }
             textValid = result.IsSuccess;
-            input = result.Value;
+            textInput = result.Value;
         }
-        return input;
+        return textInput;
     }
 }

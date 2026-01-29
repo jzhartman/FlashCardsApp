@@ -13,11 +13,11 @@ public class EditCardHandler : IEditCardHandler
         _cardRepo = cardRepo;
         _stackRepo = stackRepo;
     }
-    public void Handle(string stackName, CardResponse card, string frontText, string backText)
+    public void Handle(CardResponse card, EditCardCommand editedCard)
     {
-        var stackId = _stackRepo.GetIdByName(stackName);
+        var stackId = _stackRepo.GetIdByName(editedCard.StackName);
         int id = _cardRepo.GetIdByTextAndStackId(stackId, card.FrontText, card.BackText);
 
-        _cardRepo.UpdateCardText(id, frontText, backText);
+        _cardRepo.UpdateCardText(id, editedCard.FrontText, editedCard.BackText);
     }
 }

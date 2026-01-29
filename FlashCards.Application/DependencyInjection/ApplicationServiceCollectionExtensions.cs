@@ -17,7 +17,7 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<IGetAllCardsByStackName, GetAllCardsByStackName>();
         services.AddScoped<IDeleteCardByIdHandler, DeleteCardByIdHandler>();
         services.AddScoped<IGetCardTextHandler, GetCardTextHandler>();
-        services.AddScoped<IEditCardFrontTextHandler, EditCardFrontTextHandler>();
+        services.AddScoped<IEditCardTextHandler, EditCardTextBySideHandler>();
         services.AddScoped<IEditCardHandler, EditCardHandler>();
         services.AddScoped<IUpdateCardCounterHandler, UpdateCardCounterHandler>();
 

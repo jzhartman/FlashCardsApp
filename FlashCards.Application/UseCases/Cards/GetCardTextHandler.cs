@@ -1,4 +1,5 @@
-﻿using FlashCards.Application.Enums;
+﻿using FlashCards.Application.DTOs;
+using FlashCards.Application.Enums;
 using FlashCards.Application.Interfaces;
 using FlashCards.Core.Validation;
 
@@ -15,27 +16,27 @@ public class GetCardTextHandler : IGetCardTextHandler
         _stackRepo = stackRepo;
     }
 
-    public Result<string> Handle(string stackName, string text, CardSide cardSide)
+    public Result<string> Handle(CardTextBySideCommand card)
     {
-        var stackId = _stackRepo.GetIdByName(stackName);
+        var stackId = _stackRepo.GetIdByName(card.StackName);
 
-        if (cardSide == CardSide.Front)
+        if (card.Side == CardSide.Front)
         {
-            if (_cardRepo.ExistsByFrontText(text, stackId))
+            if (_cardRepo.ExistsByFrontText(card.Text, stackId))
                 return Result<string>.Failure(Errors.CardFrontTextExists);
 
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(card.Text))
                 return Result<string>.Failure(Errors.CardFrontTextRequired);
         }
-        if (cardSide == CardSide.Back)
+        if (card.Side == CardSide.Back)
         {
-            if (_cardRepo.ExistsByBackText(text, stackId))
+            if (_cardRepo.ExistsByBackText(card.Text, stackId))
                 return Result<string>.Failure(Errors.CardBackTextExists);
 
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(card.Text))
                 return Result<string>.Failure(Errors.CardBackTextRequired);
         }
 
-        return Result<string>.Success(text);
+        return Result<string>.Success(card.Text);
     }
 }
