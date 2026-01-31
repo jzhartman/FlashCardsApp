@@ -1,5 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.Interfaces;
+using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.UseCases.Stacks;
 
@@ -14,11 +15,14 @@ public class GetAllStackNamesAndCardCountsHandler : IGetAllStackNamesAndCardCoun
         _cardRepo = cardRepo;
     }
 
-    public List<StackNameAndCardCountResponse> Handle()
+    public Result<List<StackNameAndCardCountResponse>> Handle()
     {
         var stacks = _stackRepo.GetAllNames();
 
-        return BuildResponse(stacks);
+        if (stacks.Count == 0)
+            return Result<List<StackNameAndCardCountResponse>>.Failure(Errors.NoStacksExist);
+        else
+            return Result<List<StackNameAndCardCountResponse>>.Success(BuildResponse(stacks));
     }
 
     private List<StackNameAndCardCountResponse> BuildResponse(List<string> names)

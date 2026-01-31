@@ -1,6 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 
-namespace FlashCards.Application.UseCases.Cards;
+namespace FlashCards.Application.Interfaces;
 
 public interface IGetAllCardsByStackName
 {

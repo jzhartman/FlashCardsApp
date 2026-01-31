@@ -1,6 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
-using FlashCards.Application.UseCases.Cards;
+using FlashCards.Application.Interfaces;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;

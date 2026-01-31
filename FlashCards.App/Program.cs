@@ -11,13 +11,15 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        var isDeveloperMode = true;
+
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
         var services = new ServiceCollection();
         services.AddApplication();
-        services.AddInfrastructure(config);
+        services.AddInfrastructure(config, isDeveloperMode);
         services.AddConsoleUI();
 
         var provider = services.BuildServiceProvider();

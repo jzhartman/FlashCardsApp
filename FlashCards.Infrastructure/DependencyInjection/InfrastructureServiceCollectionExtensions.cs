@@ -11,9 +11,9 @@ namespace FlashCards.Infrastructure.DependencyInjection;
 public static class InfrastructureServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-                                                         IConfiguration configuration)
+                                                         IConfiguration configuration, bool isDeveloperMode)
     {
-        var connectionString = configuration.GetConnectionString("Default");
+        var connectionString = (isDeveloperMode) ? configuration.GetConnectionString("Dev") : configuration.GetConnectionString("Default");
 
         // Register IDbConnection Factory
         services.AddScoped<IDbConnection>(sp => new SqlConnection(connectionString));

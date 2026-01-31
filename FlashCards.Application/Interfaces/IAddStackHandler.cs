@@ -1,6 +1,6 @@
 ﻿using FlashCards.Core.Validation;
 
-namespace FlashCards.Application.UseCases.Stacks;
+namespace FlashCards.Application.Interfaces;
 
 public interface IAddStackHandler
 {

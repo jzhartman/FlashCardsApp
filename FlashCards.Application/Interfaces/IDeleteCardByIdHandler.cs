@@ -1,4 +1,4 @@
-﻿namespace FlashCards.Application.UseCases.Cards;
+﻿namespace FlashCards.Application.Interfaces;
 
 public interface IDeleteCardByIdHandler
 {

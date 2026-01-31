@@ -1,6 +1,6 @@
 ﻿using FlashCards.Application.DTOs;
 
-namespace FlashCards.Application.UseCases.Stacks;
+namespace FlashCards.Application.Interfaces;
 
 public interface IDeleteStackByNameHandler
 {

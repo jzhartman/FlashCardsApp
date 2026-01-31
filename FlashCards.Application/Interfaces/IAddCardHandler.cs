@@ -1,7 +1,7 @@
 ﻿using FlashCards.Application.DTOs;
 using FlashCards.Core.Validation;
 
-namespace FlashCards.Application.UseCases.Cards;
+namespace FlashCards.Application.Interfaces;
 
 public interface IAddCardHandler
 {

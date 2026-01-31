@@ -5,7 +5,7 @@ namespace FlashCards.ConsoleUI.Views;
 
 public class MainMenuView
 {
-    public MainMenuItem Render()
+    public MainMenuItem Render(MainMenuItem[] menuItems)
     {
         return AnsiConsole.Prompt(
                     new SelectionPrompt<MainMenuItem>()
@@ -21,6 +21,6 @@ public class MainMenuView
                         MainMenuItem.Exit => "Exit",
                         _ => menu.ToString()
                     })
-                    .AddChoices(Enum.GetValues<MainMenuItem>()));
+                    .AddChoices(menuItems));
     }
 }

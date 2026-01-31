@@ -1,6 +1,5 @@
 ﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.UseCases.Stacks;
-using FlashCards.Application.UseCases.StudySessions;
+using FlashCards.Application.Interfaces;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
@@ -54,11 +53,15 @@ public class MainMenuService
         {
             _output.PrintPageTitle("MAIN MENU");
 
-            var stacks = _getAllStackNamesAndCardCounts.Handle();
-            //_output.PrintStackList(stacks);
+            var stacks = GetStacks();
+
             _stackList.Render(stacks);
 
-            var selection = _menu.Render();
+            MainMenuItem[] menuItems = Enum.GetValues<MainMenuItem>();
+
+            if (stacks.Count <= 0) menuItems = new MainMenuItem[1] { MainMenuItem.CreateStack };
+
+            var selection = _menu.Render(menuItems);
 
             switch (selection)
             {
@@ -71,6 +74,21 @@ public class MainMenuService
                 case MainMenuItem.Exit: exitApp = true; break;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
+        }
+    }
+
+    private List<StackNameAndCardCountResponse> GetStacks()
+    {
+        var result = _getAllStackNamesAndCardCounts.Handle();
+
+        if (result.IsFailure)
+        {
+            _output.PrintValidationErrorsFromCollection(result.Errors);
+            return new List<StackNameAndCardCountResponse>();
+        }
+        else
+        {
+            return result.Value;
         }
     }
 

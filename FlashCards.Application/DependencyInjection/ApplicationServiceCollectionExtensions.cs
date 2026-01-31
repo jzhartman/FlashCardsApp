@@ -1,4 +1,5 @@
-﻿using FlashCards.Application.UseCases.Cards;
+﻿using FlashCards.Application.Interfaces;
+using FlashCards.Application.UseCases.Cards;
 using FlashCards.Application.UseCases.Stacks;
 using FlashCards.Application.UseCases.StudySessions;
 using Microsoft.Extensions.DependencyInjection;
