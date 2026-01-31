@@ -14,7 +14,7 @@ public class MainMenuService
 {
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
-    private readonly StudySessionViewHandler _studySessionHandler;
+    private readonly StudySessionService _studySessionHandler;
     private readonly ReviewStackMenuService _stackMenu;
 
     private readonly IGetAllStackNamesAndCardCountsHandler _getAllStackNamesAndCardCounts;
@@ -24,9 +24,10 @@ public class MainMenuService
     private readonly IGetStudySessionByIdHandler _getStudySessionById;
 
     private readonly MainMenuView _menu;
+    private readonly StackListView _stackList;
 
-    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionViewHandler studySessionHandler,
-                            IConsoleInput input, IConsoleOutput output, MainMenuView menu,
+    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
+                            IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList,
                             IGetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, IAddStackHandler addStack,
                             IDeleteStackByNameHandler deleteStack, IGetAllStudySessionsHandler getAllStudySessions,
                             IGetStudySessionByIdHandler getStudySessionById)
@@ -37,6 +38,7 @@ public class MainMenuService
         _studySessionHandler = studySessionHandler;
 
         _menu = menu;
+        _stackList = stackList;
 
         _getAllStackNamesAndCardCounts = getAllStackNamesAndCardCounts;
         _addStack = addStack;
@@ -53,7 +55,8 @@ public class MainMenuService
             _output.PrintPageTitle("MAIN MENU");
 
             var stacks = _getAllStackNamesAndCardCounts.Handle();
-            _output.PrintStackList(stacks);
+            //_output.PrintStackList(stacks);
+            _stackList.Render(stacks);
 
             var selection = _menu.Render();
 

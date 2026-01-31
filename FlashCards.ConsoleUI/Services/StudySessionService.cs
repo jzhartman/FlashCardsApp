@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
-public class StudySessionViewHandler
+public class StudySessionService
 {
     private readonly IServiceProvider _provider;
     private readonly IConsoleInput _input;
@@ -16,7 +16,7 @@ public class StudySessionViewHandler
 
     private StackResponse CurrentStack;
 
-    public StudySessionViewHandler(IServiceProvider provider, IConsoleInput input, IConsoleOutput output)
+    public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output)
     {
         _provider = provider;
         _input = input;

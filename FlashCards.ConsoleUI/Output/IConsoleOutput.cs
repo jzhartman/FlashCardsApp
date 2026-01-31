@@ -14,7 +14,6 @@ public interface IConsoleOutput
     void PrintPageTitle(string title);
     void PrintResultsForAllSessions(List<StudySessionResponse> sessions);
     void PrintSessionResults(StudySessionResponse session);
-    void PrintStackList(List<StackNameAndCardCountResponse> stacks);
     void PrintSuccessMessage(string message);
     void PrintValidationErrorsFromCollection(List<Error> errors);
 }
