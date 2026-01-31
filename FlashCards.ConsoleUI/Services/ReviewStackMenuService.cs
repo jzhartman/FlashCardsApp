@@ -52,11 +52,16 @@ public class ReviewStackMenuService
         {
             _output.PrintPageTitle("REVIEW STACK MENU");
 
-            var cards = _getAllCardsByName.Handle(stackName);
+            var cards = GetCards(stackName);
+
+            ReviewStackMenuItem[] menuItems = Enum.GetValues<ReviewStackMenuItem>();
+
+            if (cards.Count <= 0) menuItems = new ReviewStackMenuItem[2] { ReviewStackMenuItem.AddCard, ReviewStackMenuItem.Return };
+
             SetStack(stackName, cards);
             _output.PrintCards(CurrentStack);
 
-            var selection = _menu.Render();
+            var selection = _menu.Render(menuItems);
 
             switch (selection)
             {
@@ -67,6 +72,21 @@ public class ReviewStackMenuService
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
             _input.PressAnyKeyToContinue(2);
+        }
+    }
+
+    private List<CardResponse> GetCards(string stackName)
+    {
+        var result = _getAllCardsByName.Handle(stackName);
+
+        if (result.IsFailure)
+        {
+            _output.PrintValidationErrorsFromCollection(result.Errors);
+            return new List<CardResponse>();
+        }
+        else
+        {
+            return result.Value;
         }
     }
 

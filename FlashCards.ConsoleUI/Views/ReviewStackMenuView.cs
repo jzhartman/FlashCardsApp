@@ -5,7 +5,7 @@ namespace FlashCards.ConsoleUI.Views;
 
 public class ReviewStackMenuView
 {
-    public ReviewStackMenuItem Render()
+    public ReviewStackMenuItem Render(ReviewStackMenuItem[] menuItems)
     {
         return AnsiConsole.Prompt(
                     new SelectionPrompt<ReviewStackMenuItem>()
@@ -18,6 +18,6 @@ public class ReviewStackMenuView
                         ReviewStackMenuItem.Return => "Return to Main Menu",
                         _ => menu.ToString()
                     })
-                    .AddChoices(Enum.GetValues<ReviewStackMenuItem>()));
+                    .AddChoices(menuItems));
     }
 }

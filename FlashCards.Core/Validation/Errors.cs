@@ -10,6 +10,8 @@ public static class Errors
 
     public static readonly Error NoStacksExist = new("NoStacksExist", "No stacks exist.");
 
+    public static readonly Error NoCardsExist = new("NoCardsExist", "No cards exist in the current stack.");
+
     public static readonly Error CardFrontTextExists = new("CardFrontTextExists", "A card with that front text already exists.");
 
     public static readonly Error CardBackTextExists = new("CardBackTextExists", "A card with that back text already exists.");

@@ -93,7 +93,7 @@ public class StudySessionService
     private List<CardResponse> GetAllCardsInStack(string stackName)
     {
         var handler = _provider.GetRequiredService<GetAllCardsByStackName>();
-        return handler.Handle(stackName);
+        return new List<CardResponse>(); //handler.Handle(stackName);
     }
 
     private List<CardResponse> ShuffleStack(List<CardResponse> cards)

@@ -59,7 +59,7 @@ public class MainMenuService
 
             MainMenuItem[] menuItems = Enum.GetValues<MainMenuItem>();
 
-            if (stacks.Count <= 0) menuItems = new MainMenuItem[1] { MainMenuItem.CreateStack };
+            if (stacks.Count <= 0) menuItems = new MainMenuItem[2] { MainMenuItem.CreateStack, MainMenuItem.Exit };
 
             var selection = _menu.Render(menuItems);
 
@@ -91,7 +91,6 @@ public class MainMenuService
             return result.Value;
         }
     }
-
     private void HandleReviewStack(List<StackNameAndCardCountResponse> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
