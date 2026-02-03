@@ -4,9 +4,9 @@ using FlashCards.Application.UseCases.Stacks;
 using FlashCards.Application.UseCases.StudySessions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FlashCards.Application.DependencyInjection;
+namespace FlashCards.Application;
 
-public static class ApplicationServiceCollectionExtensions
+public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

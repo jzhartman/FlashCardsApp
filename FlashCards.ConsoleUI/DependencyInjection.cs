@@ -5,9 +5,9 @@ using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FlashCards.ConsoleUI.DependencyInjection;
+namespace FlashCards.ConsoleUI;
 
-public static class ConsoleUIServiceCollectionExtensions
+public static class DependencyInjection
 {
     public static IServiceCollection AddConsoleUI(this IServiceCollection services)
     {
