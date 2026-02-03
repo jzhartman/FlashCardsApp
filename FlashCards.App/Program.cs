@@ -1,7 +1,7 @@
-﻿using FlashCards.Application.DependencyInjection;
+﻿using FlashCards.Application;
+using FlashCards.ConsoleUI;
 using FlashCards.ConsoleUI.Controllers;
-using FlashCards.ConsoleUI.DependencyInjection;
-using FlashCards.Infrastructure.DependencyInjection;
+using FlashCards.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

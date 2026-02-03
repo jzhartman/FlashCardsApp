@@ -4,5 +4,5 @@ namespace FlashCards.Application.Interfaces;
 
 public interface IGetStudySessionByIdHandler
 {
-    StudySessionResponse Handle(StackNameAndCardCountResponse stack);
+    List<StudySessionResponse> Handle(StackNameAndCardCountResponse stack);
 }

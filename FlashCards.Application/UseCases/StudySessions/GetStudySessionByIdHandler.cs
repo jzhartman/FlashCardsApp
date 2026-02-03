@@ -14,17 +14,24 @@ public class GetStudySessionByIdHandler : IGetStudySessionByIdHandler
         _stackRepo = stackRepo;
         _studyRepo = studyRepo;
     }
-    public StudySessionResponse Handle(StackNameAndCardCountResponse stack)
+    public List<StudySessionResponse> Handle(StackNameAndCardCountResponse stack)
     {
         var stackId = _stackRepo.GetIdByName(stack.Name);
-        var session = _studyRepo.GetByStackId(stackId);
+        var sessions = _studyRepo.GetAllByStackId(stackId);
 
 
-        return StudySessionMapper(session, stack.Name);
+        return StudySessionMapper(sessions, stack.Name);
     }
 
-    private StudySessionResponse StudySessionMapper(StudySession session, string stackName)
+    private List<StudySessionResponse> StudySessionMapper(List<StudySession> sessions, string stackName)
     {
-        return new StudySessionResponse(session.Time, stackName, session.Score, session.CountStudied, session.CountCorrect, session.CountIncorrect);
+        var output = new List<StudySessionResponse>();
+
+        foreach (var session in sessions)
+        {
+            output.Add(new StudySessionResponse(session.Time, stackName, session.Score, session.CountStudied, session.CountCorrect, session.CountIncorrect));
+        }
+
+        return output;
     }
 }

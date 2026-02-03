@@ -5,6 +5,7 @@ using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
+using FlashCards.Core.Validation;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Controllers;
@@ -142,17 +143,18 @@ public class MainMenuService
     {
         var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
         int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);
+        var sessions = new List<StudySessionResponse>();
 
         if (id == 0)
-        {
-            var sessions = _getAllStudySessions.Handle();
-            _output.PrintResultsForAllSessions(sessions);
-        }
+            sessions = _getAllStudySessions.Handle();
         else
-        {
-            var session = _getStudySessionById.Handle(stacks[id - 1]);
-            _output.PrintSessionResults(session);
-        }
+            sessions = _getStudySessionById.Handle(stacks[id - 1]);
+
+        if (sessions == null || sessions.Count == 0)
+            _output.PrintValidationErrorsFromCollection(new List<Error> { Errors.NoStudySessions });
+        else
+            _output.PrintResultsForAllSessions(sessions);
+
         _input.PressAnyKeyToContinue();
     }
 

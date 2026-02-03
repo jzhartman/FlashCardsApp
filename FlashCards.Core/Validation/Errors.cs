@@ -23,4 +23,8 @@ public static class Errors
     public static readonly Error StackEmpty = new("StackEmpty", "The selected stack contains no cards!");
 
     public static readonly Error InvalidId = new("InvalidId", "Id value is invalid!");
+
+    public static readonly Error StackNameTooLong = new("StackNameTooLong", "The stack name cannot exceed 25 characters!");
+
+    public static readonly Error NoStudySessions = new("NoStudySession", "No study sessions exist for the curreent selection!");
 }

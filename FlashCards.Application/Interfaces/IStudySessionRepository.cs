@@ -6,5 +6,5 @@ public interface IStudySessionRepository
 {
     void Add(StudySession session);
     List<StudySession> GetAll();
-    StudySession GetByStackId(int id);
+    List<StudySession> GetAllByStackId(int id);
 }

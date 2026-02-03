@@ -1,10 +1,7 @@
 ﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.UseCases.Cards;
-using FlashCards.Application.UseCases.StudySessions;
+using FlashCards.Application.Interfaces;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
-using FlashCards.Core.Validation;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
@@ -14,13 +11,22 @@ public class StudySessionService
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
 
+    private readonly IGetAllCardsByStackName _getAllCardsByStackName;
+    private readonly IAddStudySessionHandler _addStudySessionHandler;
+    private readonly IUpdateCardCounterHandler _updateCardCounterHandler;
+
     private StackResponse CurrentStack;
 
-    public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output)
+    public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
+                                IGetAllCardsByStackName getAllCardsByStackName, IAddStudySessionHandler addStudySessionHandler,
+                                IUpdateCardCounterHandler updateCardCounterHandler)
     {
         _provider = provider;
         _input = input;
         _output = output;
+        _getAllCardsByStackName = getAllCardsByStackName;
+        _addStudySessionHandler = addStudySessionHandler;
+        _updateCardCounterHandler = updateCardCounterHandler;
     }
 
     public void Run(string stackName)
@@ -29,21 +35,26 @@ public class StudySessionService
 
         var cardsCorrect = new List<int>();
         var cardsIncorrect = new List<int>();
-        var cards = GetAllCardsInStack(stackName);
 
-        if (cards.Count < 1)
+
+        var result = _getAllCardsByStackName.Handle(stackName);
+
+        if (result.IsFailure)
         {
-            _output.PrintValidationErrorsFromCollection(new List<Error> { Errors.StackEmpty });
-            _input.PressAnyKeyToContinue();
-            return;
+            _output.PrintValidationErrorsFromCollection(result.Errors);
+
         }
+        else
+        {
+            var cards = result.Value;
 
-        cards = ShuffleStack(cards);
+            cards = ShuffleStack(cards);
 
-        var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
-        AddSession(session);
-        UpdateCardCounters(cardsCorrect, cardsIncorrect);
-        _output.PrintSessionResults(session);
+            var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
+            _addStudySessionHandler.Handle(session);
+            _updateCardCounterHandler.Handle(cardsCorrect, cardsIncorrect);
+            _output.PrintSessionResults(session);
+        }
 
         _input.PressAnyKeyToContinue();
     }
@@ -78,22 +89,6 @@ public class StudySessionService
 
         double score = (double)cardsCorrect.Count / cardsStudied * 100;
         return new StudySessionResponse(DateTime.Now, stackName, score, cardsStudied, cardsCorrect.Count, cardsIncorrect.Count);
-    }
-
-    private void UpdateCardCounters(List<int> cardsCorrect, List<int> cardsIncorrect)
-    {
-        var handler = _provider.GetRequiredService<UpdateCardCounterHandler>();
-        handler.Handle(cardsCorrect, cardsIncorrect);
-    }
-    private void AddSession(StudySessionResponse session)
-    {
-        var handler = _provider.GetRequiredService<AddStudySessionHandler>();
-        handler.Handle(session);
-    }
-    private List<CardResponse> GetAllCardsInStack(string stackName)
-    {
-        var handler = _provider.GetRequiredService<GetAllCardsByStackName>();
-        return new List<CardResponse>(); //handler.Handle(stackName);
     }
 
     private List<CardResponse> ShuffleStack(List<CardResponse> cards)

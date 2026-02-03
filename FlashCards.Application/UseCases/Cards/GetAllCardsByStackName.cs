@@ -7,16 +7,21 @@ namespace FlashCards.Application.UseCases.Cards;
 
 public class GetAllCardsByStackName : IGetAllCardsByStackName
 {
-    private readonly ICardRepository _repo;
+    private readonly ICardRepository _cardRepo;
+    private readonly IStackRepository _stackRepo;
 
-    public GetAllCardsByStackName(ICardRepository repo)
+    public GetAllCardsByStackName(ICardRepository cardRepo, IStackRepository stackRepo)
     {
-        _repo = repo;
+        _cardRepo = cardRepo;
+        _stackRepo = stackRepo;
     }
 
     public Result<List<CardResponse>> Handle(string name)
     {
-        var cards = _repo.GetAllByStackName(name);
+        if (_stackRepo.ExistsByName(name) == false)
+            return Result<List<CardResponse>>.Failure(Errors.NoStacksExist);
+
+        var cards = _cardRepo.GetAllByStackName(name);
 
         if (cards.Count == 0)
             return Result<List<CardResponse>>.Failure(Errors.NoCardsExist);

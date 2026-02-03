@@ -70,7 +70,6 @@ public class ConsoleOutput : IConsoleOutput
         table.AddColumn("# Cards Studied");
         table.AddColumn("# Correct");
         table.AddColumn("# Incorrect");
-        table.AddColumn("# Not Studied");
 
         foreach (var session in sessions)
         {
