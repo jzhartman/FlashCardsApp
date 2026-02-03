@@ -36,4 +36,13 @@ public class StudySessionRepository : IStudySessionRepository
 
         return _dapper.Query<StudySession>(_connection, sql).ToList();
     }
+
+    public void DeleteAllByStackName(string name)
+    {
+        var sql = @"delete u from StudySession u
+                    inner join stack s on s.id = u.StackId
+                    where s.Name = @name";
+
+        _dapper.Execute(_connection, sql, new { Name = name });
+    }
 }
