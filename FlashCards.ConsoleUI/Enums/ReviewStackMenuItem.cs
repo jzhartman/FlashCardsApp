@@ -2,6 +2,7 @@
 
 public enum ReviewStackMenuItem
 {
+    ReviewCards,
     AddCard,
     EditCard,
     DeleteCard,

@@ -18,8 +18,6 @@ public class StudySessionService
 
     private readonly StudySessionListView _studySessionList;
 
-    private StackResponse CurrentStack;
-
     public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
                                 IGetAllCardsByStackName getAllCardsByStackName, IAddStudySessionHandler addStudySessionHandler,
                                 IUpdateCardCounterHandler updateCardCounterHandler, StudySessionListView studySessionList)

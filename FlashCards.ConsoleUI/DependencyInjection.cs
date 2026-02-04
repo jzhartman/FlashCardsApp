@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<ReviewStackMenuView>();
         services.AddScoped<StackListView>();
         services.AddScoped<StudySessionListView>();
+        services.AddScoped<CardListView>();
 
         return services;
     }

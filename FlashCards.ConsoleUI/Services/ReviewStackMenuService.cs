@@ -15,6 +15,7 @@ public class ReviewStackMenuService
     private readonly IConsoleOutput _output;
 
     private readonly ReviewStackMenuView _menu;
+    private readonly CardListView _cardListView;
 
     private readonly IGetAllCardsByStackName _getAllCardsByName;
     private readonly IAddCardHandler _addCard;
@@ -25,13 +26,14 @@ public class ReviewStackMenuService
 
     private StackResponse CurrentStack;
 
-    public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu,
+    public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu, CardListView cardListView,
                                     IGetAllCardsByStackName getAllCardsByName, IGetCardTextHandler getCardText, IAddCardHandler addCard,
                                     IEditCardTextHandler editCardFrontText, IEditCardHandler editCard, IDeleteCardByIdHandler deleteCardById)
     {
         _input = input;
         _output = output;
         _menu = menu;
+        _cardListView = cardListView;
 
         _getAllCardsByName = getAllCardsByName;
         _getCardText = getCardText;
@@ -46,25 +48,26 @@ public class ReviewStackMenuService
         CurrentStack = new StackResponse(stackName, cards);
     }
 
-    public void Run(string stackName)
+    public void Run(StackNameAndCardCountResponse stack)
     {
         while (true)
         {
-            _output.PrintPageTitle("REVIEW STACK MENU");
+            _output.PrintPageTitle($"REVIEWING STACK: {stack.Name}");
 
-            var cards = GetCards(stackName);
+            var cards = GetCards(stack.Name);
+            _cardListView.Render(cards);
 
             ReviewStackMenuItem[] menuItems = Enum.GetValues<ReviewStackMenuItem>();
 
             if (cards.Count <= 0) menuItems = new ReviewStackMenuItem[2] { ReviewStackMenuItem.AddCard, ReviewStackMenuItem.Return };
 
-            SetStack(stackName, cards);
-            _output.PrintCards(CurrentStack);
+            SetStack(stack.Name, cards);
 
             var selection = _menu.Render(menuItems);
 
             switch (selection)
             {
+                case ReviewStackMenuItem.ReviewCards: HandleReviewCards(cards); break;
                 case ReviewStackMenuItem.AddCard: HandleAddCard(); break;
                 case ReviewStackMenuItem.EditCard: HandleEditCard(); break;
                 case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(cards); break;
@@ -88,6 +91,110 @@ public class ReviewStackMenuService
         {
             return result.Value;
         }
+    }
+
+    private void HandleReviewCards(List<CardResponse> cards)
+    {
+        var shuffleableCards = cards;
+        bool continueReview = true;
+        ConsoleKeyInfo keyInfo;
+        int i = 0;
+
+        while (continueReview)
+        {
+            _output.PrintPageTitle("REVIEW STACK MENU");
+
+            PrintCardTextInPanel(shuffleableCards[i].FrontText);
+            PressAnyKeyToFlipCard();
+
+            _output.PrintPageTitle("REVIEW STACK MENU");
+            PrintSideBySidePanels(shuffleableCards[i].FrontText, shuffleableCards[i].BackText);
+
+            PrintOptions(CardSide.Back, i, shuffleableCards.Count);
+
+
+            bool validKey = false;
+
+            while (validKey == false)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        if (i > 0) i--;
+                        else i = shuffleableCards.Count - 1;
+                        validKey = true;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (i < shuffleableCards.Count - 1) i++;
+                        else i = 0;
+                        validKey = true;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        shuffleableCards = ShuffleStack(shuffleableCards);
+                        i = 0;
+                        validKey = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        validKey = true;
+                        continueReview = false;
+                        break;
+                    default:
+                        Console.WriteLine($"Invalid keypress -- see options");
+                        break;
+                }
+            }
+        }
+    }
+
+    public void PressAnyKeyToFlipCard()
+    {
+        Console.Write("Press any key to flip card...");
+        Console.ReadKey();
+    }
+
+    private List<CardResponse> ShuffleStack(List<CardResponse> cards)
+    {
+        CardResponse[] cardsArray = cards.ToArray();
+        Random.Shared.Shuffle(cardsArray);
+        return cardsArray.ToList();
+    }
+
+    private void PrintOptions(CardSide side, int index, int cardCount)
+    {
+        var table = new Table()
+                        .RoundedBorder()
+                        .BorderColor(Color.Blue)
+                        .ShowRowSeparators();
+
+        table.AddColumn("Control");
+        table.AddColumn("Key");
+
+        if (side != CardSide.Front && index > 0) table.AddRow("Previous Card", "Left Arrow");
+        if (side != CardSide.Front && index < cardCount) table.AddRow("Next Card", "Right Arrow");
+        table.AddRow("Shuffle Deck", "Up Arrow");
+        table.AddRow("Return to Menu", "Esc");
+
+
+        AnsiConsole.Write(table);
+
+        Console.WriteLine();
+    }
+
+    public void PrintCardTextInPanel(string text)
+    {
+        var panel = new Panel(new Align(new Markup(text), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
+        AnsiConsole.Write(panel);
+    }
+
+    public void PrintSideBySidePanels(string frontText, string backText)
+    {
+        var frontPanel = new Panel(new Align(new Markup(frontText), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
+        var backPanel = new Panel(new Align(new Markup(backText), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
+        var columns = new Columns(frontPanel, backPanel).Collapse();
+        AnsiConsole.Write(columns);
+
     }
 
     private void HandleAddCard()

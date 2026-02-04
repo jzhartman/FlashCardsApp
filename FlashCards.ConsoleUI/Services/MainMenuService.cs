@@ -98,7 +98,7 @@ public class MainMenuService
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
-        _stackMenu.Run(stacks[id - 1].Name);
+        _stackMenu.Run(stacks[id - 1]);
     }
     private void HandleCreateStack()
     {

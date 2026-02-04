@@ -5,6 +5,10 @@ namespace FlashCards.ConsoleUI.Views;
 
 public class StackListView
 {
+    public void Render(StackNameAndCardCountResponse stack)
+    {
+        Render(new List<StackNameAndCardCountResponse>() { stack });
+    }
     public void Render(List<StackNameAndCardCountResponse> stacks)
     {
         int i = 1;
