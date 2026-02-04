@@ -25,9 +25,10 @@ public class MainMenuService
 
     private readonly MainMenuView _menu;
     private readonly StackListView _stackList;
+    private readonly StudySessionListView _studySessionList;
 
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
-                            IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList,
+                            IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
                             IGetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, IAddStackHandler addStack,
                             IDeleteStackByNameHandler deleteStack, IGetAllStudySessionsHandler getAllStudySessions,
                             IGetStudySessionByIdHandler getStudySessionById)
@@ -39,6 +40,7 @@ public class MainMenuService
 
         _menu = menu;
         _stackList = stackList;
+        _studySessionList = studySessionList;
 
         _getAllStackNamesAndCardCounts = getAllStackNamesAndCardCounts;
         _addStack = addStack;
@@ -153,7 +155,7 @@ public class MainMenuService
         if (sessions == null || sessions.Count == 0)
             _output.PrintValidationErrorsFromCollection(new List<Error> { Errors.NoStudySessions });
         else
-            _output.PrintResultsForAllSessions(sessions);
+            _studySessionList.Render(sessions);
 
         _input.PressAnyKeyToContinue();
     }

@@ -2,6 +2,7 @@
 using FlashCards.Application.Interfaces;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.ConsoleUI.Views;
 
 namespace FlashCards.ConsoleUI.Handlers;
 
@@ -15,11 +16,13 @@ public class StudySessionService
     private readonly IAddStudySessionHandler _addStudySessionHandler;
     private readonly IUpdateCardCounterHandler _updateCardCounterHandler;
 
+    private readonly StudySessionListView _studySessionList;
+
     private StackResponse CurrentStack;
 
     public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
                                 IGetAllCardsByStackName getAllCardsByStackName, IAddStudySessionHandler addStudySessionHandler,
-                                IUpdateCardCounterHandler updateCardCounterHandler)
+                                IUpdateCardCounterHandler updateCardCounterHandler, StudySessionListView studySessionList)
     {
         _provider = provider;
         _input = input;
@@ -27,6 +30,7 @@ public class StudySessionService
         _getAllCardsByStackName = getAllCardsByStackName;
         _addStudySessionHandler = addStudySessionHandler;
         _updateCardCounterHandler = updateCardCounterHandler;
+        _studySessionList = studySessionList;
     }
 
     public void Run(string stackName)
@@ -53,7 +57,7 @@ public class StudySessionService
             var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
             _addStudySessionHandler.Handle(session);
             _updateCardCounterHandler.Handle(cardsCorrect, cardsIncorrect);
-            _output.PrintSessionResults(session);
+            _studySessionList.Render(session);
         }
 
         _input.PressAnyKeyToContinue();

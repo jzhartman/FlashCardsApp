@@ -19,7 +19,7 @@ public class DeleteStackByNameHandler : IDeleteStackByNameHandler
     public void Handle(StackNameAndCardCountResponse stack)
     {
         _cardRepo.DeleteAllByStackName(stack.Name);
-_sessionRepo.DeleteAllByStackName(stack.Name);
+        _sessionRepo.DeleteAllByStackName(stack.Name);
         _stackRepo.DeleteByName(stack.Name);
     }
 }

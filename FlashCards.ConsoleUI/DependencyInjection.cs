@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<MainMenuView>();
         services.AddScoped<ReviewStackMenuView>();
         services.AddScoped<StackListView>();
+        services.AddScoped<StudySessionListView>();
 
         return services;
     }

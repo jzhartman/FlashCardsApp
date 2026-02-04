@@ -4,12 +4,12 @@ using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.UseCases.StudySessions;
 
-public class GetStudySessionByIdHandler : IGetStudySessionByIdHandler
+public class GetStudySessionsByStackIdHandler : IGetStudySessionByIdHandler
 {
     private readonly IStackRepository _stackRepo;
     private readonly IStudySessionRepository _studyRepo;
 
-    public GetStudySessionByIdHandler(IStackRepository stackRepo, IStudySessionRepository studyRepo)
+    public GetStudySessionsByStackIdHandler(IStackRepository stackRepo, IStudySessionRepository studyRepo)
     {
         _stackRepo = stackRepo;
         _studyRepo = studyRepo;

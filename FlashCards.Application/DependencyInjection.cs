@@ -24,7 +24,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAddStudySessionHandler, AddStudySessionHandler>();
         services.AddScoped<IGetAllStudySessionsHandler, GetAllStudySessionsHandler>();
-        services.AddScoped<IGetStudySessionByIdHandler, GetStudySessionByIdHandler>();
+        services.AddScoped<IGetStudySessionByIdHandler, GetStudySessionsByStackIdHandler>();
 
         return services;
     }
