@@ -26,5 +26,5 @@ public static class Errors
 
     public static readonly Error StackNameTooLong = new("StackNameTooLong", "The stack name cannot exceed 25 characters!");
 
-    public static readonly Error NoStudySessions = new("NoStudySession", "No study sessions exist for the curreent selection!");
+    public static readonly Error NoStudySessions = new("NoStudySession", "No study sessions exist for the current selection!");
 }
