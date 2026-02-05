@@ -2,6 +2,7 @@
 using FlashCards.ConsoleUI;
 using FlashCards.ConsoleUI.Controllers;
 using FlashCards.Infrastructure;
+using FlashCards.Infrastructure.Initialization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +24,9 @@ internal class Program
         services.AddConsoleUI();
 
         var provider = services.BuildServiceProvider();
+        var initializer = provider.GetRequiredService<DbInitializer>();
+        initializer.Initialize();
+
         var mainMenu = provider.GetRequiredService<MainMenuService>();
         mainMenu.Run();
     }

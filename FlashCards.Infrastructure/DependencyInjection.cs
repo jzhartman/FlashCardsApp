@@ -1,5 +1,6 @@
 ﻿using FlashCards.Application.Interfaces;
 using FlashCards.Infrastructure.Dapper;
+using FlashCards.Infrastructure.Initialization;
 using FlashCards.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,8 @@ public static class DependencyInjection
 
         // Register IDbConnection Factory
         services.AddScoped<IDbConnection>(sp => new SqlConnection(connectionString));
+
+        services.AddScoped<DbInitializer>(sp => new DbInitializer(connectionString));
 
         // Register Dapper Wrapper
         services.AddScoped<IDapperWrapper, DapperWrapper>();
