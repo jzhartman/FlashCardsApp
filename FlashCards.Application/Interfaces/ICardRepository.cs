@@ -1,21 +1,21 @@
 ﻿using FlashCards.Core.Entities;
 
-namespace FlashCards.Application.Interfaces;
+namespace FlashCards.Infrastructure.Repositories;
 
 public interface ICardRepository
 {
-    Card GetById(int id);
-    List<Card> GetAllByStackId(int id);
     int Add(Card card);
-    void DeleteById(int id);
-    bool ExistsByFrontText(string text, int stackId);
-    bool ExistsByBackText(string text, int stackId);
-    int GetCardCountByStackName(string stackName);
-    List<Card> GetAllByStackName(string name);
     void DeleteAllByStackName(string name);
-    int GetIdByTextAndStackId(int stackId, string frontText, string backText);
-    void UpdateCardText(int id, string frontText, string backText);
-    bool ExistsByFrontTextExcludingId(string text, int stackId, int cardId);
+    void DeleteById(int id);
+    bool ExistsByBackText(string text, int stackId);
     bool ExistsByBackTextExcludingId(string text, int stackId, int cardId);
+    bool ExistsByFrontText(string text, int stackId);
+    bool ExistsByFrontTextExcludingId(string text, int stackId, int cardId);
+    List<Card> GetAllByStackId(int id);
+    List<Card> GetAllByStackName(string name);
+    Card GetById(int id);
+    int GetCardCountByStackName(string stackName);
+    int GetIdByTextAndStackId(int stackId, string frontText, string backText);
     void UpdateCardCounters(int id, int studied, int correct, int incorrect);
+    void UpdateCardText(int id, string frontText, string backText);
 }

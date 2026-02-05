@@ -1,4 +1,5 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.Cards;
+using FlashCards.Application.DTOs;
 using FlashCards.Core.Validation;
 
 namespace FlashCards.ConsoleUI.Output;

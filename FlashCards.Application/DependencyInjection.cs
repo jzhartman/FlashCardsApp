@@ -1,7 +1,13 @@
-﻿using FlashCards.Application.Interfaces;
-using FlashCards.Application.UseCases.Cards;
-using FlashCards.Application.UseCases.Stacks;
-using FlashCards.Application.UseCases.StudySessions;
+﻿using FlashCards.Application.Cards;
+using FlashCards.Application.Cards.Add;
+using FlashCards.Application.Cards.Delete;
+using FlashCards.Application.Cards.EditTextBySide;
+using FlashCards.Application.Stacks.Add;
+using FlashCards.Application.Stacks.Delete;
+using FlashCards.Application.Stacks.GetAll;
+using FlashCards.Application.StudySessions.Add;
+using FlashCards.Application.StudySessions.GetAll;
+using FlashCards.Application.StudySessions.GetByStackId;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.Application;
@@ -10,21 +16,21 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IAddStackHandler, AddStackHandler>();
-        services.AddScoped<IGetAllStackNamesAndCardCountsHandler, GetAllStackNamesAndCardCountsHandler>();
-        services.AddScoped<IDeleteStackByNameHandler, DeleteStackByNameHandler>();
+        services.AddScoped<AddStackHandler>();
+        services.AddScoped<GetAllStackNamesAndCardCountsHandler>();
+        services.AddScoped<DeleteStackByNameHandler>();
 
-        services.AddScoped<IAddCardHandler, AddCardHandler>();
-        services.AddScoped<IGetAllCardsByStackName, GetAllCardsByStackName>();
-        services.AddScoped<IDeleteCardByIdHandler, DeleteCardByIdHandler>();
-        services.AddScoped<IGetCardTextHandler, GetCardTextHandler>();
-        services.AddScoped<IEditCardTextHandler, EditCardTextBySideHandler>();
-        services.AddScoped<IEditCardHandler, EditCardHandler>();
-        services.AddScoped<IUpdateCardCounterHandler, UpdateCardCounterHandler>();
+        services.AddScoped<AddCardHandler>();
+        services.AddScoped<GetAllCardsByStackName>();
+        services.AddScoped<DeleteCardByIdHandler>();
+        services.AddScoped<GetCardTextHandler>();
+        services.AddScoped<EditCardTextBySideHandler>();
+        services.AddScoped<EditCardHandler>();
+        services.AddScoped<UpdateCardCounterHandler>();
 
-        services.AddScoped<IAddStudySessionHandler, AddStudySessionHandler>();
-        services.AddScoped<IGetAllStudySessionsHandler, GetAllStudySessionsHandler>();
-        services.AddScoped<IGetStudySessionByIdHandler, GetStudySessionsByStackIdHandler>();
+        services.AddScoped<AddStudySessionHandler>();
+        services.AddScoped<GetAllStudySessionsHandler>();
+        services.AddScoped<GetStudySessionsByStackIdHandler>();
 
         return services;
     }

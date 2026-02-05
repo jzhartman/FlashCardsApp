@@ -1,4 +1,4 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.Cards;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Views;

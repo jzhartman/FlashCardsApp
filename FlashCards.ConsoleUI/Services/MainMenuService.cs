@@ -1,5 +1,9 @@
 ﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.Interfaces;
+using FlashCards.Application.Stacks.Add;
+using FlashCards.Application.Stacks.Delete;
+using FlashCards.Application.Stacks.GetAll;
+using FlashCards.Application.StudySessions.GetAll;
+using FlashCards.Application.StudySessions.GetByStackId;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
@@ -17,11 +21,11 @@ public class MainMenuService
     private readonly StudySessionService _studySessionHandler;
     private readonly ReviewStackMenuService _stackMenu;
 
-    private readonly IGetAllStackNamesAndCardCountsHandler _getAllStackNamesAndCardCounts;
-    private readonly IAddStackHandler _addStack;
-    private readonly IDeleteStackByNameHandler _deleteStack;
-    private readonly IGetAllStudySessionsHandler _getAllStudySessions;
-    private readonly IGetStudySessionByIdHandler _getStudySessionById;
+    private readonly GetAllStackNamesAndCardCountsHandler _getAllStackNamesAndCardCounts;
+    private readonly AddStackHandler _addStack;
+    private readonly DeleteStackByNameHandler _deleteStack;
+    private readonly GetAllStudySessionsHandler _getAllStudySessions;
+    private readonly GetStudySessionsByStackIdHandler _getStudySessionById;
 
     private readonly MainMenuView _menu;
     private readonly StackListView _stackList;
@@ -29,9 +33,9 @@ public class MainMenuService
 
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
-                            IGetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, IAddStackHandler addStack,
-                            IDeleteStackByNameHandler deleteStack, IGetAllStudySessionsHandler getAllStudySessions,
-                            IGetStudySessionByIdHandler getStudySessionById)
+                            GetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, AddStackHandler addStack,
+                            DeleteStackByNameHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
+                            GetStudySessionsByStackIdHandler getStudySessionById)
     {
         _stackMenu = stackMenu;
         _input = input;

@@ -1,5 +1,6 @@
-﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Cards;
+using FlashCards.Application.DTOs;
+using FlashCards.Application.StudySessions.Add;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
@@ -12,15 +13,15 @@ public class StudySessionService
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
 
-    private readonly IGetAllCardsByStackName _getAllCardsByStackName;
-    private readonly IAddStudySessionHandler _addStudySessionHandler;
-    private readonly IUpdateCardCounterHandler _updateCardCounterHandler;
+    private readonly GetAllCardsByStackName _getAllCardsByStackName;
+    private readonly AddStudySessionHandler _addStudySessionHandler;
+    private readonly UpdateCardCounterHandler _updateCardCounterHandler;
 
     private readonly StudySessionListView _studySessionList;
 
     public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
-                                IGetAllCardsByStackName getAllCardsByStackName, IAddStudySessionHandler addStudySessionHandler,
-                                IUpdateCardCounterHandler updateCardCounterHandler, StudySessionListView studySessionList)
+                                GetAllCardsByStackName getAllCardsByStackName, AddStudySessionHandler addStudySessionHandler,
+                                UpdateCardCounterHandler updateCardCounterHandler, StudySessionListView studySessionList)
     {
         _provider = provider;
         _input = input;

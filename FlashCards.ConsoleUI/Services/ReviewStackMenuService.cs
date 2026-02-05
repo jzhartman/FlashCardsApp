@@ -1,6 +1,10 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.Cards;
+using FlashCards.Application.Cards.Add;
+using FlashCards.Application.Cards.Delete;
+using FlashCards.Application.Cards.EditTextBySide;
+using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
-using FlashCards.Application.Interfaces;
+using FlashCards.Application.Stacks.GetAll;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
@@ -17,18 +21,18 @@ public class ReviewStackMenuService
     private readonly ReviewStackMenuView _menu;
     private readonly CardListView _cardListView;
 
-    private readonly IGetAllCardsByStackName _getAllCardsByName;
-    private readonly IAddCardHandler _addCard;
-    private readonly IGetCardTextHandler _getCardText;
-    private readonly IEditCardTextHandler _editCardFrontText;
-    private readonly IEditCardHandler _editCard;
-    private readonly IDeleteCardByIdHandler _deleteCardById;
+    private readonly GetAllCardsByStackName _getAllCardsByName;
+    private readonly AddCardHandler _addCard;
+    private readonly GetCardTextHandler _getCardText;
+    private readonly EditCardTextBySideHandler _editCardTextBySide;
+    private readonly EditCardHandler _editCard;
+    private readonly DeleteCardByIdHandler _deleteCardById;
 
     private StackResponse CurrentStack;
 
     public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu, CardListView cardListView,
-                                    IGetAllCardsByStackName getAllCardsByName, IGetCardTextHandler getCardText, IAddCardHandler addCard,
-                                    IEditCardTextHandler editCardFrontText, IEditCardHandler editCard, IDeleteCardByIdHandler deleteCardById)
+                                    GetAllCardsByStackName getAllCardsByName, GetCardTextHandler getCardText, AddCardHandler addCard,
+                                    EditCardTextBySideHandler editCardFrontText, EditCardHandler editCard, DeleteCardByIdHandler deleteCardById)
     {
         _input = input;
         _output = output;
@@ -38,7 +42,7 @@ public class ReviewStackMenuService
         _getAllCardsByName = getAllCardsByName;
         _getCardText = getCardText;
         _addCard = addCard;
-        _editCardFrontText = editCardFrontText;
+        _editCardTextBySide = editCardFrontText;
         _editCard = editCard;
         _deleteCardById = deleteCardById;
     }
@@ -291,7 +295,7 @@ public class ReviewStackMenuService
                                                           textInput,
                                                           cardSide);
 
-            var result = _editCardFrontText.Handle(card, editedCardSide);
+            var result = _editCardTextBySide.Handle(card, editedCardSide); // ToDo: Review that this handler was change correctly
 
             if (!result.IsSuccess)
             {

@@ -1,4 +1,4 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Core.Validation;
 
 namespace FlashCards.UnitTests.ConsoleUITests;

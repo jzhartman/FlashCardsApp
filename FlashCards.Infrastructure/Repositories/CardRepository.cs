@@ -1,5 +1,4 @@
-﻿using FlashCards.Application.Interfaces;
-using FlashCards.Core.Entities;
+﻿using FlashCards.Core.Entities;
 using FlashCards.Infrastructure.Dapper;
 using System.Data;
 
