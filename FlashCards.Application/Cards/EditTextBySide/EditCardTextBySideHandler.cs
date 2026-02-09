@@ -22,13 +22,25 @@ public class EditCardTextBySideHandler
 
         if (editedCard.Side == CardSide.Front)
         {
-            if (string.IsNullOrWhiteSpace(editedCard.Text)) return Result<string>.Success(card.FrontText);
-            if (_cardRepo.ExistsByFrontTextExcludingId(editedCard.Text, stackId, cardId)) return Result<string>.Failure(Errors.CardFrontTextExists);
+            if (string.IsNullOrWhiteSpace(editedCard.Text))
+                return Result<string>.Success(card.FrontText);
+
+            if (_cardRepo.ExistsByFrontTextExcludingId(editedCard.Text, stackId, cardId))
+                return Result<string>.Failure(Errors.CardFrontTextExists);
+
+            if (editedCard.Text.Length > 250)
+                return Result<string>.Failure(Errors.CardTextLengthTooLong);
         }
         if (editedCard.Side == CardSide.Back)
         {
-            if (string.IsNullOrWhiteSpace(editedCard.Text)) return Result<string>.Success(card.BackText);
-            if (_cardRepo.ExistsByBackTextExcludingId(editedCard.Text, stackId, cardId)) return Result<string>.Failure(Errors.CardBackTextExists);
+            if (string.IsNullOrWhiteSpace(editedCard.Text))
+                return Result<string>.Success(card.BackText);
+
+            if (_cardRepo.ExistsByBackTextExcludingId(editedCard.Text, stackId, cardId))
+                return Result<string>.Failure(Errors.CardBackTextExists);
+
+            if (editedCard.Text.Length > 250)
+                return Result<string>.Failure(Errors.CardTextLengthTooLong);
         }
 
         return Result<string>.Success(editedCard.Text);

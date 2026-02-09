@@ -12,6 +12,7 @@ public class ReviewStackMenuView
                     .Title("Select from the options below:")
                     .UseConverter(menu => menu switch
                     {
+                        ReviewStackMenuItem.ReviewCards => "Review Cards in Stack",
                         ReviewStackMenuItem.AddCard => "Add Card to Stack",
                         ReviewStackMenuItem.EditCard => "Edit Card Text",
                         ReviewStackMenuItem.DeleteCard => "Delete Card from Stack",

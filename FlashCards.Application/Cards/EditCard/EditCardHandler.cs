@@ -1,6 +1,7 @@
-﻿using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Cards.EditTextBySide;
+using FlashCards.Application.Interfaces;
 
-namespace FlashCards.Application.Cards.EditTextBySide;
+namespace FlashCards.Application.Cards.EditCard;
 
 public class EditCardHandler
 {

@@ -1,6 +1,7 @@
 ﻿using FlashCards.Application.Cards;
 using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Cards.Delete;
+using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
 using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
@@ -73,7 +74,7 @@ public class ReviewStackMenuService
             {
                 case ReviewStackMenuItem.ReviewCards: HandleReviewCards(cards); break;
                 case ReviewStackMenuItem.AddCard: HandleAddCard(); break;
-                case ReviewStackMenuItem.EditCard: HandleEditCard(); break;
+                case ReviewStackMenuItem.EditCard: HandleEditCard(stack); break;
                 case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(cards); break;
                 case ReviewStackMenuItem.Return: return;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
@@ -108,14 +109,13 @@ public class ReviewStackMenuService
         {
             _output.PrintPageTitle("REVIEW STACK MENU");
 
-            PrintCardTextInPanel(shuffleableCards[i].FrontText);
-            PressAnyKeyToFlipCard();
+            _output.PrintCardTextInPanel(shuffleableCards[i].FrontText);
+            _input.PressAnyKeyToFlipCard();
 
             _output.PrintPageTitle("REVIEW STACK MENU");
-            PrintSideBySidePanels(shuffleableCards[i].FrontText, shuffleableCards[i].BackText);
+            _output.PrintCardTextInSideBySidePanels(shuffleableCards[i].FrontText, shuffleableCards[i].BackText);
 
-            PrintOptions(CardSide.Back, i, shuffleableCards.Count);
-
+            _output.PrintReviewCardsKeypressOptions(CardSide.Back, i, shuffleableCards.Count);
 
             bool validKey = false;
 
@@ -152,11 +152,7 @@ public class ReviewStackMenuService
         }
     }
 
-    public void PressAnyKeyToFlipCard()
-    {
-        Console.Write("Press any key to flip card...");
-        Console.ReadKey();
-    }
+
 
     private List<CardResponse> ShuffleStack(List<CardResponse> cards)
     {
@@ -164,43 +160,6 @@ public class ReviewStackMenuService
         Random.Shared.Shuffle(cardsArray);
         return cardsArray.ToList();
     }
-
-    private void PrintOptions(CardSide side, int index, int cardCount)
-    {
-        var table = new Table()
-                        .RoundedBorder()
-                        .BorderColor(Color.Blue)
-                        .ShowRowSeparators();
-
-        table.AddColumn("Control");
-        table.AddColumn("Key");
-
-        if (side != CardSide.Front && index > 0) table.AddRow("Previous Card", "Left Arrow");
-        if (side != CardSide.Front && index < cardCount) table.AddRow("Next Card", "Right Arrow");
-        table.AddRow("Shuffle Deck", "Up Arrow");
-        table.AddRow("Return to Menu", "Esc");
-
-
-        AnsiConsole.Write(table);
-
-        Console.WriteLine();
-    }
-
-    public void PrintCardTextInPanel(string text)
-    {
-        var panel = new Panel(new Align(new Markup(text), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
-        AnsiConsole.Write(panel);
-    }
-
-    public void PrintSideBySidePanels(string frontText, string backText)
-    {
-        var frontPanel = new Panel(new Align(new Markup(frontText), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
-        var backPanel = new Panel(new Align(new Markup(backText), HorizontalAlignment.Center, VerticalAlignment.Middle)) { Width = 30, Height = 10 };
-        var columns = new Columns(frontPanel, backPanel).Collapse();
-        AnsiConsole.Write(columns);
-
-    }
-
     private void HandleAddCard()
     {
         var card = new AddCardCommand(CurrentStack.Name,
@@ -254,7 +213,7 @@ public class ReviewStackMenuService
     }
 
 
-    private void HandleEditCard()
+    private void HandleEditCard(StackNameAndCardCountResponse stack)
     {
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];

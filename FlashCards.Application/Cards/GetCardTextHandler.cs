@@ -27,6 +27,9 @@ public class GetCardTextHandler
 
             if (string.IsNullOrWhiteSpace(card.Text))
                 return Result<string>.Failure(Errors.CardFrontTextRequired);
+
+            if (card.Text.Length > 250)
+                return Result<string>.Failure(Errors.CardTextLengthTooLong);
         }
         if (card.Side == CardSide.Back)
         {
@@ -35,6 +38,9 @@ public class GetCardTextHandler
 
             if (string.IsNullOrWhiteSpace(card.Text))
                 return Result<string>.Failure(Errors.CardBackTextRequired);
+
+            if (card.Text.Length > 250)
+                return Result<string>.Failure(Errors.CardTextLengthTooLong);
         }
 
         return Result<string>.Success(card.Text);

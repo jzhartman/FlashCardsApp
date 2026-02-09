@@ -10,4 +10,5 @@ public interface IConsoleInput
     int GetRecordIdFromUser(string message, int minValue, int maxValue);
     string GetTextInputFromUser(string message, int topSpaces = 0, int bottomSpaces = 0);
     void PressAnyKeyToContinue(int topSpaces = 1, string message = "Press any key to continue...");
+    void PressAnyKeyToFlipCard();
 }

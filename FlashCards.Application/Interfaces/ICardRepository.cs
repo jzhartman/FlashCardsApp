@@ -1,6 +1,6 @@
 ﻿using FlashCards.Core.Entities;
 
-namespace FlashCards.Infrastructure.Repositories;
+namespace FlashCards.Application.Interfaces;
 
 public interface ICardRepository
 {

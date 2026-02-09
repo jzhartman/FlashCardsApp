@@ -1,6 +1,7 @@
 ﻿using FlashCards.Application.Cards;
 using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Cards.Delete;
+using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
 using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;

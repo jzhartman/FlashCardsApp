@@ -41,7 +41,7 @@ public class ConsoleInput : IConsoleInput
         string promptText = $"[yellow]WARNING![/]You are about to delete the card with the following data:" +
             $"\r\n[green]Front Text:[/] {frontText}" +
             $"\r\n[green]Back Text:[/] {backText}" +
-            "\r\nWould you like to proceed?";
+            "\r\n\r\nWould you like to proceed?";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>(promptText)
@@ -63,7 +63,7 @@ public class ConsoleInput : IConsoleInput
         if (originalBackText != newBackText)
             promptText += $"\r\n\t[blue]Back Text[/] changed from: [green]{originalBackText}[/] to [yellow]{newBackText}[/]";
 
-        promptText += "\r\nConfirm changes: ";
+        promptText += "\r\n\r\nConfirm changes: ";
 
 
         var confirmation = AnsiConsole.Prompt(
@@ -103,6 +103,12 @@ public class ConsoleInput : IConsoleInput
         AnsiConsole.Markup($"{message}: ");
         AddEmptyLines(bottomSpaces);
         return Console.ReadLine();
+    }
+
+    public void PressAnyKeyToFlipCard()
+    {
+        Console.Write("Press any key to flip card...");
+        Console.ReadKey();
     }
 
     public void PressAnyKeyToContinue(int topSpaces = 1, string message = "Press any key to continue...")
