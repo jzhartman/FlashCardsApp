@@ -42,6 +42,14 @@ public class CardRepository : ICardRepository
 
         _dapper.Execute(_connection, sql, new { Name = name });
     }
+    public void DeleteAllByStackId(int id)
+    {
+        var sql = @"delete c from Card c
+                    inner join stack s on s.id = c.StackId
+                    where s.Id = @Id";
+
+        _dapper.Execute(_connection, sql, new { Id = id });
+    }
 
     public void UpdateCardText(int id, string frontText, string backText)
     {

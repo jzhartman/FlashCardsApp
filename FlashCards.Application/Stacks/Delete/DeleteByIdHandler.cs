@@ -3,13 +3,13 @@ using FlashCards.Application.Stacks.GetAll;
 
 namespace FlashCards.Application.Stacks.Delete;
 
-public class DeleteStackByNameHandler
+public class DeleteByIdHandler
 {
     private readonly ICardRepository _cardRepo;
     private readonly IStackRepository _stackRepo;
     private readonly IStudySessionRepository _sessionRepo;
 
-    public DeleteStackByNameHandler(ICardRepository cardRepo, IStackRepository stackRepo, IStudySessionRepository sessionRepo)
+    public DeleteByIdHandler(ICardRepository cardRepo, IStackRepository stackRepo, IStudySessionRepository sessionRepo)
     {
         _cardRepo = cardRepo;
         _stackRepo = stackRepo;

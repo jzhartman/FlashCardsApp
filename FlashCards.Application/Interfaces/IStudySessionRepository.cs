@@ -9,4 +9,5 @@ public interface IStudySessionRepository
     List<StudySession> GetAllByStackId(int id);
     void DeleteAllByStackName(string name);
     int GetSessionCountByStackId(int id);
+    void DeleteAllByStackId(int id);
 }

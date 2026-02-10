@@ -5,6 +5,7 @@ namespace FlashCards.Application.Interfaces;
 public interface ICardRepository
 {
     int Add(Card card);
+    void DeleteAllByStackId(int id);
     void DeleteAllByStackName(string name);
     void DeleteById(int id);
     bool ExistsByBackText(string text, int stackId);
