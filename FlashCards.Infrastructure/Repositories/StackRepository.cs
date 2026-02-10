@@ -59,31 +59,10 @@ public class StackRepository : IStackRepository
 
     public List<Stack> GetAll()
     {
-        var sql = @"select s.Id, s.Name, c.Id as StackId, c.FrontText, c.BackText
-                    from dbo.Stack s
-                    left join dbo.Card c on s.Id = c.StackId";
+        var sql = @"select Id, Name
+                    from Stack";
 
-        var lookup = new Dictionary<int, Stack>();
-
-        _dapper.Query<Stack, Card, Stack>(
-            _connection,
-            sql,
-            (stack, card) =>
-            {
-                if (!lookup.TryGetValue(stack.Id, out var s))
-                {
-                    s = new Stack(stack.Id, stack.Name, new List<Card>());
-                    lookup.Add(s.Id, s);
-                }
-
-                if (card != null)
-                    s.Cards.Add(card);
-                return s;
-            },
-            splitOn: "StackId"
-            );
-
-        return lookup.Values.ToList();
+        return _dapper.Query<Stack>(_connection, sql).ToList();
     }
 
     public List<string> GetAllNames()

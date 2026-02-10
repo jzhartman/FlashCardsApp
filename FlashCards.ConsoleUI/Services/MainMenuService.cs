@@ -21,7 +21,7 @@ public class MainMenuService
     private readonly StudySessionService _studySessionHandler;
     private readonly ReviewStackMenuService _stackMenu;
 
-    private readonly GetAllStackNamesAndCardCountsHandler _getAllStackNamesAndCardCounts;
+    private readonly GetAllStacksWithCountsHandler _getAllStackNamesAndCardCounts;
     private readonly AddStackHandler _addStack;
     private readonly DeleteStackByNameHandler _deleteStack;
     private readonly GetAllStudySessionsHandler _getAllStudySessions;
@@ -33,7 +33,7 @@ public class MainMenuService
 
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
-                            GetAllStackNamesAndCardCountsHandler getAllStackNamesAndCardCounts, AddStackHandler addStack,
+                            GetAllStacksWithCountsHandler getAllStackNamesAndCardCounts, AddStackHandler addStack,
                             DeleteStackByNameHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
                             GetStudySessionsByStackIdHandler getStudySessionById)
     {
@@ -84,21 +84,21 @@ public class MainMenuService
         }
     }
 
-    private List<StackNameAndCardCountResponse> GetStacks()
+    private List<StackResponseWithCounts> GetStacks()
     {
         var result = _getAllStackNamesAndCardCounts.Handle();
 
         if (result.IsFailure)
         {
             _output.PrintValidationErrorsFromCollection(result.Errors);
-            return new List<StackNameAndCardCountResponse>();
+            return new List<StackResponseWithCounts>();
         }
         else
         {
             return result.Value;
         }
     }
-    private void HandleReviewStack(List<StackNameAndCardCountResponse> stacks)
+    private void HandleReviewStack(List<StackResponseWithCounts> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
@@ -124,7 +124,7 @@ public class MainMenuService
         }
         _input.PressAnyKeyToContinue();
     }
-    private void HandleDeleteStack(List<StackNameAndCardCountResponse> stacks)
+    private void HandleDeleteStack(List<StackResponseWithCounts> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to delete:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
@@ -139,13 +139,13 @@ public class MainMenuService
 
         _input.PressAnyKeyToContinue();
     }
-    private void HandleStudy(List<StackNameAndCardCountResponse> stacks)
+    private void HandleStudy(List<StackResponseWithCounts> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to study:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
         _studySessionHandler.Run(stacks[id - 1].Name);
     }
-    private void HandleViewPastSessions(List<StackNameAndCardCountResponse> stacks)
+    private void HandleViewPastSessions(List<StackResponseWithCounts> stacks)
     {
         var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
         int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);

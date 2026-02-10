@@ -15,7 +15,7 @@ public class GetStudySessionsByStackIdHandler
         _stackRepo = stackRepo;
         _studyRepo = studyRepo;
     }
-    public List<StudySessionResponse> Handle(StackNameAndCardCountResponse stack)
+    public List<StudySessionResponse> Handle(StackResponseWithCounts stack)
     {
         var stackId = _stackRepo.GetIdByName(stack.Name);
         var sessions = _studyRepo.GetAllByStackId(stackId);

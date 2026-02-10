@@ -36,6 +36,15 @@ public class StudySessionRepository : IStudySessionRepository
 
         return _dapper.Query<StudySession>(_connection, sql).ToList();
     }
+    public int GetSessionCountByStackId(int id)
+    {
+        var sql = @"select count(*)
+                    from StudySession t
+                    inner join stack s on s.id = t.StackId
+                    where s.Id = @Id";
+
+        return _dapper.Query<int>(_connection, sql, new { Id = id }).First();
+    }
 
     public void DeleteAllByStackName(string name)
     {

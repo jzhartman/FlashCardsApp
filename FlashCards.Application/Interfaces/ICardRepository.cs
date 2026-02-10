@@ -14,6 +14,7 @@ public interface ICardRepository
     List<Card> GetAllByStackId(int id);
     List<Card> GetAllByStackName(string name);
     Card GetById(int id);
+    int GetCardCountByStackId(int id);
     int GetCardCountByStackName(string stackName);
     int GetIdByTextAndStackId(int stackId, string frontText, string backText);
     void UpdateCardCounters(int id, int studied, int correct, int incorrect);
