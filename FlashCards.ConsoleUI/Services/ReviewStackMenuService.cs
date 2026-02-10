@@ -3,12 +3,12 @@ using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Cards.Delete;
 using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
-using FlashCards.Application.Cards.GetAll;
 using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Input;
+using FlashCards.ConsoleUI.Models;
 using FlashCards.ConsoleUI.Output;
 using FlashCards.ConsoleUI.Views;
 using Spectre.Console;
@@ -54,34 +54,42 @@ public class ReviewStackMenuService
         CurrentStack = new StackResponse(stackName, cards);
     }
 
-    public void Run(StackNameAndCardCountResponse stack)
+    public void Run(StackResponseWithCounts stack)
     {
         while (true)
         {
-            _output.PrintPageTitle($"REVIEWING STACK: {stack.Name}");
+            var fullStack = BuildFullStack(stack);
 
-            var cards = GetCards(stack.Name);
-            _cardListView.Render(cards);
+            _output.PrintPageTitle($"REVIEWING STACK: {fullStack.Name}");
+
+            _cardListView.Render(fullStack.Cards);
 
             ReviewStackMenuItem[] menuItems = Enum.GetValues<ReviewStackMenuItem>();
 
-            if (cards.Count <= 0) menuItems = new ReviewStackMenuItem[2] { ReviewStackMenuItem.AddCard, ReviewStackMenuItem.Return };
+            if (fullStack.Cards.Count <= 0) menuItems = new ReviewStackMenuItem[2] { ReviewStackMenuItem.AddCard, ReviewStackMenuItem.Return };
 
-            SetStack(stack.Name, cards);
+            SetStack(fullStack.Name, fullStack.Cards);
 
             var selection = _menu.Render(menuItems);
 
             switch (selection)
             {
-                case ReviewStackMenuItem.ReviewCards: HandleReviewCards(cards); break;
+                case ReviewStackMenuItem.ReviewCards: HandleReviewCards(fullStack.Cards); break;
                 case ReviewStackMenuItem.AddCard: HandleAddCard(); break;
-                case ReviewStackMenuItem.EditCard: HandleEditCard(stack); break;
-                case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(cards); break;
+                case ReviewStackMenuItem.EditCard: HandleEditCard(fullStack); break;
+                case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(fullStack.Cards); break;
                 case ReviewStackMenuItem.Return: return;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
             _input.PressAnyKeyToContinue(2);
         }
+    }
+
+    private StackViewModel BuildFullStack(StackResponse stack)
+    {
+        var stackName
+        var cards = GetCards(stack.Name);
+
     }
 
     private List<CardResponse> GetCards(string stackName)
@@ -211,7 +219,7 @@ public class ReviewStackMenuService
     }
 
 
-    private void HandleEditCard(StackNameAndCardCountResponse stack)
+    private void HandleEditCard(StackResponseWithCounts stack)
     {
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];

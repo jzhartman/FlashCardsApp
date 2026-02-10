@@ -5,11 +5,11 @@ namespace FlashCards.ConsoleUI.Views;
 
 public class StackListView
 {
-    public void Render(StackNameAndCardCountResponse stack)
+    public void Render(StackResponseWithCounts stack)
     {
-        Render(new List<StackNameAndCardCountResponse>() { stack });
+        Render(new List<StackResponseWithCounts>() { stack });
     }
-    public void Render(List<StackNameAndCardCountResponse> stacks)
+    public void Render(List<StackResponseWithCounts> stacks)
     {
         int i = 1;
         var table = new Table()
@@ -20,12 +20,14 @@ public class StackListView
         table.AddColumn("Id");
         table.AddColumn("Stack Name");
         table.AddColumn("Card Count");
+        table.AddColumn("Session Count");
 
-        if (stacks.Count == 0) table.AddRow("<NO ID>", "<NO NAME>", "<NO CARDS>");
+
+        if (stacks.Count == 0) table.AddRow("<NO ID>", "<NO NAME>", "<NO CARDS>", "<NO SESSIONS>");
 
         foreach (var stack in stacks)
         {
-            table.AddRow(i.ToString(), stack.Name, stack.CardCount.ToString());
+            table.AddRow(i.ToString(), stack.Name, stack.CardCount.ToString(), stack.SessionCount.ToString());
             i++;
         }
 

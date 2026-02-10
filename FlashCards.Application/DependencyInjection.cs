@@ -19,8 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<AddStackHandler>();
-        services.AddScoped<GetAllStackNamesAndCardCountsHandler>();
-        services.AddScoped<DeleteStackByNameHandler>();
+        services.AddScoped<GetAllStacksWithCountsHandler>();
+        services.AddScoped<DeleteByIdHandler>();
 
         services.AddScoped<AddCardHandler>();
         services.AddScoped<GetAllCardsByStackName>();

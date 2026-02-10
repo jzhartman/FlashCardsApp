@@ -23,7 +23,7 @@ public class MainMenuService
 
     private readonly GetAllStacksWithCountsHandler _getAllStackNamesAndCardCounts;
     private readonly AddStackHandler _addStack;
-    private readonly DeleteStackByNameHandler _deleteStack;
+    private readonly DeleteByIdHandler _deleteStack;
     private readonly GetAllStudySessionsHandler _getAllStudySessions;
     private readonly GetStudySessionsByStackIdHandler _getStudySessionById;
 
@@ -34,7 +34,7 @@ public class MainMenuService
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCardCounts, AddStackHandler addStack,
-                            DeleteStackByNameHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
+                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
                             GetStudySessionsByStackIdHandler getStudySessionById)
     {
         _stackMenu = stackMenu;
