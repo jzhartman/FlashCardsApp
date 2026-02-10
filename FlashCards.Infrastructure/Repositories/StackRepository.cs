@@ -48,6 +48,14 @@ public class StackRepository : IStackRepository
 
         return exists == 1 ? true : false;
     }
+    public bool ExistsById(int id)
+    {
+        var sql = @"select 1 from stack where Id = @Id";
+
+        int exists = _dapper.Query<int>(_connection, sql, new { Id = id }).FirstOrDefault();
+
+        return exists == 1 ? true : false;
+    }
 
     public List<Stack> GetAll()
     {

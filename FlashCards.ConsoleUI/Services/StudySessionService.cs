@@ -1,4 +1,5 @@
 ﻿using FlashCards.Application.Cards;
+using FlashCards.Application.Cards.GetAll;
 using FlashCards.Application.DTOs;
 using FlashCards.Application.StudySessions.Add;
 using FlashCards.ConsoleUI.Input;

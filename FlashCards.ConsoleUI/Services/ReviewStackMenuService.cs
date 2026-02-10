@@ -3,6 +3,7 @@ using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Cards.Delete;
 using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
+using FlashCards.Application.Cards.GetAll;
 using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
 using FlashCards.Application.Stacks.GetAll;
@@ -151,9 +152,6 @@ public class ReviewStackMenuService
             }
         }
     }
-
-
-
     private List<CardResponse> ShuffleStack(List<CardResponse> cards)
     {
         CardResponse[] cardsArray = cards.ToArray();
@@ -254,7 +252,7 @@ public class ReviewStackMenuService
                                                           textInput,
                                                           cardSide);
 
-            var result = _editCardTextBySide.Handle(card, editedCardSide); // ToDo: Review that this handler was change correctly
+            var result = _editCardTextBySide.Handle(card, editedCardSide);
 
             if (!result.IsSuccess)
             {
