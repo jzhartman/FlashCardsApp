@@ -1,10 +1,25 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.StudySessions;
+using FlashCards.Application.StudySessions.Add;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Views;
 
 public class StudySessionListView
 {
+    public void Render(AddStudySessionCommand session)
+    {
+        var mappedSession = new StudySessionResponse(
+            session.Time,
+            session.StackName,
+            session.Score,
+            session.CardsStudied,
+            session.CardsCorrect,
+            session.CardsIncorrect
+        );
+        var sessions = new List<StudySessionResponse> { mappedSession };
+
+        Render(sessions);
+    }
     public void Render(StudySessionResponse session)
     {
         var sessions = new List<StudySessionResponse> { session };

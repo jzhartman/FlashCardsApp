@@ -1,5 +1,4 @@
-﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Interfaces;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Core.Entities;
 

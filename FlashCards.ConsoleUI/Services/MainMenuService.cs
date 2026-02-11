@@ -1,7 +1,7 @@
-﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.Stacks.Add;
+﻿using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
+using FlashCards.Application.StudySessions;
 using FlashCards.Application.StudySessions.GetAll;
 using FlashCards.Application.StudySessions.GetByStackId;
 using FlashCards.ConsoleUI.Enums;
@@ -18,7 +18,7 @@ public class MainMenuService
 {
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
-    private readonly StudySessionService _studySessionHandler;
+    private readonly StudySessionService _studySessionService;
     private readonly ReviewStackMenuService _stackMenu;
 
     private readonly GetAllStacksWithCountsHandler _getAllStackNamesAndCounts;
@@ -31,7 +31,7 @@ public class MainMenuService
     private readonly StackListView _stackList;
     private readonly StudySessionListView _studySessionList;
 
-    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionHandler,
+    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionService,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCounts, AddStackHandler addStack,
                             DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
@@ -40,7 +40,7 @@ public class MainMenuService
         _stackMenu = stackMenu;
         _input = input;
         _output = output;
-        _studySessionHandler = studySessionHandler;
+        _studySessionService = studySessionService;
 
         _menu = menu;
         _stackList = stackList;
@@ -98,7 +98,7 @@ public class MainMenuService
             return result.Value;
         }
     }
-    private void HandleReviewStack(List<StackNamesWithCountsResponse> stacks)           // Follow to ReviewStackHandler
+    private void HandleReviewStack(List<StackNamesWithCountsResponse> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
@@ -139,11 +139,11 @@ public class MainMenuService
 
         _input.PressAnyKeyToContinue();
     }
-    private void HandleStudy(List<StackNamesWithCountsResponse> stacks)                 // Follow to StudySessionHandler
+    private void HandleStudy(List<StackNamesWithCountsResponse> stacks)
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to study:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
-        _studySessionHandler.Run(stacks[id - 1].Name);
+        _studySessionService.Run(stacks[id - 1]);
     }
     private void HandleViewPastSessions(List<StackNamesWithCountsResponse> stacks)
     {

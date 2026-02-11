@@ -20,7 +20,7 @@ public class AddStackHandler
         if (String.IsNullOrWhiteSpace(name))
             return Result<string>.Failure(Errors.StackNameRequired);
 
-        if (name.Length > 25)
+        if (name.Length > 32)
             return Result<string>.Failure(Errors.StackNameTooLong);
 
         _repo.Add(name);

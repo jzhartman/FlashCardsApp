@@ -78,9 +78,9 @@ public class CardRepository : ICardRepository
     public List<Card> GetAllByStackId(int id)
     {
         var sql = @"select * from Card
-                    where StackId = @id";
+                    where StackId = @Id";
 
-        return _dapper.Query<Card>(_connection, sql, id).ToList();
+        return _dapper.Query<Card>(_connection, sql, new { Id = id }).ToList();
     }
     public List<Card> GetAllByStackName(string name)
     {

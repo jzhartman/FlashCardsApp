@@ -1,6 +1,7 @@
 ﻿using FlashCards.Application.Cards;
-using FlashCards.Application.Cards.GetAll;
-using FlashCards.Application.DTOs;
+using FlashCards.Application.Cards.GetAllByStackId;
+using FlashCards.Application.Cards.UpdateCardCounters;
+using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Application.StudySessions.Add;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
@@ -14,26 +15,26 @@ public class StudySessionService
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
 
-    private readonly GetAllCardsByStackName _getAllCardsByStackName;
+    private readonly GetAllByStackId _getAllByStackId;
     private readonly AddStudySessionHandler _addStudySessionHandler;
-    private readonly UpdateCardCounterHandler _updateCardCounterHandler;
+    private readonly UpdateCardCountersHandler _updateCardCounterHandler;
 
     private readonly StudySessionListView _studySessionList;
 
     public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
-                                GetAllCardsByStackName getAllCardsByStackName, AddStudySessionHandler addStudySessionHandler,
-                                UpdateCardCounterHandler updateCardCounterHandler, StudySessionListView studySessionList)
+                                GetAllByStackId getAllByStackId, AddStudySessionHandler addStudySessionHandler,
+                                UpdateCardCountersHandler updateCardCounterHandler, StudySessionListView studySessionList)
     {
         _provider = provider;
         _input = input;
         _output = output;
-        _getAllCardsByStackName = getAllCardsByStackName;
+        _getAllByStackId = getAllByStackId;
         _addStudySessionHandler = addStudySessionHandler;
         _updateCardCounterHandler = updateCardCounterHandler;
         _studySessionList = studySessionList;
     }
 
-    public void Run(string stackName)
+    public void Run(StackNamesWithCountsResponse stack)
     {
         _output.PrintPageTitle("STUDY MODE");
 
@@ -41,7 +42,7 @@ public class StudySessionService
         var cardsIncorrect = new List<int>();
 
 
-        var result = _getAllCardsByStackName.Handle(stackName);
+        var result = _getAllByStackId.Handle(stack.Id);
 
         if (result.IsFailure)
         {
@@ -54,7 +55,7 @@ public class StudySessionService
 
             cards = ShuffleStack(cards);
 
-            var session = StudyCards(stackName, cards, cardsCorrect, cardsIncorrect);
+            var session = StudyCards(stack.Id, stack.Name, cards, cardsCorrect, cardsIncorrect);
             _addStudySessionHandler.Handle(session);
             _updateCardCounterHandler.Handle(cardsCorrect, cardsIncorrect);
             _studySessionList.Render(session);
@@ -63,7 +64,7 @@ public class StudySessionService
         _input.PressAnyKeyToContinue();
     }
 
-    private StudySessionResponse StudyCards(string stackName, List<CardResponse> cards, List<int> cardsCorrect, List<int> cardsIncorrect)
+    private AddStudySessionCommand StudyCards(int stackId, string stackName, List<CardResponse> cards, List<int> cardsCorrect, List<int> cardsIncorrect)
     {
         int cardsStudied = 0;
 
@@ -92,7 +93,7 @@ public class StudySessionService
         }
 
         double score = (double)cardsCorrect.Count / cardsStudied * 100;
-        return new StudySessionResponse(DateTime.Now, stackName, score, cardsStudied, cardsCorrect.Count, cardsIncorrect.Count);
+        return new AddStudySessionCommand(stackId, stackName, DateTime.Now, score, cardsStudied, cardsCorrect.Count, cardsIncorrect.Count);
     }
 
     private List<CardResponse> ShuffleStack(List<CardResponse> cards)

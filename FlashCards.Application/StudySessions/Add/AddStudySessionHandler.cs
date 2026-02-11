@@ -1,5 +1,4 @@
-﻿using FlashCards.Application.DTOs;
-using FlashCards.Application.Interfaces;
+﻿using FlashCards.Application.Interfaces;
 using FlashCards.Core.Entities;
 
 namespace FlashCards.Application.StudySessions.Add;
@@ -15,7 +14,7 @@ public class AddStudySessionHandler
         _stackRepo = stackRepo;
     }
 
-    public void Handle(StudySessionResponse session)
+    public void Handle(AddStudySessionCommand session)
     {
         var stackId = _stackRepo.GetIdByName(session.StackName);
         _studyRepo.Add(new StudySession
@@ -23,9 +22,9 @@ public class AddStudySessionHandler
             Time = session.Time,
             StackId = stackId,
             Score = session.Score,
-            CountStudied = session.CountStudied,
-            CountCorrect = session.CountCorrect,
-            CountIncorrect = session.CountIncorrect
+            CountStudied = session.CardsStudied,
+            CountCorrect = session.CardsCorrect,
+            CountIncorrect = session.CardsIncorrect
         });
 
     }

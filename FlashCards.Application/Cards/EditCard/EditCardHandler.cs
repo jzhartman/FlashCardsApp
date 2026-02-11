@@ -15,8 +15,7 @@ public class EditCardHandler
     }
     public void Handle(CardResponse card, EditCardCommand editedCard)
     {
-        var stackId = _stackRepo.GetIdByName(editedCard.StackName);
-        int id = _cardRepo.GetIdByTextAndStackId(stackId, card.FrontText, card.BackText);
+        int id = _cardRepo.GetIdByTextAndStackId(card.StackId, card.FrontText, card.BackText);
 
         _cardRepo.UpdateCardText(id, editedCard.FrontText, editedCard.BackText);
     }

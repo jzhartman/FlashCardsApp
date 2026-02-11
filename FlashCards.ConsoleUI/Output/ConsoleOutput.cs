@@ -1,5 +1,4 @@
 ﻿using FlashCards.Application.Cards;
-using FlashCards.Application.DTOs;
 using FlashCards.Application.Enums;
 using FlashCards.Core.Validation;
 using Spectre.Console;
@@ -36,17 +35,6 @@ public class ConsoleOutput : IConsoleOutput
     {
         Console.WriteLine($"{i}: {card.FrontText} \t {card.BackText}");
     }
-    public void PrintCards(StackResponse stack)
-    {
-        int i = 1;
-        foreach (var card in stack.Cards)
-        {
-            PrintCard(card, i);
-            i++;
-        }
-        Console.WriteLine();
-    }
-
     public void PrintValidationErrorsFromCollection(List<Error> errors)
     {
         foreach (var error in errors)

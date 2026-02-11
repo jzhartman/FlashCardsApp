@@ -1,12 +1,12 @@
 ﻿using FlashCards.Application.Interfaces;
 
-namespace FlashCards.Application.Cards;
+namespace FlashCards.Application.Cards.UpdateCardCounters;
 
-public class UpdateCardCounterHandler
+public class UpdateCardCountersHandler
 {
     private readonly ICardRepository _repo;
 
-    public UpdateCardCounterHandler(ICardRepository repo)
+    public UpdateCardCountersHandler(ICardRepository repo)
     {
         _repo = repo;
     }
