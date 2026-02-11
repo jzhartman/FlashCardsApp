@@ -3,7 +3,8 @@ using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Cards.Delete;
 using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
-using FlashCards.Application.DTOs;
+using FlashCards.Application.Cards.GetAllByStackId;
+using FlashCards.Application.Cards.ValidateCardTextBySide;
 using FlashCards.Application.Enums;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.ConsoleUI.Enums;
@@ -23,17 +24,15 @@ public class ReviewStackMenuService
     private readonly ReviewStackMenuView _menu;
     private readonly CardListView _cardListView;
 
-    private readonly GetAllCardsByStackName _getAllCardsByName;
+    private readonly GetAllByStackId _getAllCardsByStackId;
     private readonly AddCardHandler _addCard;
-    private readonly GetCardTextHandler _getCardText;
+    private readonly ValidateCardTextBySide _getCardText;
     private readonly EditCardTextBySideHandler _editCardTextBySide;
     private readonly EditCardHandler _editCard;
     private readonly DeleteCardByIdHandler _deleteCardById;
 
-    private StackResponse CurrentStack;
-
     public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu, CardListView cardListView,
-                                    GetAllCardsByStackName getAllCardsByName, GetCardTextHandler getCardText, AddCardHandler addCard,
+                                    GetAllByStackId getAllCardsByStackId, ValidateCardTextBySide getCardText, AddCardHandler addCard,
                                     EditCardTextBySideHandler editCardFrontText, EditCardHandler editCard, DeleteCardByIdHandler deleteCardById)
     {
         _input = input;
@@ -41,17 +40,12 @@ public class ReviewStackMenuService
         _menu = menu;
         _cardListView = cardListView;
 
-        _getAllCardsByName = getAllCardsByName;
+        _getAllCardsByStackId = getAllCardsByStackId;
         _getCardText = getCardText;
         _addCard = addCard;
         _editCardTextBySide = editCardFrontText;
         _editCard = editCard;
         _deleteCardById = deleteCardById;
-    }
-
-    private void SetStack(string stackName, List<CardResponse> cards)
-    {
-        CurrentStack = new StackResponse(stackName, cards);
     }
 
     public void Run(StackNamesWithCountsResponse stack)
@@ -68,14 +62,12 @@ public class ReviewStackMenuService
 
             if (fullStack.Cards.Count <= 0) menuItems = new ReviewStackMenuItem[2] { ReviewStackMenuItem.AddCard, ReviewStackMenuItem.Return };
 
-            SetStack(fullStack.Name, fullStack.Cards);
-
             var selection = _menu.Render(menuItems);
 
             switch (selection)
             {
                 case ReviewStackMenuItem.ReviewCards: HandleReviewCards(fullStack.Cards); break;
-                case ReviewStackMenuItem.AddCard: HandleAddCard(); break;
+                case ReviewStackMenuItem.AddCard: HandleAddCard(fullStack); break;
                 case ReviewStackMenuItem.EditCard: HandleEditCard(fullStack); break;
                 case ReviewStackMenuItem.DeleteCard: HandleDeleteCard(fullStack.Cards); break;
                 case ReviewStackMenuItem.Return: return;
@@ -84,17 +76,15 @@ public class ReviewStackMenuService
             _input.PressAnyKeyToContinue(2);
         }
     }
-
-    private StackViewModel BuildFullStack(StackResponse stack)
+    private StackViewModel BuildFullStack(StackNamesWithCountsResponse stack)
     {
-        var stackName
-        var cards = GetCards(stack.Name);
+        var cards = GetCards(stack.Id);
 
+        return new StackViewModel(stack.Id, stack.Name, cards);
     }
-
-    private List<CardResponse> GetCards(string stackName)
+    private List<CardResponse> GetCards(int stackId)
     {
-        var result = _getAllCardsByName.Handle(stackName);
+        var result = _getAllCardsByStackId.Handle(stackId);
 
         if (result.IsFailure)
         {
@@ -106,7 +96,6 @@ public class ReviewStackMenuService
             return result.Value;
         }
     }
-
     private void HandleReviewCards(List<CardResponse> cards)
     {
         var shuffleableCards = cards;
@@ -166,26 +155,25 @@ public class ReviewStackMenuService
         Random.Shared.Shuffle(cardsArray);
         return cardsArray.ToList();
     }
-    private void HandleAddCard()
+    private void HandleAddCard(StackViewModel fullStack)
     {
-        var card = new AddCardCommand(CurrentStack.Name,
-                                        GetCardText(CardSide.Front),
-                                        GetCardText(CardSide.Back));
+        var card = new AddCardCommand(fullStack.StackId,
+                                        GetCardText(fullStack.StackId, CardSide.Front),
+                                        GetCardText(fullStack.StackId, CardSide.Back));
 
         var result = _addCard.Handle(card);
 
-        if (result.IsSuccess) _output.PrintSuccessMessage($"Added card to {CurrentStack.Name}!");
+        if (result.IsSuccess) _output.PrintSuccessMessage($"Added card to {fullStack.Name}!");
         else Console.WriteLine("ERROR MESSAGE");
     }
-
-    private string GetCardText(CardSide cardSide)
+    private string GetCardText(int stackId, CardSide cardSide)
     {
         bool textValid = false;
         var output = string.Empty;
 
         while (textValid == false)
         {
-            var cardData = new CardTextBySideCommand(CurrentStack.Name,
+            var cardData = new ValidateCardTextBySideCommand(stackId,
                                                     _input.GetTextInputFromUser($"Enter {cardSide} text"),
                                                     cardSide);
 
@@ -201,10 +189,6 @@ public class ReviewStackMenuService
         }
         return output;
     }
-
-
-
-
     private void HandleDeleteCard(List<CardResponse> cards)
     {
         var message = "Please enter the [yellow]ID[/] of the card you wish to delete:";
@@ -217,14 +201,13 @@ public class ReviewStackMenuService
         }
         else _output.PrintCancellationMessage("deletion", "card");
     }
-
-
-    private void HandleEditCard(StackNamesWithCountsResponse stack)
+    private void HandleEditCard(StackViewModel stack)
     {
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
-        var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];
+        var cardIndex = _input.GetRecordIdFromUser(message, 1, stack.Cards.Count) - 1;
+        var originalCard = stack.Cards[cardIndex];
 
-        var editedCard = new EditCardCommand(CurrentStack.Name,
+        var editedCard = new EditCardCommand(stack.StackId,
             GetEditedTextFromUser(originalCard, CardSide.Front),
             GetEditedTextFromUser(originalCard, CardSide.Back));
 
@@ -256,9 +239,7 @@ public class ReviewStackMenuService
         {
             textInput = _input.GetTextInputFromUser(promptText, 1);
 
-            var editedCardSide = new CardTextBySideCommand(CurrentStack.Name,
-                                                          textInput,
-                                                          cardSide);
+            var editedCardSide = new EditCardTextBySideCommand(textInput, cardSide);
 
             var result = _editCardTextBySide.Handle(card, editedCardSide);
 

@@ -1,3 +1,3 @@
 ﻿namespace FlashCards.Application.Cards.Add;
 
-public record AddCardCommand(string StackName, string FrontText, string BackText);
+public record AddCardCommand(int StackId, string FrontText, string BackText);

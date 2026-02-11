@@ -4,6 +4,7 @@ using FlashCards.Application.Cards.Delete;
 using FlashCards.Application.Cards.EditCard;
 using FlashCards.Application.Cards.EditTextBySide;
 using FlashCards.Application.Cards.GetAllByStackId;
+using FlashCards.Application.Cards.ValidateCardTextBySide;
 using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
@@ -26,7 +27,7 @@ public static class DependencyInjection
         services.AddScoped<GetAllCardsByStackName>();
         services.AddScoped<GetAllByStackId>();
         services.AddScoped<DeleteCardByIdHandler>();
-        services.AddScoped<GetCardTextHandler>();
+        services.AddScoped<ValidateCardTextBySide>();
         services.AddScoped<EditCardTextBySideHandler>();
         services.AddScoped<EditCardHandler>();
         services.AddScoped<UpdateCardCounterHandler>();

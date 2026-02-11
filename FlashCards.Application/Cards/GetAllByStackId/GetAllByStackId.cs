@@ -26,16 +26,16 @@ public class GetAllByStackId
         if (cards.Count == 0)
             return Result<List<CardResponse>>.Failure(Errors.NoCardsExist);
         else
-            return Result<List<CardResponse>>.Success(BuildResponse(cards));
+            return Result<List<CardResponse>>.Success(BuildResponse(cards, stackId));
     }
 
-    private List<CardResponse> BuildResponse(List<Card> cards)
+    private List<CardResponse> BuildResponse(List<Card> cards, int stackId)
     {
         var outputs = new List<CardResponse>();
 
         foreach (var card in cards)
         {
-            var cardResponse = new CardResponse(card.Id, card.FrontText, card.BackText, card.TimesStudied, card.TimesCorrect, card.TimesIncorrect);
+            var cardResponse = new CardResponse(card.Id, stackId, card.FrontText, card.BackText, card.TimesStudied, card.TimesCorrect, card.TimesIncorrect);
             outputs.Add(cardResponse);
         }
 

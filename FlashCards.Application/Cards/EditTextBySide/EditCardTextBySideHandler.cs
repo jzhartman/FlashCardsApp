@@ -7,25 +7,22 @@ namespace FlashCards.Application.Cards.EditTextBySide;
 public class EditCardTextBySideHandler
 {
     private readonly ICardRepository _cardRepo;
-    private readonly IStackRepository _stackRepo;
 
-    public EditCardTextBySideHandler(ICardRepository cardRepo, IStackRepository stackRepo)
+    public EditCardTextBySideHandler(ICardRepository cardRepo)
     {
         _cardRepo = cardRepo;
-        _stackRepo = stackRepo;
     }
 
-    public Result<string> Handle(CardResponse card, CardTextBySideCommand editedCard)
+    public Result<string> Handle(CardResponse card, EditCardTextBySideCommand editedCard)
     {
-        var stackId = _stackRepo.GetIdByName(editedCard.StackName);
-        var cardId = _cardRepo.GetIdByTextAndStackId(stackId, card.FrontText, card.BackText);
+        var cardId = _cardRepo.GetIdByTextAndStackId(card.StackId, card.FrontText, card.BackText);
 
         if (editedCard.Side == CardSide.Front)
         {
             if (string.IsNullOrWhiteSpace(editedCard.Text))
                 return Result<string>.Success(card.FrontText);
 
-            if (_cardRepo.ExistsByFrontTextExcludingId(editedCard.Text, stackId, cardId))
+            if (_cardRepo.ExistsByFrontTextExcludingId(editedCard.Text, card.StackId, cardId))
                 return Result<string>.Failure(Errors.CardFrontTextExists);
 
             if (editedCard.Text.Length > 250)
@@ -36,7 +33,7 @@ public class EditCardTextBySideHandler
             if (string.IsNullOrWhiteSpace(editedCard.Text))
                 return Result<string>.Success(card.BackText);
 
-            if (_cardRepo.ExistsByBackTextExcludingId(editedCard.Text, stackId, cardId))
+            if (_cardRepo.ExistsByBackTextExcludingId(editedCard.Text, card.StackId, cardId))
                 return Result<string>.Failure(Errors.CardBackTextExists);
 
             if (editedCard.Text.Length > 250)

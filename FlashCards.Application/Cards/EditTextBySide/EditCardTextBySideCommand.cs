@@ -2,4 +2,4 @@
 
 namespace FlashCards.Application.Cards.EditTextBySide;
 
-public record CardTextBySideCommand(string StackName, string Text, CardSide Side);
+public record EditCardTextBySideCommand(string Text, CardSide Side);
