@@ -5,11 +5,11 @@ namespace FlashCards.ConsoleUI.Views;
 
 public class StackListView
 {
-    public void Render(StackResponseWithCounts stack)
+    public void Render(StackNamesWithCountsResponse stack)
     {
-        Render(new List<StackResponseWithCounts>() { stack });
+        Render(new List<StackNamesWithCountsResponse>() { stack });
     }
-    public void Render(List<StackResponseWithCounts> stacks)
+    public void Render(List<StackNamesWithCountsResponse> stacks)
     {
         int i = 1;
         var table = new Table()

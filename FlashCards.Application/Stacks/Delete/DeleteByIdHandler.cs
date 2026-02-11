@@ -16,7 +16,7 @@ public class DeleteByIdHandler
         _sessionRepo = sessionRepo;
     }
 
-    public void Handle(StackResponseWithCounts stack)
+    public void Handle(StackNamesWithCountsResponse stack)
     {
         _cardRepo.DeleteAllByStackId(stack.Id);
         _sessionRepo.DeleteAllByStackId(stack.Id);

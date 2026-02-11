@@ -19,11 +19,12 @@ public class ConsoleInput : IConsoleInput
     }
 
 
-    public bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount)
+    public bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount, int sessionCount)
     {
         AddEmptyLines(1);
 
-        string promptText = $"[yellow]WARNING![/]You are about to delete the stack [green]{stackName}[/] and all [blue]{cardCount}[/] cards included in it.";
+        string promptText = $"[yellow]WARNING![/]You are about to delete the stack [green]{stackName}[/].\r\n" +
+                            $"This will also delete all [blue]{cardCount}[/] cards and [blue]{sessionCount}[/] sessions that reference it.";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>(promptText)

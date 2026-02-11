@@ -9,7 +9,7 @@ public class MainMenuServiceTests
     public void GetStacks_ShouldReturnNull_WhenResultIsFailure()
     {
         // Arrange
-        var result = Result<List<StackResponseWithCounts>>.Failure(Errors.NoStacksExist);
+        var result = Result<List<StackNamesWithCountsResponse>>.Failure(Errors.NoStacksExist);
 
         // Act
 

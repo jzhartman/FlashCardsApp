@@ -17,26 +17,26 @@ public class GetAllStacksWithCountsHandler
         _sessionRepo = sessionRepo;
     }
 
-    public Result<List<StackResponseWithCounts>> Handle()
+    public Result<List<StackNamesWithCountsResponse>> Handle()
     {
         var stacks = _stackRepo.GetAll();
 
         if (stacks.Count == 0)
-            return Result<List<StackResponseWithCounts>>.Failure(Errors.NoStacksExist);
+            return Result<List<StackNamesWithCountsResponse>>.Failure(Errors.NoStacksExist);
         else
-            return Result<List<StackResponseWithCounts>>.Success(BuildResponse(stacks));
+            return Result<List<StackNamesWithCountsResponse>>.Success(BuildResponse(stacks));
     }
 
-    private List<StackResponseWithCounts> BuildResponse(List<Stack> stacks)
+    private List<StackNamesWithCountsResponse> BuildResponse(List<Stack> stacks)
     {
-        var stackResponses = new List<StackResponseWithCounts>();
+        var stackResponses = new List<StackNamesWithCountsResponse>();
 
         foreach (var stack in stacks)
         {
             int cardCount = _cardRepo.GetCardCountByStackId(stack.Id);
             var sessionCount = _sessionRepo.GetSessionCountByStackId(stack.Id);
 
-            var stackResponse = new StackResponseWithCounts(stack.Id, stack.Name, cardCount, sessionCount);
+            var stackResponse = new StackNamesWithCountsResponse(stack.Id, stack.Name, cardCount, sessionCount);
             stackResponses.Add(stackResponse);
         }
 

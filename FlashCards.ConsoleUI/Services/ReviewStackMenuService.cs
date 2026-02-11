@@ -54,7 +54,7 @@ public class ReviewStackMenuService
         CurrentStack = new StackResponse(stackName, cards);
     }
 
-    public void Run(StackResponseWithCounts stack)
+    public void Run(StackNamesWithCountsResponse stack)
     {
         while (true)
         {
@@ -219,7 +219,7 @@ public class ReviewStackMenuService
     }
 
 
-    private void HandleEditCard(StackResponseWithCounts stack)
+    private void HandleEditCard(StackNamesWithCountsResponse stack)
     {
         var message = "Please enter the [yellow]ID[/] of the card you wish to edit:";
         var originalCard = CurrentStack.Cards[_input.GetRecordIdFromUser(message, 1, CurrentStack.Cards.Count) - 1];

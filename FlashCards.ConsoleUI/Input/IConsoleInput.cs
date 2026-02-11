@@ -4,7 +4,7 @@ public interface IConsoleInput
 {
     bool ContinueStudyMode();
     bool GetDeleteCardConfirmationFromUser(string frontText, string backText);
-    bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount);
+    bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount, int sessionCount);
     bool GetEditCardConfirmationFromUser(string originalFrontText, string originalBackText, string newFrontText, string newBackText);
     bool GetPassStateFromUser();
     int GetRecordIdFromUser(string message, int minValue, int maxValue);

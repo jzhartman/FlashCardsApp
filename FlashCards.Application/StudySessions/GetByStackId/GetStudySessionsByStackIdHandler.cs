@@ -7,19 +7,15 @@ namespace FlashCards.Application.StudySessions.GetByStackId;
 
 public class GetStudySessionsByStackIdHandler
 {
-    private readonly IStackRepository _stackRepo;
     private readonly IStudySessionRepository _studyRepo;
 
-    public GetStudySessionsByStackIdHandler(IStackRepository stackRepo, IStudySessionRepository studyRepo)
+    public GetStudySessionsByStackIdHandler(IStudySessionRepository studyRepo)
     {
-        _stackRepo = stackRepo;
         _studyRepo = studyRepo;
     }
-    public List<StudySessionResponse> Handle(StackResponseWithCounts stack)
+    public List<StudySessionResponse> Handle(StackNamesWithCountsResponse stack)
     {
-        var stackId = _stackRepo.GetIdByName(stack.Name);
-        var sessions = _studyRepo.GetAllByStackId(stackId);
-
+        var sessions = _studyRepo.GetAllByStackId(stack.Id);
 
         return StudySessionMapper(sessions, stack.Name);
     }
