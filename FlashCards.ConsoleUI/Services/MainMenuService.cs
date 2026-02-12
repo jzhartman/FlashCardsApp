@@ -1,9 +1,7 @@
 ﻿using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
-using FlashCards.Application.StudySessions;
 using FlashCards.Application.StudySessions.GetAll;
-using FlashCards.Application.StudySessions.GetByStackId;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
@@ -25,7 +23,6 @@ public class MainMenuService
     private readonly AddStackHandler _addStack;
     private readonly DeleteByIdHandler _deleteStack;
     private readonly GetAllStudySessionsHandler _getAllStudySessions;
-    private readonly GetStudySessionsByStackIdHandler _getStudySessionById;
 
     private readonly MainMenuView _menu;
     private readonly StackListView _stackList;
@@ -34,8 +31,7 @@ public class MainMenuService
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionService,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCounts, AddStackHandler addStack,
-                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
-                            GetStudySessionsByStackIdHandler getStudySessionById)
+                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions)
     {
         _stackMenu = stackMenu;
         _input = input;
@@ -50,7 +46,6 @@ public class MainMenuService
         _addStack = addStack;
         _deleteStack = deleteStack;
         _getAllStudySessions = getAllStudySessions;
-        _getStudySessionById = getStudySessionById;
     }
     public void Run()
     {
@@ -147,21 +142,61 @@ public class MainMenuService
     }
     private void HandleViewPastSessions(List<StackNamesWithCountsResponse> stacks)
     {
-        var message = $"Either enter the [yellow]ID[/] of the stack whose sessions you wish to view, or enter \"0\" to view all past sessions:";
-        int id = _input.GetRecordIdFromUser(message, 0, stacks.Count);
-        var sessions = new List<StudySessionResponse>();
+        var result = _getAllStudySessions.Handle();
 
-        if (id == 0)
-            sessions = _getAllStudySessions.Handle();
-        else
-            sessions = _getStudySessionById.Handle(stacks[id - 1]);
-
-        if (sessions == null || sessions.Count == 0)
+        if (result.IsFailure)
+        {
             _output.PrintValidationErrorsFromCollection(new List<Error> { Errors.NoStudySessions });
+            _input.PressAnyKeyToContinue();
+        }
         else
-            _studySessionList.Render(sessions);
+        {
+            RenderPastSessionList(result.Value);
+        }
+    }
+    private void RenderPastSessionList(List<StudySessionResponse> sessions)
+    {
+        bool continueReview = true;
+        ConsoleKeyInfo keyInfo;
+        int i = 0;
 
-        _input.PressAnyKeyToContinue();
+        while (continueReview)
+        {
+            _output.PrintPageTitle("REVIEW STACK MENU");
+            _studySessionList.Render(sessions);
+            _output.PrintStudySessionKeypressOptions();
+
+            bool validKey = false;
+
+            while (validKey == false)
+            {
+                keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        sessions = sessions.OrderBy(s => s.StackName).ToList();
+                        validKey = true;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        sessions = sessions.OrderBy(s => s.Time).ToList();
+                        validKey = true;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        sessions = sessions.OrderBy(s => s.Score).ToList();
+                        validKey = true;
+                        break;
+                    case ConsoleKey.Escape:
+                        validKey = true;
+                        continueReview = false;
+                        break;
+                    default:
+                        Console.WriteLine($"Invalid keypress -- see options");
+                        break;
+                }
+            }
+
+        }
     }
 
 

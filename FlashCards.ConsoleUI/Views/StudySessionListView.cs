@@ -1,5 +1,5 @@
-﻿using FlashCards.Application.StudySessions;
-using FlashCards.Application.StudySessions.Add;
+﻿using FlashCards.Application.StudySessions.Add;
+using FlashCards.Application.StudySessions.GetAll;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Views;

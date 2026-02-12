@@ -1,5 +1,6 @@
 ﻿using FlashCards.Application.Interfaces;
 using FlashCards.Core.Entities;
+using FlashCards.Core.Validation;
 
 namespace FlashCards.Application.StudySessions.GetAll;
 
@@ -13,9 +14,15 @@ public class GetAllStudySessionsHandler
         _stackRepo = stackRepo;
         _studyRepo = studyRepo;
     }
-    public List<StudySessionResponse> Handle()
+
+    public Result<List<StudySessionResponse>> Handle()
     {
-        return StudySessionMapper(_studyRepo.GetAll());
+        var sessions = StudySessionMapper(_studyRepo.GetAll());
+
+        if (sessions == null || sessions.Count == 0)
+            return Result<List<StudySessionResponse>>.Failure(Errors.NoStudySessions);
+        else
+            return Result<List<StudySessionResponse>>.Success(sessions);
     }
 
     private List<StudySessionResponse> StudySessionMapper(List<StudySession> sessions)

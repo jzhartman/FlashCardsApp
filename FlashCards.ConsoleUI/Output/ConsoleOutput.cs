@@ -66,4 +66,24 @@ public class ConsoleOutput : IConsoleOutput
 
         Console.WriteLine();
     }
+
+    public void PrintStudySessionKeypressOptions()
+    {
+        var table = new Table()
+                        .RoundedBorder()
+                        .BorderColor(Color.Blue)
+                        .ShowRowSeparators();
+
+        table.AddColumn("Control");
+        table.AddColumn("Key");
+
+        table.AddRow("Sort By Stack", "Up Arrow");
+        table.AddRow("Sort By Date", "Left Arrow");
+        table.AddRow("Sort By Score", "Right Arrow");
+        table.AddRow("Return to Menu", "Esc");
+
+        AnsiConsole.Write(table);
+
+        Console.WriteLine();
+    }
 }

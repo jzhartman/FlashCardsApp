@@ -14,6 +14,7 @@ public interface IConsoleOutput
     void PrintNoEditsMadeMessage();
     void PrintPageTitle(string title);
     void PrintReviewCardsKeypressOptions(CardSide side, int index, int cardCount);
+    void PrintStudySessionKeypressOptions();
     void PrintSuccessMessage(string message);
     void PrintValidationErrorsFromCollection(List<Error> errors);
 }
