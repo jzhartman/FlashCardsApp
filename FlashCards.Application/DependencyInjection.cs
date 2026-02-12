@@ -10,7 +10,6 @@ using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Application.StudySessions.Add;
 using FlashCards.Application.StudySessions.GetAll;
-using FlashCards.Application.StudySessions.GetByStackId;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FlashCards.Application;
@@ -33,7 +32,6 @@ public static class DependencyInjection
 
         services.AddScoped<AddStudySessionHandler>();
         services.AddScoped<GetAllStudySessionsHandler>();
-        services.AddScoped<GetStudySessionsByStackIdHandler>();
 
         return services;
     }
