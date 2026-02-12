@@ -26,21 +26,13 @@ public class CardRepository : ICardRepository
         return _dapper.QuerySingle<int>(_connection, sql, card);
     }
 
+
     public void DeleteById(int id)
     {
         var sql = @"delete from Card
                     where Id = @id";
 
         _dapper.Execute(_connection, sql, new { Id = id });
-    }
-
-    public void DeleteAllByStackName(string name)
-    {
-        var sql = @"delete c from Card c
-                    inner join stack s on s.id = c.StackId
-                    where s.Name = @name";
-
-        _dapper.Execute(_connection, sql, new { Name = name });
     }
     public void DeleteAllByStackId(int id)
     {
@@ -50,6 +42,7 @@ public class CardRepository : ICardRepository
 
         _dapper.Execute(_connection, sql, new { Id = id });
     }
+
 
     public void UpdateCardText(int id, string frontText, string backText)
     {
@@ -68,13 +61,7 @@ public class CardRepository : ICardRepository
         _dapper.Execute(_connection, sql, new { Id = id, studied = studied, correct = correct, incorrect = incorrect });
     }
 
-    public Card GetById(int id)
-    {
-        var sql = @"select * from Card
-                    where Id = @Id";
 
-        return _dapper.Query<Card>(_connection, sql, new { Id = id }).FirstOrDefault();
-    }
     public List<Card> GetAllByStackId(int id)
     {
         var sql = @"select * from Card
@@ -82,26 +69,6 @@ public class CardRepository : ICardRepository
 
         return _dapper.Query<Card>(_connection, sql, new { Id = id }).ToList();
     }
-    public List<Card> GetAllByStackName(string name)
-    {
-        var sql = @"select c.Id, c.FrontText, c.BackText, c.TimesStudied, c.TimesCorrect, c.TimesIncorrect
-                    from Card c
-                    inner join stack s on s.id = c.StackId
-                    where s.Name = @name";
-
-        return _dapper.Query<Card>(_connection, sql, new { Name = name }).ToList();
-    }
-
-    public int GetCardCountByStackName(string stackName)
-    {
-        var sql = @"select count(*)
-                    from Card c
-                    inner join stack s on s.id = c.stackid
-                    where s.name = @StackName";
-
-        return _dapper.Query<int>(_connection, sql, new { StackName = stackName }).First();
-    }
-
     public int GetCardCountByStackId(int id)
     {
         var sql = @"select count(*)
@@ -111,6 +78,13 @@ public class CardRepository : ICardRepository
 
         return _dapper.Query<int>(_connection, sql, new { Id = id }).First();
     }
+    public int GetIdByTextAndStackId(int stackId, string frontText, string backText)
+    {
+        var sql = @"select Id from card where UPPER(FrontText) = UPPER(@FrontText) AND UPPER(BackText) = UPPER(@BackText) AND StackId = @StackId";
+
+        return _dapper.QuerySingle<int>(_connection, sql, new { StackId = stackId, FrontText = frontText, BackText = backText });
+    }
+
 
     public bool ExistsByFrontText(string text, int stackId)
     {
@@ -120,7 +94,6 @@ public class CardRepository : ICardRepository
 
         return exists == 1 ? true : false;
     }
-
     public bool ExistsByFrontTextExcludingId(string text, int stackId, int cardId)
     {
         var sql = @"select 1 from card where UPPER(FrontText) = UPPER(@FrontText) AND StackId = @StackId AND Id != @CardId";
@@ -129,7 +102,6 @@ public class CardRepository : ICardRepository
 
         return exists == 1 ? true : false;
     }
-
     public bool ExistsByBackText(string text, int stackId)
     {
         var sql = @"select 1 from card where UPPER(BackText) = UPPER(@BackText) AND StackId = @StackId";
@@ -146,10 +118,5 @@ public class CardRepository : ICardRepository
 
         return exists == 1 ? true : false;
     }
-    public int GetIdByTextAndStackId(int stackId, string frontText, string backText)
-    {
-        var sql = @"select Id from card where UPPER(FrontText) = UPPER(@FrontText) AND UPPER(BackText) = UPPER(@BackText) AND StackId = @StackId";
 
-        return _dapper.QuerySingle<int>(_connection, sql, new { StackId = stackId, FrontText = frontText, BackText = backText });
-    }
 }

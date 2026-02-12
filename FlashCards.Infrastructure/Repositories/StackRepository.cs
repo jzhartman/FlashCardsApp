@@ -25,6 +25,7 @@ public class StackRepository : IStackRepository
         return _dapper.QuerySingle<int>(_connection, sql, new { Name = name });
     }
 
+
     public void DeleteById(int id)
     {
         var sql = @"delete from Stack
@@ -32,13 +33,28 @@ public class StackRepository : IStackRepository
 
         _dapper.Execute(_connection, sql, new { Id = id });
     }
-    public void DeleteByName(string name)
-    {
-        var sql = @"delete from Stack
-                    where Name = @name";
 
-        _dapper.Execute(_connection, sql, new { Name = name });
+
+    public List<Stack> GetAll()
+    {
+        var sql = @"select Id, Name
+                    from Stack";
+
+        return _dapper.Query<Stack>(_connection, sql).ToList();
     }
+    public Stack GetById(int id)
+    {
+        var sql = @"select name from Stack where Id = @Id";
+
+        return _dapper.QuerySingle<Stack>(_connection, sql, new { Id = id });
+    }
+    public int GetIdByName(string name)
+    {
+        var sql = @"select Id from Stack where Name = @Name";
+
+        return _dapper.QuerySingle<int>(_connection, sql, new { Name = name });
+    }
+
 
     public bool ExistsByName(string name)
     {
@@ -55,45 +71,5 @@ public class StackRepository : IStackRepository
         int exists = _dapper.Query<int>(_connection, sql, new { Id = id }).FirstOrDefault();
 
         return exists == 1 ? true : false;
-    }
-
-    public List<Stack> GetAll()
-    {
-        var sql = @"select Id, Name
-                    from Stack";
-
-        return _dapper.Query<Stack>(_connection, sql).ToList();
-    }
-
-    public List<string> GetAllNames()
-    {
-        var sql = @"select Name from Stack";
-
-        return _dapper.Query<string>(_connection, sql).ToList();
-    }
-
-    public Stack GetById(int id)
-    {
-        var sql = @"select name from Stack where Id = @Id";
-
-        return _dapper.QuerySingle<Stack>(_connection, sql, new { Id = id });
-    }
-    public Stack GetByName(string name)
-    {
-        var sql = @"select * from Stack where Name = @Name";
-
-        return _dapper.QuerySingle<Stack>(_connection, sql);
-    }
-
-    public int GetIdByName(string name)
-    {
-        var sql = @"select Id from Stack where Name = @Name";
-
-        return _dapper.QuerySingle<int>(_connection, sql, new { Name = name });
-    }
-
-    public void Update()
-    {
-        throw new NotImplementedException();
     }
 }

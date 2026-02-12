@@ -8,10 +8,7 @@ public interface IStackRepository
     List<Stack> GetAll();
     int Add(string name);
     void DeleteById(int id);
-    void Update();
     bool ExistsByName(string name);
-    List<string> GetAllNames();
     int GetIdByName(string name);
-    void DeleteByName(string name);
     bool ExistsById(int id);
 }

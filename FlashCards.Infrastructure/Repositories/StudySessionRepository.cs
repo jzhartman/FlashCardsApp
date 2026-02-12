@@ -23,6 +23,18 @@ public class StudySessionRepository : IStudySessionRepository
 
         _dapper.Execute(_connection, sql, session);
     }
+
+
+    public void DeleteAllByStackId(int id)
+    {
+        var sql = @"delete u from StudySession u
+                    inner join stack s on s.id = u.StackId
+                    where s.Id = @Id";
+
+        _dapper.Execute(_connection, sql, new { Id = id });
+    }
+
+
     public List<StudySession> GetAll()
     {
         var sql = @"select * from StudySession";
@@ -37,22 +49,5 @@ public class StudySessionRepository : IStudySessionRepository
                     where s.Id = @Id";
 
         return _dapper.Query<int>(_connection, sql, new { Id = id }).First();
-    }
-
-    public void DeleteAllByStackName(string name)
-    {
-        var sql = @"delete u from StudySession u
-                    inner join stack s on s.id = u.StackId
-                    where s.Name = @name";
-
-        _dapper.Execute(_connection, sql, new { Name = name });
-    }
-    public void DeleteAllByStackId(int id)
-    {
-        var sql = @"delete u from StudySession u
-                    inner join stack s on s.id = u.StackId
-                    where s.Id = @Id";
-
-        _dapper.Execute(_connection, sql, new { Id = id });
     }
 }
