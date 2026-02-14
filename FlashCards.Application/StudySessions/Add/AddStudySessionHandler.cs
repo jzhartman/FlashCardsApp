@@ -19,7 +19,7 @@ public class AddStudySessionHandler
         var stackId = _stackRepo.GetIdByName(session.StackName);
         _studyRepo.Add(new StudySession
         {
-            Time = session.Time,
+            SessionDate = session.SessionDate,
             StackId = stackId,
             Score = session.Score,
             CountStudied = session.CardsStudied,

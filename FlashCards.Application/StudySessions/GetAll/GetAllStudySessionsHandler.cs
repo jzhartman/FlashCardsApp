@@ -32,7 +32,7 @@ public class GetAllStudySessionsHandler
         foreach (var session in sessions)
         {
             var stack = _stackRepo.GetById(session.StackId);
-            var sessionResponse = new StudySessionResponse(session.Time, stack.Name, session.Score, session.CountStudied, session.CountCorrect, session.CountIncorrect);
+            var sessionResponse = new StudySessionResponse(session.SessionDate, stack.Name, session.Score, session.CountStudied, session.CountCorrect, session.CountIncorrect);
             output.Add(sessionResponse);
         }
         return output;

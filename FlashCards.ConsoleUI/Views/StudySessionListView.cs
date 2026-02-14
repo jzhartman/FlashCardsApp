@@ -9,7 +9,7 @@ public class StudySessionListView
     public void Render(AddStudySessionCommand session)
     {
         var mappedSession = new StudySessionResponse(
-            session.Time,
+            session.SessionDate,
             session.StackName,
             session.Score,
             session.CardsStudied,
@@ -39,7 +39,7 @@ public class StudySessionListView
 
         foreach (var session in sessions)
         {
-            table.AddRow(session.StackName, session.Score.ToString("F1"), session.Time.ToString("yyyy-MM-dd HH:mm"), session.CountStudied.ToString(),
+            table.AddRow(session.StackName, session.Score.ToString("F1"), session.SessionDate.ToString("yyyy-MM-dd HH:mm"), session.CountStudied.ToString(),
             session.CountCorrect.ToString(), session.CountIncorrect.ToString());
         }
 

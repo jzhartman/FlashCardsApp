@@ -179,7 +179,7 @@ public class MainMenuService
                         validKey = true;
                         break;
                     case ConsoleKey.LeftArrow:
-                        sessions = sessions.OrderBy(s => s.Time).ToList();
+                        sessions = sessions.OrderBy(s => s.SessionDate).ToList();
                         validKey = true;
                         break;
                     case ConsoleKey.RightArrow:
@@ -209,6 +209,10 @@ public class MainMenuService
 
     private void HandleReports()
     {
+        // Print first report
+        // Print second report
+        // Print input key options for user
+        //      - 
         AnsiConsole.MarkupLine("Reporting for duty, sir!");
         _input.PressAnyKeyToContinue();
     }

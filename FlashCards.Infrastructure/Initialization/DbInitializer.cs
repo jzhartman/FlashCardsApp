@@ -85,7 +85,7 @@ public class DbInitializer
             IF NOT EXISTS (SELECT * FROM sys.tables WHERE name='StudySession')
             CREATE TABLE StudySession (
 	            Id INT NOT NULL PRIMARY KEY IDENTITY,
-	            Time DATETIME NOT NULL,
+	            SessionDate DATETIME NOT NULL,
 	            StackId INT NOT NULL,
 	            Score  FLOAT NOT NULL,
 	            CountStudied INT NOT NULL,
@@ -130,11 +130,61 @@ public class DbInitializer
                         (@PeopleStackId, 'Strider', 'This is no mere ranger. He is Aragorn, son of Arathorn. You owe him your allegience'),
                         (@PeopleStackId, 'Samwise', 'The Brave');
 
-                INSERT INTO StudySession (Time, StackId, Score, CountStudied, CountCorrect, CountIncorrect)
+                INSERT INTO StudySession (SessionDate, StackId, Score, CountStudied, CountCorrect, CountIncorrect)
                 VALUES  ('2026-01-01 11:00:00', @PastaStackId, 100, 10, 10, 0),
                         ('2026-01-02 15:00:00', @PastaStackId, 70, 10, 7, 3),
                         ('2026-01-03 21:00:00', @PastaStackId, 80, 5, 4, 1),
-                        ('2026-01-05 11:00:00', @PeopleStackId, 100, 3, 3, 0);
+                        ('2026-01-05 11:00:00', @PeopleStackId, 100, 3, 3, 0),
+
+                        ('2025-01-01 7:00:00', @PeopleStackId, 80, 10, 8, 2),
+                        ('2025-01-02 7:00:00', @PeopleStackId, 60, 10, 6, 4),
+		                ('2025-02-01 7:00:00', @PeopleStackId, 90, 10, 9, 1),
+		                ('2025-02-02 7:00:00', @PeopleStackId, 30, 10, 3, 7),
+		                ('2025-03-01 7:00:00', @PeopleStackId, 40, 10, 4, 6),
+		                ('2025-03-02 7:00:00', @PeopleStackId, 50, 10, 5, 5),
+		                ('2025-04-01 7:00:00', @PeopleStackId, 60, 10, 6, 4),
+		                ('2025-04-02 7:00:00', @PeopleStackId, 70, 10, 7, 3),
+		                ('2025-05-01 7:00:00', @PeopleStackId, 80, 10, 8, 2),
+		                ('2025-05-02 7:00:00', @PeopleStackId, 90, 10, 9, 1),
+		                ('2025-06-01 7:00:00', @PeopleStackId, 100, 10, 10, 0),
+		                ('2025-06-02 7:00:00', @PeopleStackId, 90, 10, 9, 1),
+		                ('2025-07-01 7:00:00', @PeopleStackId, 80, 10, 8, 2),
+		                ('2025-07-02 7:00:00', @PeopleStackId, 70, 10, 7, 3),
+		                ('2025-08-01 7:00:00', @PeopleStackId, 60, 10, 6, 4),
+		                ('2025-08-02 7:00:00', @PeopleStackId, 50, 10, 5, 5),
+		                ('2025-09-01 7:00:00', @PeopleStackId, 40, 10, 4, 6),
+		                ('2025-09-02 7:00:00', @PeopleStackId, 50, 10, 5, 5),
+		                ('2025-10-01 7:00:00', @PeopleStackId, 60, 10, 6, 4),
+		                ('2025-10-02 7:00:00', @PeopleStackId, 70, 10, 7, 3),
+		                ('2025-11-01 7:00:00', @PeopleStackId, 80, 10, 8, 2),
+		                ('2025-11-02 7:00:00', @PeopleStackId, 90, 10, 9, 1),
+		                ('2025-12-01 7:00:00', @PeopleStackId, 100, 10, 10, 0),
+		                ('2025-12-02 7:00:00', @PeopleStackId, 90, 10, 9, 1),
+
+                        ('2025-01-01 7:00:00', @PastaStackId, 80, 10, 8, 2),
+                        ('2025-01-02 7:00:00', @PastaStackId, 60, 10, 6, 4),
+		                ('2025-02-01 7:00:00', @PastaStackId, 90, 10, 9, 1),
+		                ('2025-02-02 7:00:00', @PastaStackId, 30, 10, 3, 7),
+		                ('2025-03-01 7:00:00', @PastaStackId, 40, 10, 4, 6),
+		                ('2025-03-02 7:00:00', @PastaStackId, 50, 10, 5, 5),
+		                ('2025-04-01 7:00:00', @PastaStackId, 60, 10, 6, 4),
+		                ('2025-04-02 7:00:00', @PastaStackId, 70, 10, 7, 3),
+		                ('2025-05-01 7:00:00', @PastaStackId, 80, 10, 8, 2),
+		                ('2025-05-02 7:00:00', @PastaStackId, 90, 10, 9, 1),
+		                ('2025-06-01 7:00:00', @PastaStackId, 100, 10, 10, 0),
+		                ('2025-06-02 7:00:00', @PastaStackId, 90, 10, 9, 1),
+		                ('2025-07-01 7:00:00', @PastaStackId, 80, 10, 8, 2),
+		                ('2025-07-02 7:00:00', @PastaStackId, 70, 10, 7, 3),
+		                ('2025-08-01 7:00:00', @PastaStackId, 60, 10, 6, 4),
+		                ('2025-08-02 7:00:00', @PastaStackId, 50, 10, 5, 5),
+		                ('2025-09-01 7:00:00', @PastaStackId, 40, 10, 4, 6),
+		                ('2025-09-02 7:00:00', @PastaStackId, 50, 10, 5, 5),
+		                ('2025-10-01 7:00:00', @PastaStackId, 60, 10, 6, 4),
+		                ('2025-10-02 7:00:00', @PastaStackId, 70, 10, 7, 3),
+		                ('2025-11-01 7:00:00', @PastaStackId, 80, 10, 8, 2),
+		                ('2025-11-02 7:00:00', @PastaStackId, 90, 10, 9, 1),
+		                ('2025-12-01 7:00:00', @PastaStackId, 100, 10, 10, 0),
+		                ('2025-12-02 7:00:00', @PastaStackId, 90, 10, 9, 1)
                 END";
 
         connection.Execute(seed);

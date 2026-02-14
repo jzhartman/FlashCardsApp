@@ -18,8 +18,8 @@ public class StudySessionRepository : IStudySessionRepository
 
     public void Add(StudySession session)
     {
-        var sql = @"insert into StudySession (Time, StackId, Score, CountStudied, CountCorrect, CountIncorrect)
-                    values (@Time, @StackId, @Score, @CountStudied, @CountCorrect, @CountIncorrect)";
+        var sql = @"insert into StudySession (SessionDate, StackId, Score, CountStudied, CountCorrect, CountIncorrect)
+                    values (@SessionDate, @StackId, @Score, @CountStudied, @CountCorrect, @CountIncorrect)";
 
         _dapper.Execute(_connection, sql, session);
     }
