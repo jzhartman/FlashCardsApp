@@ -5,6 +5,7 @@ using FlashCards.Application.Cards.EditTextBySide;
 using FlashCards.Application.Cards.GetAllByStackId;
 using FlashCards.Application.Cards.UpdateCardCounters;
 using FlashCards.Application.Cards.ValidateCardTextBySide;
+using FlashCards.Application.Reports.GetAverageScorePerMonth;
 using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
@@ -32,6 +33,8 @@ public static class DependencyInjection
 
         services.AddScoped<AddStudySessionHandler>();
         services.AddScoped<GetAllStudySessionsHandler>();
+
+        services.AddScoped<GetAverageScorePerMonthHandler>();
 
         return services;
     }

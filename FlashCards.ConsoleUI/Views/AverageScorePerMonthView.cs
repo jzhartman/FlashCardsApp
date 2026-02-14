@@ -28,19 +28,20 @@ public class AverageScorePerMonthView
         table.AddColumn("December");
         table.Title = new TableTitle($"Year: {averageScores.Year}");
 
+
         table.AddRow(averageScores.StackName,
-            averageScores.AverageScoresByMonth[0].ToString(),
-            averageScores.AverageScoresByMonth[1].ToString(),
-            averageScores.AverageScoresByMonth[2].ToString(),
-            averageScores.AverageScoresByMonth[3].ToString(),
-            averageScores.AverageScoresByMonth[4].ToString(),
-            averageScores.AverageScoresByMonth[5].ToString(),
-            averageScores.AverageScoresByMonth[6].ToString(),
-            averageScores.AverageScoresByMonth[7].ToString(),
-            averageScores.AverageScoresByMonth[8].ToString(),
-            averageScores.AverageScoresByMonth[9].ToString(),
-            averageScores.AverageScoresByMonth[10].ToString(),
-            averageScores.AverageScoresByMonth[11].ToString());
+            averageScores.January.ToString(),
+            averageScores.February.ToString(),
+            averageScores.March.ToString(),
+            averageScores.April.ToString(),
+            averageScores.May.ToString(),
+            averageScores.June.ToString(),
+            averageScores.July.ToString(),
+            averageScores.August.ToString(),
+            averageScores.September.ToString(),
+            averageScores.October.ToString(),
+            averageScores.November.ToString(),
+            averageScores.December.ToString());
 
         AnsiConsole.Write(table);
 

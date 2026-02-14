@@ -22,6 +22,7 @@ public static class DependencyInjection
         services.AddScoped<StackListView>();
         services.AddScoped<StudySessionListView>();
         services.AddScoped<CardListView>();
+        services.AddScoped<AverageScorePerMonthView>();
 
         return services;
     }

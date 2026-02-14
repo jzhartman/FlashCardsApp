@@ -1,4 +1,5 @@
-﻿using FlashCards.Application.Stacks.Add;
+﻿using FlashCards.Application.Reports.GetAverageScorePerMonth;
+using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Application.StudySessions.GetAll;
@@ -27,11 +28,15 @@ public class MainMenuService
     private readonly MainMenuView _menu;
     private readonly StackListView _stackList;
     private readonly StudySessionListView _studySessionList;
+    private readonly AverageScorePerMonthView _averageScoreView;
+
+    private readonly GetAverageScorePerMonthHandler _averageScoreReport;
 
     public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionService,
                             IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCounts, AddStackHandler addStack,
-                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions)
+                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
+                            GetAverageScorePerMonthHandler averageScoreReport, AverageScorePerMonthView averageScoreView)
     {
         _stackMenu = stackMenu;
         _input = input;
@@ -46,6 +51,8 @@ public class MainMenuService
         _addStack = addStack;
         _deleteStack = deleteStack;
         _getAllStudySessions = getAllStudySessions;
+        _averageScoreReport = averageScoreReport;
+        _averageScoreView = averageScoreView;
     }
     public void Run()
     {
@@ -209,11 +216,13 @@ public class MainMenuService
 
     private void HandleReports()
     {
+        var averageScores = _averageScoreReport.Handle();
+        _averageScoreView.Render(averageScores[1]);
+
         // Print first report
         // Print second report
         // Print input key options for user
         //      - 
-        AnsiConsole.MarkupLine("Reporting for duty, sir!");
         _input.PressAnyKeyToContinue();
     }
 
