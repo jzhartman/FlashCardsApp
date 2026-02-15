@@ -2,6 +2,7 @@
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.ConsoleUI.Services;
 using FlashCards.ConsoleUI.Views;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<MainMenuService>();
         services.AddScoped<ReviewStackMenuService>();
         services.AddScoped<StudySessionService>();
+        services.AddScoped<ReportService>();
         services.AddScoped<IConsoleInput, ConsoleInput>();
         services.AddScoped<IConsoleOutput, ConsoleOutput>();
 
@@ -23,6 +25,8 @@ public static class DependencyInjection
         services.AddScoped<StudySessionListView>();
         services.AddScoped<CardListView>();
         services.AddScoped<AverageScorePerMonthView>();
+        services.AddScoped<SessionCountPerMonthView>();
+        services.AddScoped<SessionYearSelectionView>();
 
         return services;
     }

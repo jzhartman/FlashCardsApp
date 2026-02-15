@@ -1,27 +1,27 @@
 ﻿using FlashCards.Application.Interfaces;
 using FlashCards.Core.Entities;
 
-namespace FlashCards.Application.Reports.GetAverageScorePerMonth;
+namespace FlashCards.Application.Reports.GetSessionCountPerMonth;
 
-public class GetAverageScorePerMonthHandler
+public class GetSessionCountPerMonthHandler
 {
     private readonly IStudySessionRepository _studyRepo;
 
-    public GetAverageScorePerMonthHandler(IStudySessionRepository studyRepo)
+    public GetSessionCountPerMonthHandler(IStudySessionRepository studyRepo)
     {
         _studyRepo = studyRepo;
     }
 
-    public List<GetAverageScorePerMonthResponse> Handle()
+    public List<GetSessionCountPerMonthResponse> Handle(int year)
     {
-        var report = _studyRepo.GetAverageScoreByMonth();
+        var report = _studyRepo.GetSessionCountByMonthByYear(year);
 
         return ReportMapper(report);
     }
 
-    private List<GetAverageScorePerMonthResponse> ReportMapper(List<AverageScoreReport> report)
+    private List<GetSessionCountPerMonthResponse> ReportMapper(List<SessionReport> report)
     {
-        var mappedReport = new List<GetAverageScorePerMonthResponse>();
+        var mappedReport = new List<GetSessionCountPerMonthResponse>();
 
         foreach (var row in report)
         {

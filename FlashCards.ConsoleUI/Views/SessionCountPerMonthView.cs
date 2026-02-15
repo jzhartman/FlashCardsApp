@@ -1,11 +1,11 @@
-﻿using FlashCards.Application.Reports.GetAverageScorePerMonth;
+﻿using FlashCards.Application.Reports.GetSessionCountPerMonth;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Views;
 
-public class AverageScorePerMonthView
+public class SessionCountPerMonthView
 {
-    public void Render(List<GetAverageScorePerMonthResponse> reports, int year)
+    public void Render(List<GetSessionCountPerMonthResponse> reports, int year)
     {
         int i = 1;
         var table = new Table()
@@ -27,24 +27,24 @@ public class AverageScorePerMonthView
         table.AddColumn("Nov", col => col.Width(5).Centered());
         table.AddColumn("Dec", col => col.Width(5).Centered());
         table.AddColumn("Annual");
-        table.Title = new TableTitle($"Average Score By Month for Year: {year}");
+        table.Title = new TableTitle($"Count of Sessions Per Month for Year: {year}");
 
 
         foreach (var report in reports)
         {
             table.AddRow(report.StackName,
-            report.January.ToString("f1"),
-            report.February.ToString("f1"),
-            report.March.ToString("f1"),
-            report.April.ToString("f1"),
-            report.May.ToString("f1"),
-            report.June.ToString("f1"),
-            report.July.ToString("f1"),
-            report.August.ToString("f1"),
-            report.September.ToString("f1"),
-            report.October.ToString("f1"),
-            report.November.ToString("f1"),
-            report.December.ToString("f1"),
+            report.January.ToString(),
+            report.February.ToString(),
+            report.March.ToString(),
+            report.April.ToString(),
+            report.May.ToString(),
+            report.June.ToString(),
+            report.July.ToString(),
+            report.August.ToString(),
+            report.September.ToString(),
+            report.October.ToString(),
+            report.November.ToString(),
+            report.December.ToString(),
             AnnualSum(report));
         }
 
@@ -53,9 +53,9 @@ public class AverageScorePerMonthView
         Console.WriteLine();
     }
 
-    private string AnnualSum(GetAverageScorePerMonthResponse report)
+    private string AnnualSum(GetSessionCountPerMonthResponse report)
     {
         return ((double)(report.January + report.February + report.March + report.April + report.May + report.June + report.July
-                + report.August + report.September + report.October + report.November + report.December) / 12).ToString("f1");
+                + report.August + report.September + report.October + report.November + report.December)).ToString();
     }
 }

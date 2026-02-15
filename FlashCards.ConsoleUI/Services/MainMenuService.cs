@@ -1,12 +1,13 @@
-﻿using FlashCards.Application.Reports.GetAverageScorePerMonth;
-using FlashCards.Application.Stacks.Add;
+﻿using FlashCards.Application.Stacks.Add;
 using FlashCards.Application.Stacks.Delete;
 using FlashCards.Application.Stacks.GetAll;
 using FlashCards.Application.StudySessions.GetAll;
+using FlashCards.Application.StudySessions.GetAllSessionYears;
 using FlashCards.ConsoleUI.Enums;
 using FlashCards.ConsoleUI.Handlers;
 using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Output;
+using FlashCards.ConsoleUI.Services;
 using FlashCards.ConsoleUI.Views;
 using FlashCards.Core.Validation;
 using Spectre.Console;
@@ -17,33 +18,36 @@ public class MainMenuService
 {
     private readonly IConsoleInput _input;
     private readonly IConsoleOutput _output;
+
     private readonly StudySessionService _studySessionService;
-    private readonly ReviewStackMenuService _stackMenu;
+    private readonly ReviewStackMenuService _stackMenuService;
+    private readonly ReportService _reportService;
 
     private readonly GetAllStacksWithCountsHandler _getAllStackNamesAndCounts;
     private readonly AddStackHandler _addStack;
     private readonly DeleteByIdHandler _deleteStack;
     private readonly GetAllStudySessionsHandler _getAllStudySessions;
+    private readonly GetAllSessionYears _getAllSessionYears;
 
-    private readonly MainMenuView _menu;
+    private readonly MainMenuView _mainMenu;
     private readonly StackListView _stackList;
     private readonly StudySessionListView _studySessionList;
-    private readonly AverageScorePerMonthView _averageScoreView;
 
-    private readonly GetAverageScorePerMonthHandler _averageScoreReport;
 
-    public MainMenuService(ReviewStackMenuService stackMenu, StudySessionService studySessionService,
-                            IConsoleInput input, IConsoleOutput output, MainMenuView menu, StackListView stackList, StudySessionListView studySessionList,
+    public MainMenuService(ReviewStackMenuService stackMenuService, StudySessionService studySessionService, ReportService reportService,
+                            IConsoleInput input, IConsoleOutput output, MainMenuView mainMenu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCounts, AddStackHandler addStack,
-                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions,
-                            GetAverageScorePerMonthHandler averageScoreReport, AverageScorePerMonthView averageScoreView)
+                            DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions, GetAllSessionYears getAllSessionYears
+                            )
     {
-        _stackMenu = stackMenu;
+        _stackMenuService = stackMenuService;
+        _studySessionService = studySessionService;
+        _reportService = reportService;
+
         _input = input;
         _output = output;
-        _studySessionService = studySessionService;
 
-        _menu = menu;
+        _mainMenu = mainMenu;
         _stackList = stackList;
         _studySessionList = studySessionList;
 
@@ -51,8 +55,8 @@ public class MainMenuService
         _addStack = addStack;
         _deleteStack = deleteStack;
         _getAllStudySessions = getAllStudySessions;
-        _averageScoreReport = averageScoreReport;
-        _averageScoreView = averageScoreView;
+        _getAllSessionYears = getAllSessionYears;
+
     }
     public void Run()
     {
@@ -70,7 +74,7 @@ public class MainMenuService
 
             if (stacks.Count <= 0) menuItems = new MainMenuItem[2] { MainMenuItem.CreateStack, MainMenuItem.Exit };
 
-            var selection = _menu.Render(menuItems);
+            var selection = _mainMenu.Render(menuItems);
 
             switch (selection)
             {
@@ -104,7 +108,7 @@ public class MainMenuService
     {
         var message = "Please enter the [yellow]ID[/] of the stack you wish to review:";
         int id = _input.GetRecordIdFromUser(message, 1, stacks.Count);
-        _stackMenu.Run(stacks[id - 1]);
+        _stackMenuService.Run(stacks[id - 1]);
     }
     private void HandleCreateStack()
     {
@@ -205,26 +209,18 @@ public class MainMenuService
 
         }
     }
-
-
-    //
-    // NOT YET IMPLEMENTED
-    //
-
-
-
-
     private void HandleReports()
     {
-        var averageScores = _averageScoreReport.Handle();
-        _averageScoreView.Render(averageScores[1]);
+        var result = _getAllSessionYears.Handle();
 
-        // Print first report
-        // Print second report
-        // Print input key options for user
-        //      - 
-        _input.PressAnyKeyToContinue();
+        if (result.IsFailure)
+        {
+            _output.PrintValidationErrorsFromCollection(result.Errors);
+            _input.PressAnyKeyToContinue();
+        }
+        else
+        {
+            _reportService.Run(result.Value);
+        }
     }
-
-
 }

@@ -8,5 +8,7 @@ public interface IStudySessionRepository
     List<StudySession> GetAll();
     int GetSessionCountByStackId(int id);
     void DeleteAllByStackId(int id);
-    List<AverageScoreReport> GetAverageScoreByMonth();
+    List<SessionReport> GetAverageScoreByMonthByYear(int year);
+    int[] GetAllSessionYears();
+    List<SessionReport> GetSessionCountByMonthByYear(int year);
 }
