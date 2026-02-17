@@ -28,7 +28,7 @@ public class CardRepositoryIntegrationTests
 
         // Act
         var id = repo.Add(card);
-        var retrieved = repo.GetById(id);
+        var retrieved = repo.GetByStackId(id);
 
         // Assert
         Assert.Equal(stackId, retrieved.StackId);

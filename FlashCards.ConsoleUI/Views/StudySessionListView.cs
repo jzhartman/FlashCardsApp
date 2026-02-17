@@ -1,46 +1,38 @@
-﻿using FlashCards.Application.StudySessions.Add;
-using FlashCards.Application.StudySessions.GetAll;
+﻿using FlashCards.Application.StudySessions.GetAll;
 using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Views;
 
 public class StudySessionListView
 {
-    public void Render(AddStudySessionCommand session)
-    {
-        var mappedSession = new StudySessionResponse(
-            session.SessionDate,
-            session.StackName,
-            session.Score,
-            session.CardsStudied,
-            session.CardsCorrect,
-            session.CardsIncorrect
-        );
-        var sessions = new List<StudySessionResponse> { mappedSession };
-
-        Render(sessions);
-    }
-    public void Render(StudySessionResponse session)
-    {
-        var sessions = new List<StudySessionResponse> { session };
-
-        Render(sessions);
-    }
-    public void Render(List<StudySessionResponse> sessions)
+    public void Render(List<StudySessionResponse> sessions, int startIndex)
     {
         var table = new Table();
 
+        table.AddColumn("Id");
         table.AddColumn("Stack Name");
         table.AddColumn("Score");
         table.AddColumn("Time");
-        table.AddColumn("# Cards Studied");
+        table.AddColumn("# Studied");
         table.AddColumn("# Correct");
         table.AddColumn("# Incorrect");
 
-        foreach (var session in sessions)
+        for (int i = startIndex; i < startIndex + 15; i++)
         {
-            table.AddRow(session.StackName, session.Score.ToString("F1"), session.SessionDate.ToString("yyyy-MM-dd HH:mm"), session.CountStudied.ToString(),
-            session.CountCorrect.ToString(), session.CountIncorrect.ToString());
+            if (i < sessions.Count - 1)
+            {
+                table.AddRow((i + 1).ToString(),
+                                sessions[i].StackName,
+                                sessions[i].Score.ToString("F1"),
+                                sessions[i].SessionDate.ToString("yyyy-MM-dd HH:mm"),
+                                sessions[i].CountStudied.ToString(),
+                                sessions[i].CountCorrect.ToString(),
+                                sessions[i].CountIncorrect.ToString());
+            }
+            else
+            {
+                table.AddRow("", "", "", "", "", "", "");
+            }
         }
 
         AnsiConsole.WriteLine("SESSION RESULTS:");

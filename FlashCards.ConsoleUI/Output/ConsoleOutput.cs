@@ -5,7 +5,7 @@ using Spectre.Console;
 
 namespace FlashCards.ConsoleUI.Output;
 
-public class ConsoleOutput : IConsoleOutput
+public class ConsoleOutput
 {
     public void PrintAppTitle()
     {
@@ -46,7 +46,6 @@ public class ConsoleOutput : IConsoleOutput
     public void PrintSuccessMessage(string message) => AnsiConsole.MarkupLine($"[green]SUCCESS:[/] {message}");
     public void PrintCancellationMessage(string action, string item) => AnsiConsole.MarkupLine($"[yellow]CANCELLED:[/] {action} of {item}!");
     public void PrintNoEditsMadeMessage() => AnsiConsole.MarkupLine($"\r\n[yellow]No changes made to card![/]");
-
     public void PrintReviewCardsKeypressOptions(CardSide side, int index, int cardCount)
     {
         var table = new Table()
@@ -57,16 +56,15 @@ public class ConsoleOutput : IConsoleOutput
         table.AddColumn("Control");
         table.AddColumn("Key");
 
-        if (side != CardSide.Front && index > 0) table.AddRow("Previous Card", "Left Arrow");
-        if (side != CardSide.Front && index < cardCount) table.AddRow("Next Card", "Right Arrow");
-        table.AddRow("Shuffle Deck", "Up Arrow");
-        table.AddRow("Return to Menu", "Esc");
+        if (side != CardSide.Front && index > 0) table.AddRow("Previous Card", "A");
+        if (side != CardSide.Front && index < cardCount) table.AddRow("Next Card", "D");
+        table.AddRow("Shuffle Deck", "W");
+        table.AddRow("Return to Menu", "Q");
 
         AnsiConsole.Write(table);
 
         Console.WriteLine();
     }
-
     public void PrintStudySessionKeypressOptions()
     {
         var table = new Table()
@@ -77,10 +75,12 @@ public class ConsoleOutput : IConsoleOutput
         table.AddColumn("Control");
         table.AddColumn("Key");
 
-        table.AddRow("Sort By Stack", "Up Arrow");
-        table.AddRow("Sort By Date", "Left Arrow");
-        table.AddRow("Sort By Score", "Right Arrow");
-        table.AddRow("Return to Menu", "Esc");
+        table.AddRow("Previous Page", "A");
+        table.AddRow("Next Page", "D");
+        table.AddRow("Sort By Score", "W");
+        table.AddRow("Sort By Stack", "E");
+        table.AddRow("Sort By Time", "R");
+        table.AddRow("Return to Menu", "Q");
 
         AnsiConsole.Write(table);
 

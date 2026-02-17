@@ -16,13 +16,14 @@ public static class DependencyInjection
         services.AddScoped<ReviewStackMenuService>();
         services.AddScoped<StudySessionService>();
         services.AddScoped<ReportService>();
-        services.AddScoped<IConsoleInput, ConsoleInput>();
-        services.AddScoped<IConsoleOutput, ConsoleOutput>();
+        services.AddScoped<ConsoleInput>();
+        services.AddScoped<ConsoleOutput>();
 
         services.AddScoped<MainMenuView>();
         services.AddScoped<ReviewStackMenuView>();
         services.AddScoped<StackListView>();
         services.AddScoped<StudySessionListView>();
+        services.AddScoped<StudySessionView>();
         services.AddScoped<CardListView>();
         services.AddScoped<AverageScorePerMonthView>();
         services.AddScoped<SessionCountPerMonthView>();

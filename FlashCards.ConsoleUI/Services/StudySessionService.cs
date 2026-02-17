@@ -12,18 +12,18 @@ namespace FlashCards.ConsoleUI.Handlers;
 public class StudySessionService
 {
     private readonly IServiceProvider _provider;
-    private readonly IConsoleInput _input;
-    private readonly IConsoleOutput _output;
+    private readonly ConsoleInput _input;
+    private readonly ConsoleOutput _output;
 
     private readonly GetAllByStackId _getAllByStackId;
     private readonly AddStudySessionHandler _addStudySessionHandler;
     private readonly UpdateCardCountersHandler _updateCardCounterHandler;
 
-    private readonly StudySessionListView _studySessionList;
+    private readonly StudySessionView _studySession;
 
-    public StudySessionService(IServiceProvider provider, IConsoleInput input, IConsoleOutput output,
+    public StudySessionService(IServiceProvider provider, ConsoleInput input, ConsoleOutput output,
                                 GetAllByStackId getAllByStackId, AddStudySessionHandler addStudySessionHandler,
-                                UpdateCardCountersHandler updateCardCounterHandler, StudySessionListView studySessionList)
+                                UpdateCardCountersHandler updateCardCounterHandler, StudySessionView studySession)
     {
         _provider = provider;
         _input = input;
@@ -31,7 +31,7 @@ public class StudySessionService
         _getAllByStackId = getAllByStackId;
         _addStudySessionHandler = addStudySessionHandler;
         _updateCardCounterHandler = updateCardCounterHandler;
-        _studySessionList = studySessionList;
+        _studySession = studySession;
     }
 
     public void Run(StackNamesWithCountsResponse stack)
@@ -58,7 +58,7 @@ public class StudySessionService
             var session = StudyCards(stack.Id, stack.Name, cards, cardsCorrect, cardsIncorrect);
             _addStudySessionHandler.Handle(session);
             _updateCardCounterHandler.Handle(cardsCorrect, cardsIncorrect);
-            _studySessionList.Render(session);
+            _studySession.Render(session);
         }
 
         _input.PressAnyKeyToContinue();
@@ -79,16 +79,17 @@ public class StudySessionService
 
             if (correctAnswer)
             {
-                Console.WriteLine("Hooray, you did it!");
+                Console.WriteLine("Congratulations!");
                 cardsCorrect.Add(card.Id);
             }
             else
             {
-                Console.WriteLine("Opps, that wasn't quite right...");
+                Console.WriteLine("Too bad! Keep studying!");
                 cardsIncorrect.Add(card.Id);
             }
 
             cardsStudied++;
+            if (cardsStudied == cards.Count) break;
             if (_input.ContinueStudyMode() == false) break;
         }
 

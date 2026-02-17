@@ -16,8 +16,8 @@ namespace FlashCards.ConsoleUI.Controllers;
 
 public class MainMenuService
 {
-    private readonly IConsoleInput _input;
-    private readonly IConsoleOutput _output;
+    private readonly ConsoleInput _input;
+    private readonly ConsoleOutput _output;
 
     private readonly StudySessionService _studySessionService;
     private readonly ReviewStackMenuService _stackMenuService;
@@ -35,7 +35,7 @@ public class MainMenuService
 
 
     public MainMenuService(ReviewStackMenuService stackMenuService, StudySessionService studySessionService, ReportService reportService,
-                            IConsoleInput input, IConsoleOutput output, MainMenuView mainMenu, StackListView stackList, StudySessionListView studySessionList,
+                            ConsoleInput input, ConsoleOutput output, MainMenuView mainMenu, StackListView stackList, StudySessionListView studySessionList,
                             GetAllStacksWithCountsHandler getAllStackNamesAndCounts, AddStackHandler addStack,
                             DeleteByIdHandler deleteStack, GetAllStudySessionsHandler getAllStudySessions, GetAllSessionYears getAllSessionYears
                             )
@@ -169,12 +169,12 @@ public class MainMenuService
     {
         bool continueReview = true;
         ConsoleKeyInfo keyInfo;
-        int i = 0;
+        int startIndex = 0;
 
         while (continueReview)
         {
             _output.PrintPageTitle("REVIEW STACK MENU");
-            _studySessionList.Render(sessions);
+            _studySessionList.Render(sessions, startIndex);
             _output.PrintStudySessionKeypressOptions();
 
             bool validKey = false;
@@ -185,19 +185,27 @@ public class MainMenuService
 
                 switch (keyInfo.Key)
                 {
-                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.E:
                         sessions = sessions.OrderBy(s => s.StackName).ToList();
                         validKey = true;
                         break;
-                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.R:
                         sessions = sessions.OrderBy(s => s.SessionDate).ToList();
                         validKey = true;
                         break;
-                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.W:
                         sessions = sessions.OrderBy(s => s.Score).ToList();
                         validKey = true;
                         break;
-                    case ConsoleKey.Escape:
+                    case ConsoleKey.A:
+                        startIndex -= 15;
+                        validKey = true;
+                        break;
+                    case ConsoleKey.D:
+                        startIndex += 15;
+                        validKey = true;
+                        break;
+                    case ConsoleKey.Q:
                         validKey = true;
                         continueReview = false;
                         break;
@@ -207,6 +215,9 @@ public class MainMenuService
                 }
             }
 
+            if (startIndex > sessions.Count) startIndex = 0;
+            if (startIndex >= 0 && startIndex < 15) startIndex = 0;
+            if (startIndex < 0) startIndex = sessions.Count - sessions.Count % 15;
         }
     }
     private void HandleReports()

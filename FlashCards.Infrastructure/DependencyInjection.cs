@@ -12,9 +12,9 @@ namespace FlashCards.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
-                                                         IConfiguration configuration, bool isDeveloperMode)
+                                                         IConfiguration configuration)
     {
-        var connectionString = (isDeveloperMode) ? configuration.GetConnectionString("Dev") : configuration.GetConnectionString("Default");
+        var connectionString = configuration.GetConnectionString("Default");
 
         // Register IDbConnection Factory
         services.AddScoped<IDbConnection>(sp => new SqlConnection(connectionString));

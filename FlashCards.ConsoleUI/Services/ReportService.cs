@@ -1,11 +1,13 @@
 ﻿using FlashCards.Application.Reports.GetAverageScorePerMonth;
 using FlashCards.Application.Reports.GetSessionCountPerMonth;
+using FlashCards.ConsoleUI.Input;
 using FlashCards.ConsoleUI.Views;
 
 namespace FlashCards.ConsoleUI.Services;
 
 public class ReportService
 {
+    private readonly ConsoleInput _input;
     private readonly SessionCountPerMonthView _sessionnCountView;
     private readonly AverageScorePerMonthView _averageScoreView;
     private readonly GetAverageScorePerMonthByYearHandler _averageScoreReport;
@@ -14,8 +16,9 @@ public class ReportService
 
     public ReportService(GetAverageScorePerMonthByYearHandler averageScoreReport, GetSessionCountPerMonthHandler sessionCountReport,
                         SessionCountPerMonthView sessionCountView, AverageScorePerMonthView averageScoreView,
-                        SessionYearSelectionView yearSelection)
+                        SessionYearSelectionView yearSelection, ConsoleInput input)
     {
+        _input = input;
         _averageScoreReport = averageScoreReport;
         _sessionCountReport = sessionCountReport;
         _sessionnCountView = sessionCountView;
@@ -25,6 +28,7 @@ public class ReportService
 
     public void Run(int[] sessionYears)
     {
+
         var year = _yearSelection.Render(sessionYears);
 
         var averageScoreReports = _averageScoreReport.Handle(year);
@@ -32,6 +36,7 @@ public class ReportService
 
         _averageScoreView.Render(averageScoreReports, year);
         _sessionnCountView.Render(sessionCountReports, year);
-        Console.ReadLine();
+
+        _input.PressAnyKeyToContinue(1, "Press any key to return to the Main Menu...");
     }
 }

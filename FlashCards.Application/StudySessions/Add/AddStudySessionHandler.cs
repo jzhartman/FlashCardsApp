@@ -16,11 +16,11 @@ public class AddStudySessionHandler
 
     public void Handle(AddStudySessionCommand session)
     {
-        var stackId = _stackRepo.GetIdByName(session.StackName);
+        //var stackId = _stackRepo.GetIdByName(session.StackName);
         _studyRepo.Add(new StudySession
         {
             SessionDate = session.SessionDate,
-            StackId = stackId,
+            StackId = session.StackId,
             Score = session.Score,
             CountStudied = session.CardsStudied,
             CountCorrect = session.CardsCorrect,

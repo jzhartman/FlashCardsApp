@@ -18,8 +18,8 @@ namespace FlashCards.ConsoleUI.Handlers;
 
 public class ReviewStackMenuService
 {
-    private readonly IConsoleInput _input;
-    private readonly IConsoleOutput _output;
+    private readonly ConsoleInput _input;
+    private readonly ConsoleOutput _output;
 
     private readonly ReviewStackMenuView _menu;
     private readonly CardListView _cardListView;
@@ -31,7 +31,7 @@ public class ReviewStackMenuService
     private readonly EditCardHandler _editCard;
     private readonly DeleteCardByIdHandler _deleteCardById;
 
-    public ReviewStackMenuService(IConsoleInput input, IConsoleOutput output, ReviewStackMenuView menu, CardListView cardListView,
+    public ReviewStackMenuService(ConsoleInput input, ConsoleOutput output, ReviewStackMenuView menu, CardListView cardListView,
                                     GetAllByStackId getAllCardsByStackId, ValidateCardTextBySide getCardText, AddCardHandler addCard,
                                     EditCardTextBySideHandler editCardFrontText, EditCardHandler editCard, DeleteCardByIdHandler deleteCardById)
     {
@@ -73,7 +73,6 @@ public class ReviewStackMenuService
                 case ReviewStackMenuItem.Return: return;
                 default: AnsiConsole.Markup("[bold red]ERROR:[/] Invalid input!"); break;
             }
-            _input.PressAnyKeyToContinue(2);
         }
     }
     private StackViewModel BuildFullStack(StackNamesWithCountsResponse stack)
@@ -123,22 +122,22 @@ public class ReviewStackMenuService
 
                 switch (keyInfo.Key)
                 {
-                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.A:
                         if (i > 0) i--;
                         else i = shuffleableCards.Count - 1;
                         validKey = true;
                         break;
-                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.D:
                         if (i < shuffleableCards.Count - 1) i++;
                         else i = 0;
                         validKey = true;
                         break;
-                    case ConsoleKey.UpArrow:
+                    case ConsoleKey.W:
                         shuffleableCards = ShuffleStack(shuffleableCards);
                         i = 0;
                         validKey = true;
                         break;
-                    case ConsoleKey.Escape:
+                    case ConsoleKey.Q:
                         validKey = true;
                         continueReview = false;
                         break;
@@ -165,6 +164,7 @@ public class ReviewStackMenuService
 
         if (result.IsSuccess) _output.PrintSuccessMessage($"Added card to {fullStack.Name}!");
         else Console.WriteLine("ERROR MESSAGE");
+        _input.PressAnyKeyToContinue(2);
     }
     private string GetCardText(int stackId, CardSide cardSide)
     {
@@ -199,7 +199,8 @@ public class ReviewStackMenuService
             _deleteCardById.Handle(card.Id);
             _output.PrintSuccessMessage($"Deleted [yellow]{card.FrontText}[/] card!");
         }
-        else _output.PrintCancellationMessage("deletion", "card");
+        else _output.PrintCancellationMessage("Deletion", "card");
+        _input.PressAnyKeyToContinue(2);
     }
     private void HandleEditCard(StackViewModel stack)
     {
@@ -226,6 +227,7 @@ public class ReviewStackMenuService
             _output.PrintSuccessMessage("Edited card data!");
         }
         else _output.PrintCancellationMessage("editing", "card text");
+        _input.PressAnyKeyToContinue(2);
     }
     private string GetEditedTextFromUser(CardResponse card, CardSide cardSide)
     {

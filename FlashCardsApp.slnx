@@ -6,11 +6,4 @@
     <Project Path="FlashCards.Core/FlashCards.Core.csproj" />
     <Project Path="FlashCards.Infrastructure/FlashCards.Infrastructure.csproj" Id="f30bb556-ce30-4cfe-b771-88af840d6642" />
   </Folder>
-  <Folder Name="/tests/" />
-  <Folder Name="/tests/IntegrationTests/">
-    <Project Path="FlashCards.IntegrationTests/FlashCards.IntegrationTests.csproj" Id="8eb2d4fd-a5fc-4fb9-924c-120c64738b6d" />
-  </Folder>
-  <Folder Name="/tests/UnitTests/">
-    <Project Path="FlashCards.Tests/FlashCards.UnitTests.csproj" Id="c11254da-24fd-4314-afca-b2956c453936" />
-  </Folder>
 </Solution>

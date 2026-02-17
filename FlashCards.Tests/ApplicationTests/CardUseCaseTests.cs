@@ -1,6 +1,5 @@
-﻿using FlashCards.Application.DTOs;
+﻿using FlashCards.Application.Cards.Add;
 using FlashCards.Application.Interfaces;
-using FlashCards.Application.UseCases.Cards;
 using FlashCards.Core.Entities;
 using Moq;
 
@@ -19,8 +18,8 @@ public class CardUseCaseTests
 
         cardRepoMock.Setup(c => c.Add(It.IsAny<Card>())).Callback<Card>(d => d.Id = 13).Returns(13); // Sets any card to return an Id of 13 (arbitrary number)
 
-        var addCardUseCase = new AddCardHandler(cardRepoMock.Object, stackRepoMock.Object);
-        var command = new AddCardCommand("CoolStack", "Gandalf", "Elderly chap, big grey beard, pointy hat");
+        var addCardUseCase = new AddCardHandler(cardRepoMock.Object);
+        var command = new AddCardCommand(1, "Gandalf", "Elderly chap, big grey beard, pointy hat");
 
         // Act
         var result = addCardUseCase.Handle(command);

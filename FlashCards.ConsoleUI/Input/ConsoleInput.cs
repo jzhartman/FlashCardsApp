@@ -2,7 +2,7 @@
 
 namespace FlashCards.ConsoleUI.Input;
 
-public class ConsoleInput : IConsoleInput
+public class ConsoleInput
 {
     public int GetRecordIdFromUser(string message, int minValue, int maxValue)
     {
@@ -17,8 +17,6 @@ public class ConsoleInput : IConsoleInput
 
         return id;
     }
-
-
     public bool GetDeleteStackConfirmationFromUser(string stackName, int cardCount, int sessionCount)
     {
         AddEmptyLines(1);
@@ -34,7 +32,6 @@ public class ConsoleInput : IConsoleInput
 
         return confirmation;
     }
-
     public bool GetDeleteCardConfirmationFromUser(string frontText, string backText)
     {
         AddEmptyLines(1);
@@ -44,13 +41,7 @@ public class ConsoleInput : IConsoleInput
             $"\r\n[green]Back Text:[/] {backText}" +
             "\r\n\r\nWould you like to proceed?";
 
-        var confirmation = AnsiConsole.Prompt(
-            new TextPrompt<bool>(promptText)
-            .AddChoice(true)
-            .AddChoice(false)
-            .WithConverter(choice => choice ? "y" : "n"));
-
-        return confirmation;
+        return ConfirmationSelection(promptText);
     }
 
     public bool GetEditCardConfirmationFromUser(string originalFrontText, string originalBackText, string newFrontText, string newBackText)
@@ -66,18 +57,8 @@ public class ConsoleInput : IConsoleInput
 
         promptText += "\r\n\r\nConfirm changes: ";
 
-
-        var confirmation = AnsiConsole.Prompt(
-            new TextPrompt<bool>(promptText)
-            .AddChoice(true)
-            .AddChoice(false)
-            .WithConverter(choice => choice ? "y" : "n"));
-
-        return confirmation;
+        return ConfirmationSelection(promptText);
     }
-
-
-
     public bool GetPassStateFromUser()
     {
         var choice = AnsiConsole.Prompt(
@@ -87,7 +68,6 @@ public class ConsoleInput : IConsoleInput
 
         return (choice == "PASS" ? true : false);
     }
-
     public bool ContinueStudyMode()
     {
         Console.Write("Press \'ESC\' to exit study mode, or any other key to continue...");
@@ -95,9 +75,6 @@ public class ConsoleInput : IConsoleInput
         return Console.ReadKey().Key != ConsoleKey.Escape;
 
     }
-
-
-
     public string GetTextInputFromUser(string message, int topSpaces = 0, int bottomSpaces = 0)
     {
         AddEmptyLines(topSpaces);
@@ -105,20 +82,25 @@ public class ConsoleInput : IConsoleInput
         AddEmptyLines(bottomSpaces);
         return Console.ReadLine();
     }
-
     public void PressAnyKeyToFlipCard()
     {
         Console.Write("Press any key to flip card...");
         Console.ReadKey();
     }
-
     public void PressAnyKeyToContinue(int topSpaces = 1, string message = "Press any key to continue...")
     {
         AddEmptyLines(topSpaces);
         Console.Write(message);
         Console.ReadKey();
     }
-
+    private bool ConfirmationSelection(string promptText, string affirmative = "y", string negative = "n")
+    {
+        return AnsiConsole.Prompt(
+            new TextPrompt<bool>(promptText)
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? affirmative : negative));
+    }
     private void AddEmptyLines(int count)
     {
         for (int i = 0; i < count; i++) AnsiConsole.WriteLine();
